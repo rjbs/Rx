@@ -1,0 +1,114 @@
+{
+   "type" : "//bool"
+}
+{
+   "type" : "//num"
+}
+{
+   "type" : "//int"
+}
+{
+   "type" : "//float"
+}
+{
+   "type" : "//date"
+}
+{
+   "type" : "//datetime"
+}
+{
+   "type" : "//str"
+}
+{
+   "contents" : {
+      "bar" : {
+         "required" : 0,
+         "type" : "//int"
+      },
+      "baz" : {
+         "contents" : {
+            "type" : "//int"
+         },
+         "type" : "//map/uniform"
+      },
+      "foo" : {
+         "required" : 1,
+         "type" : "//int"
+      }
+   },
+   "type" : "//map"
+}
+{
+   "contents" : {
+      "contents" : {
+         "type" : "//str"
+      },
+      "type" : "//array"
+   },
+   "type" : "//array",
+   "size" : {
+      "min" : 1,
+      "max" : 10
+   }
+}
+{
+   "contents" : [
+      {
+         "type" : "//int"
+      },
+      {
+         "type" : "//str"
+      },
+      null,
+      {
+         "contents" : {
+            "foo" : {
+               "type" : "//int"
+            }
+         },
+         "type" : "//map"
+      }
+   ],
+   "type" : "//seq"
+}
+{
+   "tail" : {
+      "contents" : {
+         "type" : "//str"
+      },
+      "type" : "//array",
+      "size" : {
+         "min" : 1,
+         "max" : 100
+      }
+   },
+   "contents" : [
+      {
+         "type" : "//codesimply.com/hostport"
+      },
+      {
+         "type" : "//codesimply.com/hostport"
+      }
+   ],
+   "type" : "//seq"
+}
+{
+   "contents" : {
+      "sender" : {
+         "type" : "/pobox.com/email/env_addr"
+      },
+      "recipients" : {
+         "contents" : {
+            "type" : "/pobox.com/email/env_addr",
+            "size" : {
+               "min" : 1
+            }
+         },
+         "type" : "//array"
+      },
+      "account_id" : {
+         "type" : "/pobox.com/account"
+      }
+   },
+   "type" : "//map"
+}

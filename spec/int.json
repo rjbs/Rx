@@ -1,0 +1,17 @@
+[
+  { "type": "//int" },
+  [ true,  "0"       ],
+  [ true,  "5"       ],
+  [ false, "\"0\""   ],
+  [ false, "\"5\""   ],
+  [ false, "\"05\""  ],
+  [ false, "\"5.0\"" ],
+  [ false, "\"5.1\"" ],
+  [ true,  "5.0"     ],
+  [ false, "5.1"     ],
+  [ false, "\"5.\""  ],
+  [ false, "false"   ],
+  [ false, "true"    ],
+  [ false, "null"    ],
+  [ false, "\"x\""   ]
+]
