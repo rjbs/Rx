@@ -1,0 +1,17 @@
+[
+  { "type": "//txt" },
+  [ true,  "0"       ],
+  [ true,  "5"       ],
+  [ true,  "\"0\""   ],
+  [ true,  "\"5\""   ],
+  [ true,  "\"05\""  ],
+  [ true,  "\"5.0\"" ],
+  [ true,  "\"5.1\"" ],
+  [ true,  "5.0"     ],
+  [ true,  "5.1"     ],
+  [ true,  "\"5.\""  ],
+  [ false, "false"   ],
+  [ false, "true"    ],
+  [ false, "null"    ],
+  [ true,  "\"x\""   ]
+]

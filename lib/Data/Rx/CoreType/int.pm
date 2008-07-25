@@ -2,8 +2,6 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::int;
 
-use B;
-
 my $int_re = qr{(?:0|[1-9]\d*)};
 my $dec_re = qr{\.0+};
 my $exp_re = qr{e$int_re}i;
