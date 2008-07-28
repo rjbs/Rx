@@ -1,5 +1,7 @@
+use strict;
+use warnings;
 package Data::Rx::CoreType::str;
-use Mouse;
+use base 'Data::Rx::CoreType';
 
 sub check {
   my ($self, $value) = @_;
@@ -20,6 +22,4 @@ sub check {
 sub authority { '' }
 sub type      { 'str' }
 
-__PACKAGE__->meta->make_immutable;
-no Mouse;
 1;

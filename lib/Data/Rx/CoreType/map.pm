@@ -1,11 +1,7 @@
+use strict;
+use warnings;
 package Data::Rx::CoreType::map;
-use Mouse;
-
-has 'contents' => (
-  is  => 'ro',
-  isa => 'HashRef',
-  required => 1,
-);
+use base 'Data::Rx::CoreType';
 
 use Scalar::Util ();
 
@@ -20,6 +16,4 @@ sub check {
   );
 }
 
-__PACKAGE__->meta->make_immutable;
-no Mouse;
 1;

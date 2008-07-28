@@ -1,5 +1,7 @@
+use strict;
+use warnings;
 package Data::Rx::CoreType::txt;
-use Mouse;
+use base 'Data::Rx::CoreType';
 
 sub check {
   my ($self, $value) = @_;
@@ -11,6 +13,4 @@ sub check {
 sub authority { '' }
 sub type      { 'txt' }
 
-__PACKAGE__->meta->make_immutable;
-no Mouse;
 1;
