@@ -1,11 +1,9 @@
 use strict;
 use warnings;
-package Data::Rx::CoreType::int;
+package Data::Rx::CoreType::rat;
 use base 'Data::Rx::CoreType::num';
 
-sub _dec_re { '' }
-
 sub authority { '' }
-sub type      { 'int' }
+sub type      { 'rat' }
 
 1;

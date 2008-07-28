@@ -1,0 +1,17 @@
+[
+  { "type": "//bool" },
+  [ false, "0"       ],
+  [ false, "5"       ],
+  [ false, "\"0\""   ],
+  [ false, "\"5\""   ],
+  [ false, "\"05\""  ],
+  [ false, "\"5.0\"" ],
+  [ false, "\"5.1\"" ],
+  [ false, "5.0"     ],
+  [ false, "5.1"     ],
+  [ false, "\"5.\""  ],
+  [ true,  "false"   ],
+  [ true,  "true"    ],
+  [ false, "null"    ],
+  [ false, "\"x\""   ]
+]

@@ -1,0 +1,12 @@
+any
+  nil
+  def
+    scalar
+      bool
+      num
+        int
+        rat
+      str
+    map
+    seq
+    arr

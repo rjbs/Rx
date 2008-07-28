@@ -1,11 +1,11 @@
 [
-  { "type": "//int" },
-  [ true,  "0"       ],
-  [ true,  "0e0"     ],
-  [ true,  "-0"      ],
-  [ true,  "5"       ],
-  [ true,  "5E10"    ],
-  [ true,  "-5"      ],
+  { "type": "//nil" },
+  [ false, "0"       ],
+  [ false, "0e0"     ],
+  [ false, "-0"      ],
+  [ false, "5"       ],
+  [ false, "5E10"    ],
+  [ false, "-5"      ],
   [ false, "\"0\""   ],
   [ false, "\"5\""   ],
   [ false, "\"05\""  ],
@@ -19,6 +19,6 @@
   [ false, "\"5.\""  ],
   [ false, "false"   ],
   [ false, "true"    ],
-  [ false, "null"    ],
+  [ true,  "null"    ],
   [ false, "\"x\""   ]
 ]
