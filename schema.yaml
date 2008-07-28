@@ -15,15 +15,16 @@ type: //str
 ---
 type: //map
 contents:
-  foo: { type: //int, required: 1 }
-  bar: { type: //int, required: 0 }
+  foo: { type: //int }
+  bar: { type: //int, optional: 1 }
   baz:
     type: //map/uniform
+    optional: 0
     contents: { type: //int }
 ---
-type: //array
+type: //arr
 size: { min: 1, max: 10 }
-contents: { type: //array, contents: { type: //str } }
+contents: { type: //arr, contents: { type: //str } }
 ---
 # [ $int, $str, ( { foo => $int } )? ]
 type: //seq
@@ -31,7 +32,7 @@ contents:
   - type: //int
   - type: //str
 tail:
-  type: //array
+  type: //arr
   size: { min: 0, max: 1 }
   contents:
     type: //map
@@ -55,7 +56,7 @@ contents:
   - type: /codesimply.com/hostport
   - type: /codesimply.com/hostport
 tail:
-  type: //array
+  type: //arr
   size: { min: 1, max: 100 }
   contents: { type: //str }
 ---
@@ -64,7 +65,7 @@ contents:
   account_id: { type: /pobox.com/account }
   sender:     { type: /pobox.com/email/env_addr }
   recipients:  
-    type: //array
+    type: //arr
     contents: 
       type: /pobox.com/email/env_addr
       size: { min: 1 }
