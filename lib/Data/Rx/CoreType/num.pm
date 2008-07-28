@@ -1,6 +1,5 @@
-use strict;
-use warnings;
 package Data::Rx::CoreType::num;
+use Mouse;
 
 sub _int_re { qr{(?:0|[1-9]\d*)} }
 sub _dec_re { qr{(?:\.\d+)?}     }
@@ -32,4 +31,6 @@ sub check {
 sub authority { '' }
 sub type      { 'num' }
 
+__PACKAGE__->meta->make_immutable;
+no Mouse;
 1;

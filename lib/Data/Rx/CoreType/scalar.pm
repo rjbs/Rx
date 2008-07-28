@@ -1,6 +1,5 @@
-use strict;
-use warnings;
 package Data::Rx::CoreType::scalar;
+use Mouse;
 
 sub check {
   my ($self, $value) = @_;
@@ -13,4 +12,6 @@ sub check {
 sub authority { '' }
 sub type      { 'scalar' }
 
+__PACKAGE__->meta->make_immutable;
+no Mouse;
 1;

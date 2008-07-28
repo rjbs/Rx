@@ -1,6 +1,5 @@
-use strict;
-use warnings;
 package Data::Rx::CoreType::bool;
+use Mouse;
 
 sub check {
   my ($self, $value) = @_;
@@ -15,4 +14,6 @@ sub check {
 sub authority { '' }
 sub type      { 'bool' }
 
+__PACKAGE__->meta->make_immutable;
+no Mouse;
 1;

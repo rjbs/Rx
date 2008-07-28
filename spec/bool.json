@@ -13,5 +13,7 @@
   [ true,  "false"   ],
   [ true,  "true"    ],
   [ false, "null"    ],
-  [ false, "\"x\""   ]
+  [ false, "\"x\""   ],
+  [ false, "{\"key\": 1 }" ],
+  [ false, "[\"string\", 1 ]" ]
 ]
