@@ -10,7 +10,8 @@ sub type      { 'map' }
 
 sub new {
   my ($class, $arg) = @_;
-  Carp::croak("no contents hash given")   unless $arg->{contents};
+  Carp::croak("no contents hash given")
+    unless $arg->{contents} and (ref $arg->{contents} eq 'HASH');
   Carp::croak("unknown arguments to new") unless keys %$arg == 1;
 
   my %content_check = (

@@ -2,6 +2,7 @@ use strict;
 use warnings;
 package Data::Rx;
 
+use Data::Rx::Util;
 use Module::Pluggable::Object;
 
 sub new {

@@ -8,7 +8,7 @@ use Test::RxSpec;
 
 plan 'no_plan';
 
-my @types = qw(num int rat txt bool scalar nil def map);
+my @types = qw(num int rat txt bool scalar nil def map arr);
 my %skip  = map { $_ => 1 } qw();
 
 for my $type (@types) {
