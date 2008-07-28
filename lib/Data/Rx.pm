@@ -23,15 +23,21 @@ sub new {
   return $self;
 }
 
-sub check {
-  my ($self, $value, $schema) = @_;
+sub make_checker {
+  my ($self, $schema, $arg) = @_;
+  $arg ||= {};
 
-  my ($authority, $type) = $schema->{type} =~ m{\A / (\w*) / (\w+) \z}x;
+  my $type = $schema->{type};
+  my ($authority, $type_name) = $type =~ m{\A / (\w*) / (\w+) \z}x;
 
-  die "unknown schema: $schema->{type}"
-    unless my $handler = $self->{handlers}{ $authority }{ $type };
+  die "unknown schema: $type"
+    unless my $handler = $self->{handlers}{ $authority }{ $type_name };
 
-  $handler->check($value);
+  my $checker = $handler->new($schema);
+
+  return sub {
+    $checker->check($_[0]);
+  }
 }
 
 1;
