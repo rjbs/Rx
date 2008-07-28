@@ -29,7 +29,7 @@ $VAR1 = {
 $VAR1 = {
           'contents' => {
                           'bar' => {
-                                     'required' => '0',
+                                     'required' => 0,
                                      'type' => '//int'
                                    },
                           'baz' => {
@@ -39,7 +39,7 @@ $VAR1 = {
                                      'type' => '//map/uniform'
                                    },
                           'foo' => {
-                                     'required' => '1',
+                                     'required' => 1,
                                      'type' => '//int'
                                    }
                         },
@@ -55,27 +55,59 @@ $VAR1 = {
                         },
           'type' => '//array',
           'size' => {
-                      'min' => '1',
-                      'max' => '10'
+                      'min' => 1,
+                      'max' => 10
                     }
         };
 
 $VAR1 = {
+          'tail' => {
+                      'contents' => {
+                                      'contents' => {
+                                                      'foo' => {
+                                                                 'type' => '//int'
+                                                               }
+                                                    },
+                                      'type' => '//map'
+                                    },
+                      'type' => '//array',
+                      'size' => {
+                                  'min' => 0,
+                                  'max' => 1
+                                }
+                    },
           'contents' => [
                           {
                             'type' => '//int'
                           },
                           {
                             'type' => '//str'
-                          },
-                          undef,
+                          }
+                        ],
+          'type' => '//seq'
+        };
+
+$VAR1 = {
+          'tail' => {
+                      'contents' => [
+                                      {
+                                        'type' => '//str'
+                                      },
+                                      {
+                                        'type' => '//int'
+                                      },
+                                      {
+                                        'type' => '//str'
+                                      }
+                                    ],
+                      'type' => '//seq/cumulative'
+                    },
+          'contents' => [
                           {
-                            'contents' => {
-                                            'foo' => {
-                                                       'type' => '//int'
-                                                     }
-                                          },
-                            'type' => '//map'
+                            'type' => '//int'
+                          },
+                          {
+                            'type' => '//str'
                           }
                         ],
           'type' => '//seq'
@@ -88,16 +120,16 @@ $VAR1 = {
                                     },
                       'type' => '//array',
                       'size' => {
-                                  'min' => '1',
-                                  'max' => '100'
+                                  'min' => 1,
+                                  'max' => 100
                                 }
                     },
           'contents' => [
                           {
-                            'type' => '//codesimply.com/hostport'
+                            'type' => '/codesimply.com/hostport'
                           },
                           {
-                            'type' => '//codesimply.com/hostport'
+                            'type' => '/codesimply.com/hostport'
                           }
                         ],
           'type' => '//seq'
@@ -112,7 +144,7 @@ $VAR1 = {
                                             'contents' => {
                                                             'type' => '/pobox.com/email/env_addr',
                                                             'size' => {
-                                                                        'min' => '1'
+                                                                        'min' => 1
                                                                       }
                                                           },
                                             'type' => '//array'

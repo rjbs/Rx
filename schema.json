@@ -52,21 +52,52 @@
    }
 }
 {
-   "contents" : [
-      {
-         "type" : "//int"
-      },
-      {
-         "type" : "//str"
-      },
-      null,
-      {
+   "tail" : {
+      "contents" : {
          "contents" : {
             "foo" : {
                "type" : "//int"
             }
          },
          "type" : "//map"
+      },
+      "type" : "//array",
+      "size" : {
+         "min" : 0,
+         "max" : 1
+      }
+   },
+   "contents" : [
+      {
+         "type" : "//int"
+      },
+      {
+         "type" : "//str"
+      }
+   ],
+   "type" : "//seq"
+}
+{
+   "tail" : {
+      "contents" : [
+         {
+            "type" : "//str"
+         },
+         {
+            "type" : "//int"
+         },
+         {
+            "type" : "//str"
+         }
+      ],
+      "type" : "//seq/cumulative"
+   },
+   "contents" : [
+      {
+         "type" : "//int"
+      },
+      {
+         "type" : "//str"
       }
    ],
    "type" : "//seq"
@@ -84,10 +115,10 @@
    },
    "contents" : [
       {
-         "type" : "//codesimply.com/hostport"
+         "type" : "/codesimply.com/hostport"
       },
       {
-         "type" : "//codesimply.com/hostport"
+         "type" : "/codesimply.com/hostport"
       }
    ],
    "type" : "//seq"
