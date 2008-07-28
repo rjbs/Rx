@@ -13,6 +13,7 @@ sub test_spec {
   my $spec = JSON::XS->new->decode($spec_json);
 
   my ($schema, @examples) = @$spec;
+  my $schema_desc = JSON::XS->new->encode($schema);
 
   my $rx = Data::Rx->new;
   my $checker = $rx->make_checker($schema);
@@ -23,9 +24,9 @@ sub test_spec {
     my $input = JSON::XS->new->decode("[ $json ]")->[0];
 
     if ($ok) {
-      ok(  $checker->($input, $schema), "'$json' is valid $schema->{type}");
+      ok(  $checker->($input, $schema), "'$json' is valid $schema_desc");
     } else {
-      ok(! $checker->($input, $schema), "'$json' is invalid $schema->{type}");
+      ok(! $checker->($input, $schema), "'$json' is invalid $schema_desc");
     }
   }
 }

@@ -1,5 +1,5 @@
 [
-  { "type": "//map", "contents": { } },
+  { "type": "//map", "contents": { "key": { "type": "//int" } } },
   [ false, "0"       ],
   [ false, "0e0"     ],
   [ false, "-0"      ],
@@ -22,5 +22,9 @@
   [ false, "null"    ],
   [ false, "\"x\""   ],
   [ true,  "{\"key\": 1 }" ],
+  [ true,  "{\"key\": 0 }" ],
+  [ false, "{\"key\": \"pants\" }" ],
+  [ false, "{\"key\": 1, \"unknown\": 2 }" ],
+  [ false, "{}" ],
   [ false, "[\"string\", 1 ]" ]
 ]
