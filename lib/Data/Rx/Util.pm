@@ -23,12 +23,13 @@ sub _make_length_check {
     $arg, { map {; $_ => 1 } qw(min max) },
   );
 
-  for my $field (qw(min max)) {
+  for my $field (grep { exists $arg->{$_} } qw(min max)) {
     Carp::croak "illegal $field"
       if $arg->{$field} < 0 or int($arg->{$field}) != $arg->{$field};
   }
 
-  Carp::croak "min exceeds max" if $arg->{min} > $arg->{max};
+  Carp::croak "min exceeds max"
+    if exists $arg->{min} and exists $arg->{max} and $arg->{min} > $arg->{max};
 
   return sub { $_[0] >= $arg->{min} and $_[0] <= $arg->{max} }
     if exists $arg->{min} and exists $arg->{max};

@@ -34,9 +34,9 @@ sub make_checker {
   die "unknown schema: $type"
     unless my $handler = $self->{handlers}{ $authority }{ $type_name };
 
-  my $arg = {%$schema};
-  delete $arg->{type};
-  my $checker = $handler->new($arg);
+  my $schema_arg = {%$schema};
+  delete $schema_arg->{type};
+  my $checker = $handler->new($schema_arg);
 
   return sub {
     $checker->check($_[0]);
