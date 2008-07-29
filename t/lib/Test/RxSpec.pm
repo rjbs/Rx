@@ -10,6 +10,13 @@ use Test::More;
 
 my $JSON = JSON::XS->new;
 
+sub dejson {
+  my ($json) = @_;
+  my $data = eval { $JSON->decode($json) };
+  die "$@ (in $json)" unless $data;
+  return $data;
+}
+
 sub slurp {
   my $fn = shift || $_;
   my $json = do { local $/; open my $fh, '<', "spec/$fn.json"; <$fh> };
@@ -27,7 +34,7 @@ sub data {
     s{spec/}{};
     s{\.json}{};
     my $data_json = slurp;
-    my $data = $JSON->decode($data_json);
+    my $data = dejson($data_json);
     $data = { map { $_ => $_ } @$data } if ref $data eq 'ARRAY';
 
     s{data/}{};
@@ -41,7 +48,7 @@ sub test_spec {
   my ($self, $schema) = @_;
 
   my $schema_json = slurp("schemata/$schema");
-  my $schema_test = $JSON->decode($schema_json);
+  my $schema_test = dejson($schema_json);
 
   my $rx = Data::Rx->new;
   my $checker = $rx->make_checker($schema_test->{schema});
@@ -55,7 +62,14 @@ sub test_spec {
     for my $source (keys %{ $schema_test->{$pf} }) {
       for my $entry (@{ $schema_test->{$pf}{ $source } }) {
         my $json  = data->{ $source }->{ $entry };
-        my $input = $JSON->decode("[ $json ]")->[0];
+
+        use Data::Dumper;
+        warn(Dumper(data->{$source})),
+          warn(Dumper($schema_test)),
+          die("no JSON found for $source/$entry")
+          unless defined $json;
+
+        my $input = dejson("[ $json ]")->[0];
 
         $pf{$pf}->($input, $schema, "$source/$entry");
         # ok(! $checker->($input, $schema), "'$json' is invalid $schema_desc");

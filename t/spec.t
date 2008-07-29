@@ -9,7 +9,7 @@ use Test::RxSpec;
 plan 'no_plan';
 
 # my @types = qw(num int rat txt bool scalar nil def map arr seq);
-my @types = qw(array-3-int);
+my @types = qw(bool def nil int array-3-int);
 my %skip  = map { $_ => 1 } qw();
 
 for my $type (@types) {
