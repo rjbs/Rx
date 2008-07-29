@@ -1,0 +1,24 @@
+{
+  "schema": {
+    "type": "//map",
+    "required": {
+      "key": { "type": "//int" }
+    },
+    "optional": {
+      "opt": { "type": "//bool" }
+    }
+  },
+
+  "pass": {
+    "obj": [ "key-0", "key-1" ]
+  },
+
+  "fail": {
+    "arr": "*",
+    "bool": "*",
+    "null": "*",
+    "num" : "*",
+    "obj" : [ "empty", "key-pants", "key-1-unknown" ],
+    "str" : "*"
+  }
+}

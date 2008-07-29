@@ -1,0 +1,15 @@
+{
+  "schema": { "type": "//scalar" },
+
+  "fail": {
+    "bool": "*",
+    "null": "*",
+    "num" : "*",
+    "str" : "*"
+  },
+
+  "fail": {
+    "arr": "*",
+    "obj": "*"
+  }
+}
