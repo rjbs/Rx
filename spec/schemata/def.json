@@ -2,8 +2,11 @@
   "schema": { "type": "//def" },
 
   "pass": {
-    "bool": [ "false", "true" ],
-    "num" : [ "0" ]
+    "arr" : "*",
+    "bool": "*",
+    "num" : "*",
+    "obj" : "*",
+    "str" : "*"
   },
 
   "fail": {

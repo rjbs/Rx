@@ -3,5 +3,11 @@
 
   "pass": { "null": [ "null" ] },
 
-  "fail": { "num": [ "0" ] }
+  "fail": {
+    "arr" : "*",
+    "bool": "*",
+    "num" : "*",
+    "obj" : "*",
+    "str" : "*"
+  }
 }

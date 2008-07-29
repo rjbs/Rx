@@ -20,10 +20,11 @@
   },
 
   "fail": {
-    "num"  : [ "0" ],
-    "str"  : [ "0" ],
-    "bool" : [ "true", "false" ],
     "arr"  : [ "0-str-3-18", "0-str-3-T-str", "0-str-3-T-F-T" ],
-    "obj"  : "*"
+    "bool" : "*",
+    "null" : "*",
+    "num"  : "*",
+    "obj"  : "*",
+    "str"  : "*"
   }
 }
