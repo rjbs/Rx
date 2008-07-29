@@ -1,0 +1,11 @@
+{
+  "schema": {
+    "type"    : "//arr",
+    "contents": { "type": "//int" },
+    "length"  : { "max": 3 }
+  },
+
+  "pass": {
+    "array": [ "empty", "0", "0-1", "0-1-1" ]
+  },
+]
