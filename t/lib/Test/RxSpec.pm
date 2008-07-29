@@ -47,11 +47,6 @@ sub data {
 my $fudge = {
   int => {
     str => "Perl has trouble with num/str distinction",
-    num => {
-      "5.1e1" => "I believe this gets expanded to 51 before testing",
-      "5.0"   => "I believe this gets expanded to 5 before testing",
-      "-5.0"  => "I believe this gets expanded to -5 before testing",
-    },
   },
 };
 
