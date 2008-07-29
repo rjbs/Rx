@@ -10,23 +10,27 @@ sub type      { 'map' }
 
 sub new {
   my ($class, $arg) = @_;
-  Carp::croak("no contents hash given")
-    unless $arg->{contents} and (ref $arg->{contents} eq 'HASH');
-  Carp::croak("unknown arguments to new") unless keys %$arg == 1;
 
-  my %content_check;
-  
-  for my $key (keys %{ $arg->{contents} }) {
-    my %key_arg  = %{ $arg->{contents}{$key} };
-    my $optional = delete $key_arg{optional};
+  Carp::croak("unknown arguments to new") unless
+  Data::Rx::Util->_x_subset_keys_y($arg, { required => 1, optional => 1 });
 
-    $content_check{ $key } = {
-      optional => $optional, 
-      checker  => Data::Rx->new->make_checker(\%key_arg),
-    };
+  my $content_check = {};
+
+  TYPE: for my $type (qw(required optional)) {
+    next TYPE unless my $entries = $arg->{$type};
+
+    for my $entry (keys %$entries) {
+      Carp::croak("$entry appears in both required and optional")
+        if $content_check->{ $entry };
+
+      $content_check->{ $entry } = {
+        optional => $type eq 'optional',
+        checker  => Data::Rx->new->make_checker($entries->{ $entry }),
+      };
+    }
   };
 
-  return bless { content_check => \%content_check } => $class;
+  return bless { content_check => $content_check } => $class;
 }
 
 sub check {
@@ -34,13 +38,14 @@ sub check {
 
   return unless
     ! Scalar::Util::blessed($value) and ref $value eq 'HASH';
-  
+
   my $c_check = $self->{content_check};
   return unless Data::Rx::Util->_x_subset_keys_y($value, $c_check);
 
   for my $key (keys %$c_check) {
-    return if not $c_check->{$key}{optional} and not exists $value->{$key};
-    return unless $c_check->{$key}{checker}->($value->{$key});
+    my $check = $c_check->{$key};
+    return if not $check->{optional} and not exists $value->{$key};
+    return if exists $value->{$key} and ! $check->{checker}->($value->{$key});
   }
 
   return 1;

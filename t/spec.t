@@ -13,7 +13,7 @@ plan 'no_plan';
 my @files = File::Find::Rule->file->in('spec/schemata');
 
 for my $type (@files) {
-  $type =~ s{^spec/schemata}{};
+  $type =~ s{^spec/schemata/}{};
   $type =~ s{\.json$}{};
   Test::RxSpec->test_spec($type);
 }

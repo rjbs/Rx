@@ -45,9 +45,10 @@ sub data {
 }
 
 my $fudge = {
-  int => {
-    str => "Perl has trouble with num/str distinction",
-  },
+  int => { str => "Perl has trouble with num/str distinction", },
+  num => { str => "Perl has trouble with num/str distinction", },
+  str => { num => "Perl has trouble with num/str distinction", },
+
   'array-3-int' => {
     arr => {
       '0-s1-1' => 'Perl has trouble with num/str distinction',
@@ -57,6 +58,7 @@ my $fudge = {
 
 sub fudge_reason {
   my ($schema, $source, $entry) = @_;
+
   return unless $fudge->{$schema}
      and my $se_reason = $fudge->{$schema}{$source};
 

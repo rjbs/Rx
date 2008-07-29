@@ -1,13 +1,13 @@
 {
-  "schema": { "type": "//num" },
+  "schema": { "type": "//str" },
   "pass": {
-    "num": "*"
+    "str": "*"
   },
   "fail": {
     "arr" : "*",
     "bool": "*",
     "null": "*",
-    "obj" : "*",
-    "str" : "*"
+    "num" : "*",
+    "obj" : "*"
   }
 }
