@@ -1,5 +1,11 @@
 [
-  { "type": "//map", "contents": { "key": { "type": "//int" } } },
+  {
+    "type": "//map",
+    "contents": {
+      "key": { "type": "//int" },
+      "opt": { "type": "//bool", "optional": 1 }
+    }
+  },
   [ false, "0"       ],
   [ false, "0e0"     ],
   [ false, "-0"      ],
