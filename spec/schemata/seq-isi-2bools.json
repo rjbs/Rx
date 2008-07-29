@@ -12,7 +12,7 @@
   },
 
   "pass": {
-    "array": [
+    "arr": [
       "0-str-3",
       "0-str-3-T",
       "0-str-3-T-F"
@@ -23,6 +23,7 @@
     "num"  : [ "0" ],
     "str"  : [ "0" ],
     "bool" : [ "true", "false" ],
-    "array": [ "0-str-3-18", "0-str-3-T-str", "0-str-3-T-F-T" ]
+    "arr"  : [ "0-str-3-18", "0-str-3-T-str", "0-str-3-T-F-T" ],
+    "obj"  : "*"
   }
 }

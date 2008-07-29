@@ -48,7 +48,9 @@ my $fudge = {
   int => {
     str => "Perl has trouble with num/str distinction",
     num => {
-      "5.1e1" => "I believe this gets expanded to 51 before testing",    
+      "5.1e1" => "I believe this gets expanded to 51 before testing",
+      "5.0"   => "I believe this gets expanded to 5 before testing",
+      "-5.0"  => "I believe this gets expanded to -5 before testing",
     },
   },
 };
@@ -79,7 +81,12 @@ sub test_spec {
 
   for my $pf (keys %pf) {
     for my $source (keys %{ $schema_test->{$pf} }) {
-      for my $entry (@{ $schema_test->{$pf}{ $source } }) {
+      my $entries = $schema_test->{$pf}{ $source };
+      my @entries = ref $entries    ? @$entries
+                  : $entries eq '*' ? keys %{ data->{$source} }
+                  : Carp::croak("invalid test specification: $entries");
+
+      for my $entry (@entries) {
         my $json  = data->{ $source }->{ $entry };
 
         my $input = dejson("[ $json ]")->[0];

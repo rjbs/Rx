@@ -2,10 +2,14 @@
   "schema": { "type": "//bool" },
 
   "pass": {
-    "bool": [ "false", "true" ]
+    "bool": "*"
   },
 
   "fail": {
-    "num": [ "0" ]
+    "arr" : "*",
+    "obj" : "*",
+    "num" : "*",
+    "str" : "*",
+    "null": "*"
   }
 }
