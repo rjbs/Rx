@@ -1,0 +1,28 @@
+{
+  "schema": {
+    "type": "//seq",
+    "contents": [
+      { "type": "//int" }, { "type": "//str" }, { "type": "//int" }
+    ],
+    "tail": {
+      "type": "//arr",
+      "contents": { "type": "//bool" },
+      "length":   { "max": 2 }
+    }
+  },
+
+  "pass": {
+    "array": [
+      "0-str-3",
+      "0-str-3-T",
+      "0-str-3-T-F"
+    ]
+  },
+
+  "fail": {
+    "num"  : [ "0" ],
+    "str"  : [ "0" ],
+    "bool" : [ "true", "false" ],
+    "array": [ "0-str-3-18", "0-str-3-T-str", "0-str-3-T-F-T" ]
+  }
+}
