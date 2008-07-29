@@ -48,6 +48,11 @@ my $fudge = {
   int => {
     str => "Perl has trouble with num/str distinction",
   },
+  'array-3-int' => {
+    arr => {
+      '0-s1-1' => 'Perl has trouble with num/str distinction',
+    },
+  },
 };
 
 sub fudge_reason {
