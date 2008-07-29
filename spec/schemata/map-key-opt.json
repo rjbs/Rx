@@ -10,7 +10,7 @@
   },
 
   "pass": {
-    "obj": [ "key-0", "key-1" ]
+    "obj": [ "key-0", "key-1", "key-0-opt-T" ]
   },
 
   "fail": {
@@ -18,7 +18,7 @@
     "bool": "*",
     "null": "*",
     "num" : "*",
-    "obj" : [ "empty", "key-pants", "key-1-unknown" ],
+    "obj" : [ "empty", "key-pants", "key-1-unknown", "key-0-opt-1" ],
     "str" : "*"
   }
 }

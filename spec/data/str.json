@@ -8,5 +8,6 @@
   "x"  : "\"x\"",
   "false": "\"false\"",
   "true" : "\"true\"",
-  "null" : "\"null\""
+  "null" : "\"null\"",
+  "empty": "\"\""
 }
