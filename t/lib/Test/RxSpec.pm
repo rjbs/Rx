@@ -74,7 +74,13 @@ sub test_spec {
   my $schema_test = dejson($schema_json);
 
   my $rx = Data::Rx->new;
-  my $checker = $rx->make_checker($schema_test->{schema});
+  my $checker = eval { $rx->make_checker($schema_test->{schema}) };
+  my $error   = $@;
+
+  if ($schema_test->{invalid}) {
+    ok($error && ! $checker, "BAD SCHEMA: $schema");
+    return;
+  }
 
   my %pf = (
     pass => sub { ok($checker->($_[0]),   "VALID  : $_[2] against $_[1]") },

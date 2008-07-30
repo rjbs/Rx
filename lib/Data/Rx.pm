@@ -28,10 +28,10 @@ sub make_checker {
   my ($self, $schema, $arg) = @_;
   $arg ||= {};
 
-  my $type = $schema->{type};
+  Carp::croak("no type name given") unless my $type = $schema->{type};
   my ($authority, $type_name) = $type =~ m{\A / (\w*) / (\w+) \z}x;
 
-  die "unknown schema: $type"
+  die "unknown type name: $type"
     unless my $handler = $self->{handlers}{ $authority }{ $type_name };
 
   my $schema_arg = {%$schema};
