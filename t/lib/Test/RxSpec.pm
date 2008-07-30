@@ -10,16 +10,17 @@ use Test::More;
 
 my $JSON = JSON::XS->new;
 
-sub dejson {
-  my ($json) = @_;
-  my $data = eval { $JSON->decode($json) };
-  die "$@ (in $json)" unless $data;
-  return $data;
-}
-
 sub slurp {
   my $fn = shift || $_;
-  my $json = do { local $/; open my $fh, '<', "spec/$fn.json"; <$fh> };
+  my $json = do { local $/; open my $fh, '<', $fn; <$fh> };
+}
+
+sub slurp_json {
+  my ($fn) = shift || $_;
+  $fn = "spec/$fn.json";
+  my $data = eval { $JSON->decode( slurp($fn) ) };
+  die "$@ (in $fn)" unless $data;
+  return $data;
 }
 
 # I really, really should go to bed before this gets any more awful.
@@ -33,8 +34,7 @@ sub data {
   for (File::Find::Rule->file->in('spec/data')) {
     s{spec/}{};
     s{\.json}{};
-    my $data_json = slurp;
-    my $data = dejson($data_json);
+    my $data = slurp_json;
     $data = { map { $_ => $_ } @$data } if ref $data eq 'ARRAY';
 
     s{data/}{};
@@ -70,8 +70,7 @@ sub fudge_reason {
 sub test_spec {
   my ($self, $schema) = @_;
 
-  my $schema_json = slurp("schemata/$schema");
-  my $schema_test = dejson($schema_json);
+  my $schema_test = slurp_json("schemata/$schema");
 
   my $rx = Data::Rx->new;
   my $checker = eval { $rx->make_checker($schema_test->{schema}) };
@@ -97,7 +96,7 @@ sub test_spec {
       for my $entry (@entries) {
         my $json  = data->{ $source }->{ $entry };
 
-        my $input = dejson("[ $json ]")->[0];
+        my $input = $JSON->decode("[ $json ]")->[0];
 
         TODO: {
           my $reason = fudge_reason($schema, $source, $entry);
