@@ -10,15 +10,11 @@ use Test::More;
 
 my $JSON = JSON::XS->new;
 
-sub slurp {
-  my $fn = shift || $_;
-  my $json = do { local $/; open my $fh, '<', $fn; <$fh> };
-}
-
 sub slurp_json {
   my ($fn) = shift || $_;
   $fn = "spec/$fn.json";
-  my $data = eval { $JSON->decode( slurp($fn) ) };
+  my $json = do { local $/; open my $fh, '<', $fn; <$fh> };
+  my $data = eval { $JSON->decode( $json ) };
   die "$@ (in $fn)" unless $data;
   return $data;
 }
@@ -80,6 +76,9 @@ sub test_spec {
     ok($error && ! $checker, "BAD SCHEMA: $schema");
     return;
   }
+
+  Carp::croak("could not produce validator for valid input ($schema): $error")
+    unless $checker;
 
   my %pf = (
     pass => sub { ok($checker->($_[0]),   "VALID  : $_[2] against $_[1]") },
