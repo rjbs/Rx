@@ -65,3 +65,12 @@ for (i in schema_to_test.sort()) {
     }
   }
 }
+
+for (source in test_data) {
+  for (entry in test_data[source]) {
+    var jsonSnippet = test_data[source][entry];
+    var jsonArray = '[' + jsonSnippet + ']';
+    var entryData = jsonParse(jsonArray);
+    test_data[source][entry] = entryData[0];
+  }
+}
