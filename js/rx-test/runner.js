@@ -6,20 +6,7 @@ print('1..' + plan.totalTests);
 var currentTest = 1;
 
 load('js/rx.js');
-var rx = new Rx({});
-rx.authority[''] = {
-  any   : Rx.CoreType.anyType,
-  arr   : Rx.CoreType.arrType,
-  bool  : Rx.CoreType.boolType,
-  def   : Rx.CoreType.defType,
-  'int' : Rx.CoreType.intType,
-  map   : Rx.CoreType.mapType,
-  nil   : Rx.CoreType.nilType,
-  num   : Rx.CoreType.numType,
-  seq   : Rx.CoreType.seqType,
-  str   : Rx.CoreType.strType,
-  scalar: Rx.CoreType.scalarType,
-};
+var rx = new Rx({ defaultTypes: true });
 
 var schemaToTest = [];
 for (schemaName in plan.testSchema) schemaToTest.push(schemaName);

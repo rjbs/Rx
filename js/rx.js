@@ -1,6 +1,22 @@
 
 function Rx (opt) {
   this.authority = { };
+
+  if (opt.defaultTypes) {
+    this.authority[''] = {
+      any   : Rx.CoreType.anyType,
+      arr   : Rx.CoreType.arrType,
+      bool  : Rx.CoreType.boolType,
+      def   : Rx.CoreType.defType,
+      'int' : Rx.CoreType.intType,
+      map   : Rx.CoreType.mapType,
+      nil   : Rx.CoreType.nilType,
+      num   : Rx.CoreType.numType,
+      seq   : Rx.CoreType.seqType,
+      str   : Rx.CoreType.strType,
+      scalar: Rx.CoreType.scalarType,
+    };
+  }
 }
 
 Rx.CoreType = function () { throw 'you cannot make a Rx.CoreType directly' };
@@ -18,11 +34,6 @@ Rx.CoreType.strType  = function (opt) {};
 
 Rx.CoreType.scalarType  = function (opt) {};
 
-//for (type in Rx.CoreType) {
-//  (Rx.CoreType)[type].prototype = Rx.CoreType;
-//}
-
-Rx.CoreType.prototype.check = function (value) { throw 'unimplemented'; };
 Rx.CoreType.anyType.prototype.check  = function (v) { return true; };
 Rx.CoreType.arrType.prototype.check  = function (v) { return v instanceof Array; };
 Rx.CoreType.boolType.prototype.check = function (v) { return v instanceof Boolean; };
