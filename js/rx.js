@@ -1,11 +1,44 @@
 
-function Rx (options) {
+function Rx (opt) {
   this.authority = { };
 }
 
-Rx.CoreType = { 
-  intType: function () {},
+Rx.CoreType = function () { throw 'you cannot make a Rx.CoreType directly' };
+
+Rx.CoreType.anyType  = function (opt) {};
+Rx.CoreType.arrType  = function (opt) {};
+Rx.CoreType.boolType = function (opt) {};
+Rx.CoreType.defType  = function (opt) {};
+Rx.CoreType.intType  = function (opt) {};
+Rx.CoreType.mapType  = function (opt) {};
+Rx.CoreType.nilType  = function (opt) {};
+Rx.CoreType.numType  = function (opt) {};
+Rx.CoreType.seqType  = function (opt) {};
+Rx.CoreType.strType  = function (opt) {};
+
+Rx.CoreType.scalarType  = function (opt) {};
+
+//for (type in Rx.CoreType) {
+//  (Rx.CoreType)[type].prototype = Rx.CoreType;
+//}
+
+Rx.CoreType.prototype.check = function (value) { throw 'unimplemented'; };
+Rx.CoreType.anyType.prototype.check  = function (v) { return true; };
+Rx.CoreType.arrType.prototype.check  = function (v) { return v instanceof Array; };
+Rx.CoreType.boolType.prototype.check = function (v) { return v instanceof Boolean; };
+Rx.CoreType.defType.prototype.check  = function (v) { return v != null; };
+Rx.CoreType.intType.prototype.check  = function (v) {
+  return((v instanceof Number) && (Math.floor(v) == v));
 };
+Rx.CoreType.mapType.prototype.check  = function (v) { return typeof(v) == 'object';};
+Rx.CoreType.nilType.prototype.check  = function (v) { return v === null };
+Rx.CoreType.numType.prototype.check  = function (v) { return v instanceof Number; };
+Rx.CoreType.scalarType.prototype.check = function (v) {
+  return
+    (v instanceof String) || (v instanceof Boolean) || (v instanceof Number);
+};
+Rx.CoreType.seqType.prototype.check  = function (v) { return v instanceof Array; };
+Rx.CoreType.strType.prototype.check  = function (v) { return v instanceof String; };
 
 Rx.parseTypeName = function (name) {
   var matches = name.match(/^\/(\w*)\/(\w+)$/);
@@ -31,7 +64,7 @@ Rx.prototype._checkerFor = function (schemaType) {
 };
 
 Rx.prototype.make_checker = function (schema) {
-  var checkerMaker = this._checkerFor(schema.type);
+  var typeChecker = this._checkerFor(schema.type);
 
-  checkerMaker.checkerFor(schema);
+  return new typeChecker(schema);
 };

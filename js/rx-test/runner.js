@@ -7,6 +7,19 @@ var currentTest = 1;
 
 load('js/rx.js');
 var rx = new Rx({});
+rx.authority[''] = {
+  any   : Rx.CoreType.anyType,
+  arr   : Rx.CoreType.arrType,
+  bool  : Rx.CoreType.boolType,
+  def   : Rx.CoreType.defType,
+  'int' : Rx.CoreType.intType,
+  map   : Rx.CoreType.mapType,
+  nil   : Rx.CoreType.nilType,
+  num   : Rx.CoreType.numType,
+  seq   : Rx.CoreType.seqType,
+  str   : Rx.CoreType.strType,
+  scalar: Rx.CoreType.scalarType,
+};
 
 var schemaToTest = [];
 for (schemaName in plan.testSchema) schemaToTest.push(schemaName);
@@ -31,7 +44,7 @@ for (i in schemaToTest) {
         var sourceEntry = sourceTests[j];
         var testData = sourceData[ sourceEntry ];
 
-        var valid  = rxChecker( testData );
+        var valid  = rxChecker.check( testData );
         var expect = pf == 'pass';
 
         var testDesc = (expect ? 'VALID  : ' : 'INVALID: ')
