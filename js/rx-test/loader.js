@@ -31,6 +31,21 @@ var loadRxTests = (function (specRoot) {
     }
   }
 
+  for (source in testData) {
+    if (testData[source] instanceof Array) {
+      var newData = { };
+      for (i in testData[source])
+        newData[ testData[source][i] ] = testData[source][i];
+      testData[source] = newData;
+    }
+    for (entry in testData[source]) {
+      var jsonSnippet = testData[source][entry];
+      var jsonArray = '[' + jsonSnippet + ']';
+      var entryData = jsonParse(jsonArray);
+      testData[source][entry] = entryData[0];
+    }
+  }
+
   // XXX: Honestly, this is moronic.  There should be an obj.props().sort()..?
   // -- rjbs, 2008-07-30
   var schemaToTest = [];
@@ -64,15 +79,6 @@ var loadRxTests = (function (specRoot) {
 
         totalTests += entries.length;
       }
-    }
-  }
-
-  for (source in testData) {
-    for (entry in testData[source]) {
-      var jsonSnippet = testData[source][entry];
-      var jsonArray = '[' + jsonSnippet + ']';
-      var entryData = jsonParse(jsonArray);
-      testData[source][entry] = entryData[0];
     }
   }
 
