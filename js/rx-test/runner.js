@@ -2,18 +2,12 @@ load('js/rx-test/loader.js');
 
 var plan = loadRxTests('spec');
 
-function Rx () {
-  this.make_checker = function (schema) {
-    return function (value) {
-      return false;
-    };
-  };
-}
-
 print('1..' + plan.totalTests);
 var currentTest = 1;
 
-var rx = new Rx();
+load('js/rx.js');
+var rx = new Rx({});
+
 var schemaToTest = [];
 for (schemaName in plan.testSchema) schemaToTest.push(schemaName);
 schemaToTest = schemaToTest.sort();
@@ -26,7 +20,7 @@ for (i in schemaToTest) {
     continue;
   }
 
-  var rxChecker = rx.make_checker(schemaTest);
+  var rxChecker = rx.make_checker(schemaTest.schema);
 
   for (pf in { pass: 1, fail: 1 }) {
     for (sourceName in schemaTest[pf]) {

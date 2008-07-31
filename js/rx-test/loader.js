@@ -1,5 +1,5 @@
 var loadRxTests = (function (specRoot) {
-  load('js/json_sans_eval.js');
+  load('js/ext/json_sans_eval.js');
 
   var indexJSON = readFile(specRoot + '/index.json');
   var index = jsonParse(indexJSON);
