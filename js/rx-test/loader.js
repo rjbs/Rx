@@ -35,13 +35,15 @@ var loadRxTests = (function (specRoot) {
   // -- rjbs, 2008-07-30
   var schemaToTest = [];
   for (schema in testSchema) schemaToTest.push(schema);
-  for (i in schemaToTest.sort()) {
+  schemaToTest = schemaToTest.sort();
+  for (i in schemaToTest) {
     var schemaName = schemaToTest[i];
     var schema = testSchema[ schemaName ];
-    print("now going to test " + schemaName + "...");
 
     if (schema.invalid) {
-      print("...expecting BAD SCHEMA");
+      totalTests++;
+      if (schema.pass || schema.fail)
+        throw 'invalid test: ' + schemaName + ' is invalid but has pass/fail';
       continue;
     }
 
@@ -49,20 +51,18 @@ var loadRxTests = (function (specRoot) {
 
     for (pf in expect) {
       for (source in schema[pf]) {
-        print(pf + ' for ' + source);
         entries = schema[pf][source];
 
         if (entries instanceof Array) {
           // keep as is
         } else if (entries == '*') {
-          entries = [];
+          schema[pf][source] = entries = [];
           for (entry in testData[source]) entries.push(entry);
         } else {
           throw 'invalid entry in ' + pf + ' for schemaName: ' + source;
         }
 
-        for (i in entries)
-          print('...expected ' + pf + ' for ' + source + '/' + entries[i]);
+        totalTests += entries.length;
       }
     }
   }
@@ -75,4 +75,10 @@ var loadRxTests = (function (specRoot) {
       testData[source][entry] = entryData[0];
     }
   }
+
+  return {
+    totalTests: totalTests,
+    testData  : testData,
+    testSchema: testSchema,
+  };
 });
