@@ -37,7 +37,7 @@ Rx.prototype._checkerFor = function (schemaType) {
 Rx.prototype.make_checker = function (schema) {
   var typeChecker = this._checkerFor(schema.type);
 
-  return new typeChecker(schema);
+  return new typeChecker(schema, this);
 };
 
 Rx.Error = function (message) { this.message = message };
