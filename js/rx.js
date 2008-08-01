@@ -1,55 +1,15 @@
-
 function Rx (opt) {
   this.authority = { };
-
-  if (opt.defaultTypes) {
-    this.authority[''] = {
-      any   : Rx.CoreType.anyType,
-      arr   : Rx.CoreType.arrType,
-      bool  : Rx.CoreType.boolType,
-      def   : Rx.CoreType.defType,
-      'int' : Rx.CoreType.intType,
-      map   : Rx.CoreType.mapType,
-      nil   : Rx.CoreType.nilType,
-      num   : Rx.CoreType.numType,
-      seq   : Rx.CoreType.seqType,
-      str   : Rx.CoreType.strType,
-      scalar: Rx.CoreType.scalarType,
-    };
-  }
 }
 
-Rx.CoreType = function () { throw 'you cannot make a Rx.CoreType directly' };
+Rx.prototype.registerType = function (type, opt) {
+  var sn = type.schemaName;
+  var auth = this.authority[ sn.authorityName ];
 
-Rx.CoreType.anyType  = function (opt) {};
-Rx.CoreType.arrType  = function (opt) {};
-Rx.CoreType.boolType = function (opt) {};
-Rx.CoreType.defType  = function (opt) {};
-Rx.CoreType.intType  = function (opt) {};
-Rx.CoreType.mapType  = function (opt) {};
-Rx.CoreType.nilType  = function (opt) {};
-Rx.CoreType.numType  = function (opt) {};
-Rx.CoreType.seqType  = function (opt) {};
-Rx.CoreType.strType  = function (opt) {};
-
-Rx.CoreType.scalarType  = function (opt) {};
-
-Rx.CoreType.anyType.prototype.check  = function (v) { return true; };
-Rx.CoreType.arrType.prototype.check  = function (v) { return v instanceof Array; };
-Rx.CoreType.boolType.prototype.check = function (v) { return v instanceof Boolean; };
-Rx.CoreType.defType.prototype.check  = function (v) { return v != null; };
-Rx.CoreType.intType.prototype.check  = function (v) {
-  return((v instanceof Number) && (Math.floor(v) == v));
+  if (! auth) auth = this.authority[ sn.authorityName ] = {};
+  if (auth[ sn.dataTypeName ]) throw 'registration already present';
+  auth[ sn.dataTypeName ] = type;
 };
-Rx.CoreType.mapType.prototype.check  = function (v) { return typeof(v) == 'object';};
-Rx.CoreType.nilType.prototype.check  = function (v) { return v === null };
-Rx.CoreType.numType.prototype.check  = function (v) { return v instanceof Number; };
-Rx.CoreType.scalarType.prototype.check = function (v) {
-  return
-    (v instanceof String) || (v instanceof Boolean) || (v instanceof Number);
-};
-Rx.CoreType.seqType.prototype.check  = function (v) { return v instanceof Array; };
-Rx.CoreType.strType.prototype.check  = function (v) { return v instanceof String; };
 
 Rx.parseTypeName = function (name) {
   var matches = name.match(/^\/(\w*)\/(\w+)$/);
@@ -79,3 +39,22 @@ Rx.prototype.make_checker = function (schema) {
 
   return new typeChecker(schema);
 };
+
+Rx.Error = function (message) { this.message = message };
+
+Rx.Util = {};
+
+Rx.Util._x_subset_keys_y = function (x, y) {
+  var x_props = [];
+  var y_props = [];
+
+  for (i in x) x_props.push(x[i]);
+  for (i in y) y_props.push(y[i]);
+
+  if (x.length > y.length) return false;
+  // My JavaScript is lousy; I need something like obj.hasProp(name) -- rjbs,
+  // 2008-07-31
+  for (i in x) if (! y[ i ]) return false;
+  return true;
+};
+

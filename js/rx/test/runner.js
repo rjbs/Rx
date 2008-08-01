@@ -1,4 +1,4 @@
-load('js/rx-test/loader.js');
+load('js/rx/test/loader.js');
 
 var plan = loadRxTests('spec');
 
@@ -6,7 +6,10 @@ print('1..' + plan.totalTests);
 var currentTest = 1;
 
 load('js/rx.js');
+load('js/rx/coretypes.js');
 var rx = new Rx({ defaultTypes: true });
+
+for (coreType in Rx.CoreType) rx.registerType( Rx.CoreType[coreType] );
 
 var schemaToTest = [];
 for (schemaName in plan.testSchema) schemaToTest.push(schemaName);
@@ -15,12 +18,22 @@ for (i in schemaToTest) {
   var schemaName = schemaToTest[i];
   var schemaTest = plan.testSchema[ schemaName ];
 
+  var rxChecker;
+
+  try {
+    rxChecker = rx.make_checker(schemaTest.schema);
+  } catch (e) {
+    if (schemaTest.invalid && (e instanceof Rx.Error)) {
+      print('ok ' + currentTest++ + ' - BAD SCHEMA: ' + schemaName);
+      continue;
+    }
+    throw e;
+  }
+
   if (schemaTest.invalid) {
     print('not ok ' + currentTest++ + ' - BAD SCHEMA: ' + schemaName);
     continue;
   }
-
-  var rxChecker = rx.make_checker(schemaTest.schema);
 
   for (pf in { pass: 1, fail: 1 }) {
     for (sourceName in schemaTest[pf]) {
