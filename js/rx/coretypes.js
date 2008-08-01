@@ -11,7 +11,7 @@ Rx.CoreType.anyType.prototype.check  = function (v) { return true; };
 Rx.CoreType.boolType = function (opt) {};
 Rx.CoreType.boolType.schemaName = Rx.parseTypeName('//bool');
 Rx.CoreType.boolType.prototype.check = function (v) {
-  return typeof(v) == 'boolean';
+  return((typeof(v) == 'boolean') || (v instanceof Boolean));
 };
 
 Rx.CoreType.defType  = function (opt) {};
@@ -24,7 +24,9 @@ Rx.CoreType.intType  = function (opt) {
 };
 Rx.CoreType.intType.schemaName = Rx.parseTypeName('//int');
 Rx.CoreType.intType.prototype.check  = function (v) {
-  return((typeof(v) == 'number') && (Math.floor(v) == v));
+  return(
+    ((typeof(v) == 'number') || (v instanceof Number)) && (Math.floor(v) == v)
+  );
 };
 
 Rx.CoreType.nilType  = function (opt) {};
@@ -34,13 +36,13 @@ Rx.CoreType.nilType.prototype.check  = function (v) { return v === null };
 Rx.CoreType.numType  = function (opt) {};
 Rx.CoreType.numType.schemaName = Rx.parseTypeName('//num');
 Rx.CoreType.numType.prototype.check  = function (v) {
-  return typeof(v) == 'number';
+  return((typeof(v) == 'number') || (v instanceof Number));
 };
 
 Rx.CoreType.strType  = function (opt) {};
 Rx.CoreType.strType.schemaName = Rx.parseTypeName('//str');
 Rx.CoreType.strType.prototype.check  = function (v) {
-  return typeof(v) == 'string';
+  return((typeof(v) == 'string') || (v instanceof String));
 };
 
 Rx.CoreType.scalarType  = function (opt) {};
@@ -49,9 +51,9 @@ Rx.CoreType.scalarType.prototype.check = function (v) {
   // for some reason this was false: (false instanceof Boolean)
   return (
     (v === null)
-    || (typeof(v) == 'string')
-    || (typeof(v) == 'boolean')
-    || (typeof(v) == 'number')
+    || ((typeof(v) == 'string')  || (v instanceof String))
+    || ((typeof(v) == 'boolean') || (v instanceof Boolean))
+    || ((typeof(v) == 'number')  || (v instanceof Number))
   );
 };
 
