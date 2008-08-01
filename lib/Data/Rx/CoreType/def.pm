@@ -10,6 +10,6 @@ sub check {
 }
 
 sub authority { '' }
-sub type      { 'def' }
+sub subname   { 'def' }
 
 1;

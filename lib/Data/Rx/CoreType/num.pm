@@ -31,6 +31,6 @@ sub check {
 }
 
 sub authority { '' }
-sub type      { 'num' }
+sub subname   { 'num' }
 
 1;

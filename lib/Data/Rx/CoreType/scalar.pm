@@ -12,6 +12,6 @@ sub check {
 }
 
 sub authority { '' }
-sub type      { 'scalar' }
+sub subname   { 'scalar' }
 
 1;

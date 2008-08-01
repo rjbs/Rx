@@ -9,7 +9,7 @@ Rx.parseTypeName = function (name) {
 
   return {
     authorityName: matches[1],
-    typeLeafName : matches[2],
+    subName      : matches[2],
   };
 }
 
@@ -18,8 +18,8 @@ Rx.prototype.registerType = function (type, opt) {
   var auth = this.authority[ sn.authorityName ];
 
   if (! auth) auth = this.authority[ sn.authorityName ] = {};
-  if (auth[ sn.typeLeafName ]) throw 'registration already present';
-  auth[ sn.typeLeafName ] = type;
+  if (auth[ sn.subName ]) throw 'registration already present';
+  auth[ sn.subName ] = type;
 };
 
 Rx.prototype.typeFor = function (typeName) {
@@ -28,7 +28,7 @@ Rx.prototype.typeFor = function (typeName) {
   var auth = this.authority[sn.authorityName];
   if (!auth) throw 'unknown authority in: ' + typeName;
 
-  var typeChecker = auth[sn.typeLeafName];
+  var typeChecker = auth[sn.subName];
   if (! typeChecker) throw 'unknown datatype in: ' + typeName;
 
   return typeChecker;

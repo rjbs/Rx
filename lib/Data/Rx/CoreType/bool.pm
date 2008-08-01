@@ -14,6 +14,6 @@ sub check {
 }
 
 sub authority { '' }
-sub type      { 'bool' }
+sub subname   { 'bool' }
 
 1;

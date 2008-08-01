@@ -4,7 +4,7 @@ package Data::Rx::CoreType::int;
 use base 'Data::Rx::CoreType::num';
 
 sub authority { '' }
-sub type      { 'int' }
+sub subname   { 'int' }
 
 sub check {
   my ($self, $value) = @_;

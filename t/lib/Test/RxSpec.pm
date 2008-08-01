@@ -64,25 +64,25 @@ sub fudge_reason {
 }
 
 sub test_spec {
-  my ($self, $schema) = @_;
+  my ($self, $schema_fn) = @_;
 
-  my $schema_test = slurp_json("schemata/$schema");
+  my $schema_test = slurp_json("schemata/$schema_fn");
 
   my $rx = Data::Rx->new;
-  my $checker = eval { $rx->make_checker($schema_test->{schema}) };
+  my $schema = eval { $rx->make_schema($schema_test->{schema}) };
   my $error   = $@;
 
   if ($schema_test->{invalid}) {
-    ok($error && ! $checker, "BAD SCHEMA: $schema");
+    ok($error && ! $schema, "BAD SCHEMA: $schema_fn");
     return;
   }
 
-  Carp::croak("could not produce validator for valid input ($schema): $error")
-    unless $checker;
+  Carp::croak("could not produce schema for valid input ($schema_fn): $error")
+    unless $schema;
 
   my %pf = (
-    pass => sub { ok($checker->($_[0]),   "VALID  : $_[2] against $_[1]") },
-    fail => sub { ok(! $checker->($_[0]), "INVALID: $_[2] against $_[1]") },
+    pass => sub { ok($schema->check($_[0]),   "VALID  : $_[2] against $_[1]") },
+    fail => sub { ok(! $schema->check($_[0]), "INVALID: $_[2] against $_[1]") },
   );
 
   for my $pf (keys %pf) {
@@ -98,9 +98,9 @@ sub test_spec {
         my $input = $JSON->decode("[ $json ]")->[0];
 
         TODO: {
-          my $reason = fudge_reason($schema, $source, $entry);
+          my $reason = fudge_reason($schema_fn, $source, $entry);
           local $TODO = $reason if $reason;
-          $pf{$pf}->($input, $schema, "$source/$entry");
+          $pf{$pf}->($input, $schema_fn, "$source/$entry");
         }
       }
     }

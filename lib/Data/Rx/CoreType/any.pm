@@ -6,6 +6,6 @@ use base 'Data::Rx::CoreType';
 sub check { return 1 }
 
 sub authority { '' }
-sub type      { 'any' }
+sub subname   { 'any' }
 
 1;
