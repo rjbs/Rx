@@ -21,7 +21,7 @@ for (i in schemaToTest) {
   var rxChecker;
 
   try {
-    rxChecker = rx.make_checker(schemaTest.schema);
+    rxChecker = rx.makeSchema(schemaTest.schema);
   } catch (e) {
     if (schemaTest.invalid && (e instanceof Rx.Error)) {
       print('ok ' + currentTest++ + ' - BAD SCHEMA: ' + schemaName);

@@ -5,24 +5,24 @@ Rx.CoreType = {};
 // Simple types
 
 Rx.CoreType.anyType  = function (opt) {};
-Rx.CoreType.anyType.schemaName = Rx.parseTypeName('//any');
+Rx.CoreType.anyType.typeName = Rx.parseTypeName('//any');
 Rx.CoreType.anyType.prototype.check  = function (v) { return true; };
 
 Rx.CoreType.boolType = function (opt) {};
-Rx.CoreType.boolType.schemaName = Rx.parseTypeName('//bool');
+Rx.CoreType.boolType.typeName = Rx.parseTypeName('//bool');
 Rx.CoreType.boolType.prototype.check = function (v) {
   return((typeof(v) == 'boolean') || (v instanceof Boolean));
 };
 
 Rx.CoreType.defType  = function (opt) {};
-Rx.CoreType.defType.schemaName = Rx.parseTypeName('//def');
+Rx.CoreType.defType.typeName = Rx.parseTypeName('//def');
 Rx.CoreType.defType.prototype.check  = function (v) { return v != null; };
 
 Rx.CoreType.intType  = function (opt) {
   if (! Rx.Util._x_subset_keys_y(opt, { type: true }))
     throw new Rx.Error('unknown argument for int type');
 };
-Rx.CoreType.intType.schemaName = Rx.parseTypeName('//int');
+Rx.CoreType.intType.typeName = Rx.parseTypeName('//int');
 Rx.CoreType.intType.prototype.check  = function (v) {
   return(
     ((typeof(v) == 'number') || (v instanceof Number)) && (Math.floor(v) == v)
@@ -30,23 +30,23 @@ Rx.CoreType.intType.prototype.check  = function (v) {
 };
 
 Rx.CoreType.nilType  = function (opt) {};
-Rx.CoreType.nilType.schemaName = Rx.parseTypeName('//nil');
+Rx.CoreType.nilType.typeName = Rx.parseTypeName('//nil');
 Rx.CoreType.nilType.prototype.check  = function (v) { return v === null };
 
 Rx.CoreType.numType  = function (opt) {};
-Rx.CoreType.numType.schemaName = Rx.parseTypeName('//num');
+Rx.CoreType.numType.typeName = Rx.parseTypeName('//num');
 Rx.CoreType.numType.prototype.check  = function (v) {
   return((typeof(v) == 'number') || (v instanceof Number));
 };
 
 Rx.CoreType.strType  = function (opt) {};
-Rx.CoreType.strType.schemaName = Rx.parseTypeName('//str');
+Rx.CoreType.strType.typeName = Rx.parseTypeName('//str');
 Rx.CoreType.strType.prototype.check  = function (v) {
   return((typeof(v) == 'string') || (v instanceof String));
 };
 
 Rx.CoreType.scalarType  = function (opt) {};
-Rx.CoreType.scalarType.schemaName = Rx.parseTypeName('//scalar');
+Rx.CoreType.scalarType.typeName = Rx.parseTypeName('//scalar');
 Rx.CoreType.scalarType.prototype.check = function (v) {
   // for some reason this was false: (false instanceof Boolean)
   return (
@@ -66,7 +66,7 @@ Rx.CoreType.arrType  = function (opt, rx) {
   if (! opt.contents.type)
     throw new Rx.Error('contents arg for arr type must declare a type');
 
-  this.content_check = rx.make_checker(opt.contents);
+  this.content_check = rx.makeSchema(opt.contents);
   if (opt.length) {
     this.length_check = new Rx.Util.RangeChecker(
       { allowNegative: false, allowFraction: false, allowExclusive: false },
@@ -74,7 +74,7 @@ Rx.CoreType.arrType  = function (opt, rx) {
     );
   }
 };
-Rx.CoreType.arrType.schemaName = Rx.parseTypeName('//arr');
+Rx.CoreType.arrType.typeName = Rx.parseTypeName('//arr');
 Rx.CoreType.arrType.prototype.check  = function (v) {
   if (! (v instanceof Array)) return false;
 
@@ -99,7 +99,7 @@ Rx.CoreType.mapType = function (opt, rx) {
       this.allowed[prop] = true;
       if (opt.optional && opt.optional[prop])
         throw new Rx.Error(prop + ' appears in both optional and required');
-      this.required[prop] = rx.make_checker(opt.required[prop]);
+      this.required[prop] = rx.makeSchema(opt.required[prop]);
     }
   }
 
@@ -107,12 +107,12 @@ Rx.CoreType.mapType = function (opt, rx) {
     this.optional = {};
     for (prop in opt.optional) {
       this.allowed[prop] = true;
-      this.optional[prop] = rx.make_checker(opt.optional[prop]);
+      this.optional[prop] = rx.makeSchema(opt.optional[prop]);
     }
   }
 };
 Rx.CoreType.mapType._valid_options =  { type: 1, required: 1, optional: 1 };
-Rx.CoreType.mapType.schemaName = Rx.parseTypeName('//map');
+Rx.CoreType.mapType.typeName = Rx.parseTypeName('//map');
 Rx.CoreType.mapType.prototype.check  = function (v) {
   if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
     return false;
@@ -141,13 +141,13 @@ Rx.CoreType.seqType  = function (opt, rx) {
 
   this.content_checks = [];
   for (i in opt.contents)
-    this.content_checks[i] = rx.make_checker(opt.contents[i]);
+    this.content_checks[i] = rx.makeSchema(opt.contents[i]);
 
   if (opt.tail) {
-    this.tail_check = rx.make_checker(opt.tail);
+    this.tail_check = rx.makeSchema(opt.tail);
   }
 };
-Rx.CoreType.seqType.schemaName = Rx.parseTypeName('//seq');
+Rx.CoreType.seqType.typeName = Rx.parseTypeName('//seq');
 Rx.CoreType.seqType.prototype.check  = function (v) {
   if (!(v instanceof Array)) return false;
 
