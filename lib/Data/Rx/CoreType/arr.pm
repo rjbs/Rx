@@ -9,7 +9,8 @@ sub authority { '' }
 sub subname   { 'arr' }
 
 sub new {
-  my ($class, $arg) = @_;
+  my ($class, $arg, $rx) = @_;
+  my $self = $class->SUPER::new({}, $rx);
 
   Carp::croak("no contents hash given")
     unless $arg->{contents} and (ref $arg->{contents} eq 'HASH');
@@ -17,11 +18,9 @@ sub new {
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, {length=>1, contents=>1});
 
-  my $content_check = Data::Rx->new->make_schema($arg->{contents});
+  my $content_check = $rx->make_schema($arg->{contents});
 
-  my $self = {
-    content_check => $content_check,
-  };
+  $self->{content_check} = $content_check;
 
   if ($arg->{length}) {
     $self->{length_check} = Data::Rx::Util->_make_range_check(

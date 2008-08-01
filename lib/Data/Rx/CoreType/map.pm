@@ -9,7 +9,8 @@ sub authority { '' }
 sub subname   { 'map' }
 
 sub new {
-  my ($class, $arg) = @_;
+  my ($class, $arg, $rx) = @_;
+  my $self = $class->SUPER::new({}, $rx);
 
   Carp::croak("unknown arguments to new") unless
   Data::Rx::Util->_x_subset_keys_y($arg, { required => 1, optional => 1 });
@@ -25,12 +26,13 @@ sub new {
 
       $content_schema->{ $entry } = {
         optional => $type eq 'optional',
-        schema   => Data::Rx->new->make_schema($entries->{ $entry }),
+        schema   => $rx->make_schema($entries->{ $entry }),
       };
     }
   };
 
-  return bless { content_schema => $content_schema } => $class;
+  $self->{content_schema} = $content_schema;
+  return $self;
 }
 
 sub check {

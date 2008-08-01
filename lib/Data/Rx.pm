@@ -36,7 +36,7 @@ sub make_schema {
 
   my $schema_arg = {%$schema};
   delete $schema_arg->{type};
-  my $checker = $handler->new($schema_arg);
+  my $checker = $handler->new($schema_arg, $self);
 
   return $checker;
 }

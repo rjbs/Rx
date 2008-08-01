@@ -9,7 +9,8 @@ sub authority { '' }
 sub subname   { 'seq' }
 
 sub new {
-  my ($class, $arg) = @_;
+  my ($class, $arg, $rx) = @_;
+  my $self = $class->SUPER::new({}, $rx);
 
   Carp::croak("no contents array given")
     unless $arg->{contents} and (ref $arg->{contents} eq 'ARRAY');
@@ -17,17 +18,15 @@ sub new {
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, {contents=>1,tail=>1});
 
-  my @content_schemata = map { Data::Rx->new->make_schema($_) }
+  my @content_schemata = map { $rx->make_schema($_) }
                          @{ $arg->{contents} };
 
-  my $self = {
-    content_schemata => \@content_schemata,
-    tail_check       => $arg->{tail}
-                      ? Data::Rx->new->make_schema($arg->{tail})
-                      : undef
-  };
+  $self->{content_schemata} = \@content_schemata;
+  $self->{tail_check} = $arg->{tail}
+                      ? $rx->make_schema($arg->{tail})
+                      : undef;
 
-  bless $self => $class;
+  return $self;
 }
 
 sub check {
