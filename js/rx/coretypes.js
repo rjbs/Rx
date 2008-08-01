@@ -91,8 +91,11 @@ Rx.CoreType.mapType = function (opt, rx) {
   if (! Rx.Util._x_subset_keys_y(opt, Rx.CoreType.mapType._valid_options))
     throw new Rx.Error('unknown argument for map type');
 
+  this.allowed = {};
+
   if (opt.required) {
     this.required = {};
+    this.allowed = true;
     for (prop in opt.required) {
       if (opt.optional && opt.optional[prop])
         throw new Rx.Error(prop + ' appears in both optional and required');
@@ -102,6 +105,7 @@ Rx.CoreType.mapType = function (opt, rx) {
 
   if (opt.optional) {
     this.optional = {};
+    this.allowed = true;
     for (prop in opt.optional)
       this.optional[prop] = rx.make_checker(opt.optional[prop])
   }
@@ -111,6 +115,19 @@ Rx.CoreType.mapType.schemaName = Rx.parseTypeName('//map');
 Rx.CoreType.mapType.prototype.check  = function (v) {
   if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
     return false;
+
+  for (prop in v) if (! this.allowed[prop]) return false;
+
+  for (prop in this.required) {
+    if (v[prop] == null) return false;
+    if (! this.required[prop].check( v[prop] ) ) return false;
+  }
+
+  for (prop in this.optional) {
+    if (v[prop] == null) continue;
+    if (! this.optional[prop].check( v[prop] ) ) return false;
+  }
+
   return true;
 };
 
