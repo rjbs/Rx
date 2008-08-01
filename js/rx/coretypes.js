@@ -109,7 +109,9 @@ Rx.CoreType.mapType = function (opt, rx) {
 Rx.CoreType.mapType._valid_options =  { type: 1, required: 1, optional: 1 };
 Rx.CoreType.mapType.schemaName = Rx.parseTypeName('//map');
 Rx.CoreType.mapType.prototype.check  = function (v) {
-  return (((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array));
+  if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
+    return false;
+  return true;
 };
 
 Rx.CoreType.seqType  = function (opt, rx) {
