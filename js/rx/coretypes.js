@@ -59,19 +59,29 @@ Rx.CoreType.scalarType.prototype.check = function (v) {
 
 // Complex types
 
-Rx.CoreType.arrType  = function (opt) {};
+Rx.CoreType.arrType  = function (opt) {
+  if (! Rx.Util._x_subset_keys_y(opt, { type: 1, contents: 1, length: 1 }))
+    throw new Rx.Error('unknown argument for arr type');
+};
 Rx.CoreType.arrType.schemaName = Rx.parseTypeName('//arr');
 Rx.CoreType.arrType.prototype.check  = function (v) {
   return v instanceof Array;
 }
 
-Rx.CoreType.mapType  = function (opt) {};
+Rx.CoreType.mapType  = function (opt) {
+  if (! Rx.Util._x_subset_keys_y(opt, Rx.CoreType.mapType._valid_options))
+    throw new Rx.Error('unknown argument for map type');
+};
+Rx.CoreType.mapType._valid_options =  { type: 1, required: 1, optional: 1 };
 Rx.CoreType.mapType.schemaName = Rx.parseTypeName('//map');
 Rx.CoreType.mapType.prototype.check  = function (v) {
   return ((v != null) && (typeof(v) == 'object'));
 };
 
-Rx.CoreType.seqType  = function (opt) {};
+Rx.CoreType.seqType  = function (opt) {
+  if (! Rx.Util._x_subset_keys_y(opt, { type: 1, contents: 1, tail: 1 }))
+    throw new Rx.Error('unknown argument for seq type');
+};
 Rx.CoreType.seqType.schemaName = Rx.parseTypeName('//seq');
 Rx.CoreType.seqType.prototype.check  = function (v) {
   return v instanceof Array;
