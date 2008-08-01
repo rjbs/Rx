@@ -95,19 +95,20 @@ Rx.CoreType.mapType = function (opt, rx) {
 
   if (opt.required) {
     this.required = {};
-    this.allowed = true;
     for (prop in opt.required) {
+      this.allowed[prop] = true;
       if (opt.optional && opt.optional[prop])
         throw new Rx.Error(prop + ' appears in both optional and required');
-      this.required[prop] = rx.make_checker(opt.required[prop])
+      this.required[prop] = rx.make_checker(opt.required[prop]);
     }
   }
 
   if (opt.optional) {
     this.optional = {};
-    this.allowed = true;
-    for (prop in opt.optional)
-      this.optional[prop] = rx.make_checker(opt.optional[prop])
+    for (prop in opt.optional) {
+      this.allowed[prop] = true;
+      this.optional[prop] = rx.make_checker(opt.optional[prop]);
+    }
   }
 };
 Rx.CoreType.mapType._valid_options =  { type: 1, required: 1, optional: 1 };
