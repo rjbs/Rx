@@ -67,12 +67,22 @@ Rx.CoreType.arrType  = function (opt, rx) {
     throw new Rx.Error('contents arg for arr type must declare a type');
 
   this.content_check = rx.make_checker(opt.contents);
+  if (opt.length) {
+    this.length_check = new Rx.Util.RangeChecker(
+      { allowNegative: false, allowFraction: false, allowExclusive: false },
+      opt.length
+    );
+  }
 };
 Rx.CoreType.arrType.schemaName = Rx.parseTypeName('//arr');
 Rx.CoreType.arrType.prototype.check  = function (v) {
   if (! (v instanceof Array)) return false;
 
   for (i in v) if (! this.content_check.check(v[i])) return false;
+
+  if (this.length_check && ! this.length_check.check(v.length)) {
+    return false;
+  }
 
   return true;
 }
