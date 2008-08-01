@@ -62,6 +62,9 @@ Rx.CoreType.scalarType.prototype.check = function (v) {
 Rx.CoreType.arrType  = function (opt) {
   if (! Rx.Util._x_subset_keys_y(opt, { type: 1, contents: 1, length: 1 }))
     throw new Rx.Error('unknown argument for arr type');
+  if (! opt.contents) throw new Rx.Error('no contents argument for arr type');
+  if (opt.contents instanceof Array)
+    throw new Rx.Error('contents arg for arr type must be a non-Array Object');
 };
 Rx.CoreType.arrType.schemaName = Rx.parseTypeName('//arr');
 Rx.CoreType.arrType.prototype.check  = function (v) {
@@ -81,6 +84,9 @@ Rx.CoreType.mapType.prototype.check  = function (v) {
 Rx.CoreType.seqType  = function (opt) {
   if (! Rx.Util._x_subset_keys_y(opt, { type: 1, contents: 1, tail: 1 }))
     throw new Rx.Error('unknown argument for seq type');
+  if (! opt.contents) throw new Rx.Error('no contents argument for seq type');
+  if (! (opt.contents instanceof Array))
+    throw new Rx.Error('contents argument for seq type must be an Array');
 };
 Rx.CoreType.seqType.schemaName = Rx.parseTypeName('//seq');
 Rx.CoreType.seqType.prototype.check  = function (v) {
