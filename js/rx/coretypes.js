@@ -97,7 +97,7 @@ Rx.CoreType.mapType.prototype.check  = function (v) {
   return (((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array));
 };
 
-Rx.CoreType.seqType  = function (opt) {
+Rx.CoreType.seqType  = function (opt, rx) {
   if (! Rx.Util._x_subset_keys_y(opt, { type: 1, contents: 1, tail: 1 }))
     throw new Rx.Error('unknown argument for seq type');
   if (! opt.contents) throw new Rx.Error('no contents argument for seq type');
@@ -107,15 +107,28 @@ Rx.CoreType.seqType  = function (opt) {
   this.content_checks = [];
   for (i in opt.contents)
     this.content_checks[i] = rx.make_checker(opt.contents[i]);
+
+  if (opt.tail) {
+    this.tail_check = rx.make_checker(opt.tail);
+  }
 };
 Rx.CoreType.seqType.schemaName = Rx.parseTypeName('//seq');
 Rx.CoreType.seqType.prototype.check  = function (v) {
   if (!(v instanceof Array)) return false;
 
-  if ((v.length > this.content_checks.length) && ! this.tail_check)
-    return false;
+  if (v.length < this.content_checks.length) return false;
 
-  for (i in v) if (! this.content_checks[i].check(v[i])) return false;
+  if (v.length > this.content_checks.length) {
+    if (this.tail_check) {
+      var tail = v.slice(this.content_checks.length, v.length);
+      if (! this.tail_check.check( tail )) return false;
+    } else {
+      return false;
+    }
+  }
+
+  for (i in this.content_checks)
+    if (! this.content_checks[i].check(v[i])) return false;
 
   return true;
 };
