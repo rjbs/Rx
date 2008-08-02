@@ -1,0 +1,30 @@
+body { max-width: 50em }
+button {
+  border:1px black solid;
+  font-size: 125%;
+  background-color: #aaa;
+}
+div.docheader {
+  font-size: 200%;
+  padding-bottom: 1em;
+  text-decoration: underline;
+}
+
+div.secheader {
+  font-size: 150%;
+  font-weight: bold;
+}
+
+div.sample {
+  background-color: #eee;
+  text-align: center;
+  padding: 1em;
+  -moz-border-radius: 10px;
+}
+pre {
+  padding: 1em;
+  text-align: left;
+  -moz-border-radius: 10px;
+}
+pre.yaml { background-color: #ecc; }
+pre.json { background-color: #cce; }

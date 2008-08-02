@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Rx: Simple, Extensible Schemata</title>
+  <link rel='stylesheet' href='rx.css' />
+</head>
+
+<body>
+
+<script src='http://rjbs.manxome.org/js/jquery.js' /></script>
+<script lang='text/javascript'>
+$(function() {
+  $('pre.yaml').before("<button class='jy'>show alternate</button>");
+  $('pre.json').hide();
+  $('button.jy').toggle(
+    function () { $('pre.json').show(); $('pre.yaml').hide(); },
+    function () { $('pre.yaml').show(); $('pre.json').hide(); }
+  );
+});
+</script>
+
+<div class='docheader'>Rx: Simple, Extensible Schemata</div>
+
+<div class='secheader'>Why Rx?</div>
+
+<p>
+  When adding an API to your web service, you have to choose how to encode the
+  data you send across the line.  <a href='http://www.w3.org/XML/'>XML</a> is
+  one common choice for this, but it can grow arcane and cumbersome pretty
+  quickly.  Lots of webservice authors want to avoid thinking about XML, and
+  instead choose formats that provide a few simple data types that correspond
+  to common data structures in modern programming languages.  In other words,
+  <a href='http://json.org/'>JSON</a> and <a href='http://yaml.org/'>YAML</a>.
+</p>
+
+<p>
+  Unfortunately, while these formats make it easy to pass around complex data
+  structures, they lack a system for validation.  XML has <a
+  href='http://www.w3.org/XML/Schema'>XML Schemas</a> and <a
+  href='http://relaxng.org/'>RELAX NG</a>, but these are complicated and
+  sometimes confusing standards.  They're not very portable to the kind of data
+  structure provided by JSON, and if you wanted to avoid XML as a data
+  encoding, writing more XML to validate the first XML is probably even less
+  appealing.
+</p>
+
+<p>
+  Rx is meant to provide a system for data validation that matches up with
+  JSON-style data structures and is as easy to work with as JSON itself.
+</p>
+
+<div class='sample'>
+<pre class='yaml'>
+---
+type: //map
+required:
+  from: { type: //str }
+  to  : 
+    type  : //arr
+    length: { min: 1 }
+    contents: { type: //str }
+  subj: { type: //str }
+  body: { type: //str }
+optional:
+  user: { type: /pobox.com/account }
+</pre>
+<pre class='json'>
+{
+  "type": "//map",
+  "required": {
+    "from": { "type": "//str" },
+    "to"  : {
+      "type"    : "//arr",
+      "length"  : { "min": 1 },
+      "contents": { "type": "//str" }
+    },
+    "subj": { "type": "//str" },
+    "body": { "type": "//str" }
+  },
+  "optional": {
+    "user": { "type": "/pobox.com/account" }
+  }
+}
+</pre>
+</div>
+
+</body>
+</html>
