@@ -1,24 +1,102 @@
-body { max-width: 50em }
+body,
+html {
+  margin:0;
+  padding:0;
+  background:#000;
+  color:#000;
+}
+a, a:visited {
+  color: #000;
+  text-decoration: none;
+  border-bottom: dotted 1px black;
+}
+a:hover {
+  color: #ff0;
+  border-bottom: dotted 1px yellow;
+}
+body {
+  min-width:775px;
+}
+#content {
+  background-color: rgb( 45, 134,  76);
+  margin:0 auto;
+  width:775px;
+}
+#header {
+  background: #eee;
+  color: rgb( 60,  79, 133);
+}
+#header h1 {
+  padding:5px;
+  margin:0;
+}
+#nav {
+  background:#bbb;
+  padding:5px;
+}
+#nav ul{
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+#nav li{
+  display:inline;
+  margin:0;
+  padding:0;
+  padding-left:1em;
+}
+#main {
+  /*background:#dde;*/
+  background-color: rgb(110, 129, 183);
+  float:right;
+  width:625px;
+}
+#main h2, #main h3, #main p {
+  padding:0 10px;
+}
+#main ul {
+  padding:0 20px;
+}
+#sidebar {
+  background-color: rgb( 45, 134,  76);
+  float:right;
+  width:140px;
+}
+#sidebar ul {
+  margin-bottom:0;
+}
+#sidebar h3, #sidebar p {
+  padding:0 10px 0 0;
+}
+#sidebar a, #sidebar a:visited {
+  color: #eee;
+  border-bottom: 1px #fff dotted;
+}
+#sidebar a:hover {
+  color: #ff0;
+  border-bottom: 1px #ff0 dotted;
+}
+#footer {
+  background: #ccc;
+  clear:both;
+}
+#footer p {
+  padding:5px;
+  margin:0;
+}
 button {
   border:1px black solid;
   font-size: 125%;
   background-color: #aaa;
-}
-div.docheader {
-  font-size: 200%;
-  text-decoration: underline;
-}
-
-div.secheader {
-  font-size: 150%;
-  font-weight: bold;
 }
 
 div.sample {
   background-color: #eee;
   text-align: center;
   padding: 1em;
+  margin: 1em 7%;
   -moz-border-radius: 10px;
+  width: 80%;
 }
 pre {
   padding: 1em;
@@ -27,3 +105,23 @@ pre {
 }
 pre.yaml { background-color: #ecc; }
 pre.json { background-color: #cce; }
+
+
+span.logo  { white-space: nowrap; }
+span.paren { font-weight: normal; color: rgb( 45, 100,  76) }
+.cons { color: rgb( 60,  79, 133); }
+.cdr  { color: rgb( 45, 134,  76); font-style: italic; }
+
+table.types {
+  padding:0 40px;
+}
+
+th {
+  text-align: left;
+  width: 4em;
+}
+
+td {
+  text-align: left;
+  width: 25em;
+}

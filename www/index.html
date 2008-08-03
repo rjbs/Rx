@@ -18,121 +18,141 @@ $(function() {
     function () { $('pre.json').show(); $('pre.yaml').hide(); },
     function () { $('pre.yaml').show(); $('pre.json').hide(); }
   );
+
+  $($('h2').get().reverse()).each(function () {
+    var $this = $(this);
+    $('#sidebar').append(
+      '<p><a href="#' + $this.attr('id') + '">' + $this.text() + '</a></p>'
+    );
+  });
 });
 </script>
 
-<div class='docheader'>Rx: Simple, Extensible Schemata</div>
+<div id='content'>
+<div id='header'><h1>Rx: Simple, Extensible Schemata</h1></div>
 
-<ul>
-  <li><a href='#example'>Example</a></li>
-  <li><a href='#download'>Download and Use</a></li>
-  <li><a href='#hacking'>Hacking on Rx</a></li>
-</ul>
-
-<div class='secheader'>Why Rx?</div>
-
-<p>
-  When adding an API to your web service, you have to choose how to encode the
-  data you send across the line.  <a href='http://www.w3.org/XML/'>XML</a> is
-  one common choice for this, but it can grow arcane and cumbersome pretty
-  quickly.  Lots of webservice authors want to avoid thinking about XML, and
-  instead choose formats that provide a few simple data types that correspond
-  to common data structures in modern programming languages.  In other words,
-  <a href='http://json.org/'>JSON</a> and <a href='http://yaml.org/'>YAML</a>.
-</p>
-
-<p>
-  Unfortunately, while these formats make it easy to pass around complex data
-  structures, they lack a system for validation.  XML has <a
-  href='http://www.w3.org/XML/Schema'>XML Schemas</a> and <a
-  href='http://relaxng.org/'>RELAX NG</a>, but these are complicated and
-  sometimes confusing standards.  They're not very portable to the kind of data
-  structure provided by JSON, and if you wanted to avoid XML as a data
-  encoding, writing more XML to validate the first XML is probably even less
-  appealing.
-</p>
-
-<p>
-  Rx is meant to provide a system for data validation that matches up with
-  JSON-style data structures and is as easy to work with as JSON itself.
-</p>
-
-<div id='example' class='secheader'>Simple Example</div>
-
-<p>
-  This sample shows a schema to validate a simple data structure composed of a
-  map (a hash, dict, js Object, or the like) with at least four and maybe five
-  entries.  Each entry in the map has its own schema for validation, even
-  though some of the schemata are as simple as "must be a string."
-</p>
-
-<p>
-  You can see the example schema expressed in either YAML or JSON by clicking
-  the button.
-</p>
-
-<div class='sample'>
-<pre class='yaml'>
----
-type: //map
-required:
-  from: { type: //str }
-  to  : 
-    type  : //arr
-    length: { min: 1 }
-    contents: { type: //str }
-  subj: { type: //str }
-  body: { type: //str }
-optional:
-  user: { type: /example.com/account }
-</pre>
-<pre class='json'>
-{
-  "type": "//map",
-  "required": {
-    "from": { "type": "//str" },
-    "to"  : {
-      "type"    : "//arr",
-      "length"  : { "min": 1 },
-      "contents": { "type": "//str" }
-    },
-    "subj": { "type": "//str" },
-    "body": { "type": "//str" }
-  },
-  "optional": {
-    "user": { "type": "/example.com/account" }
-  }
-}
-</pre>
+<div id='nav'>
+  <ul>
+    <li><a href='index.html'>About</a></li>
+    <li><a href='coretypes.html'>Core Types</a></li>
+    <li><a href='download.html'>Download</a></li>
+  </ul>
 </div>
 
-<div id='download' class='secheader'>Download and Use Rx</div>
-<p>
-  Right now, implementations of Rx have been written in Perl and JavaScript.
-  Since Rx itself is still undergoing design refinements, relying on either
-  implementation in production would be a bad idea.  You can find them an play
-  with them in <a href='http://git.codesimply.com/?p=Rx'>their git
-  repository</a>.
-</p>
+<div id='main'>
+  <h2>Why Rx?</h2>
 
-<div id='hacking' class='secheader'>Hacking on Rx</div>
-<p>
-  One of Rx's strengths is its simplicity.  It should be easy to implement in
-  any language into which JSON can be easily loaded, and one of its design
-  goals was to keep its core types simple to implement on any such language.
-  The core tests for proving the acceptability of an Rx implementation are
-  written in JSON, so new implementations need only write a loader and runner
-  for the test suite.
-</p>
+  <p>
+    When adding an API to your web service, you have to choose how to encode
+    the data you send across the line.  <a
+    href='http://www.w3.or/XML/'>XML</a> is one common choice for this, but it
+    can grow arcane and cumbersome pretty quickly.  Lots of webservice authors
+    want to avoid thinking about XML, and instead choose formats that provide a
+    few simple data types that correspond to common data structures in modern
+    programming languages.  In other words, <a href='http://json.org/'>JSON</a>
+    and <a href='http://yaml.org/'>YAML</a>.
+  </p>
 
-<p>
-  To have a look at the existing Rx code and test suite, check out <a
-  href='http://git.codesimply.com/?p=Rx'>its git repository</a>.
-</p>
+  <p>
+    Unfortunately, while these formats make it easy to pass around complex data
+    structures, they lack a system for validation.  XML has <a
+    href='http://www.w3.org/XML/Schema'>XML Schemas</a> and <a
+    href='http://relaxng.org/'>RELAX NG</a>, but these are complicated and
+    sometimes confusing standards.  They're not very portable to the kind of
+    data structure provided by JSON, and if you wanted to avoid XML as a data
+    encoding, writing more XML to validate the first XML is probably even less
+    appealing.
+  </p>
+
+  <p>
+    Rx is meant to provide a system for data validation that matches up with
+    JSON-style data structures and is as easy to work with as JSON itself.
+  </p>
+
+  <h2 id='example'>Simple Example</h2>
+
+  <div class='sample'>
+  <pre class='yaml'>
+  ---
+  type: //map
+  required:
+    from: { type: //str }
+    to  : 
+      type  : //arr
+      length: { min: 1 }
+      contents: { type: //str }
+    subj: { type: //str }
+    body: { type: //str }
+  optional:
+    user: { type: /example.com/account }
+  </pre>
+  <pre class='json'>
+  {
+    "type": "//map",
+    "required": {
+      "from": { "type": "//str" },
+      "to"  : {
+        "type"    : "//arr",
+        "length"  : { "min": 1 },
+        "contents": { "type": "//str" }
+      },
+      "subj": { "type": "//str" },
+      "body": { "type": "//str" }
+    },
+    "optional": {
+      "user": { "type": "/example.com/account" }
+    }
+  }
+  </pre>
+  </div>
+
+  <p>
+    This sample shows a schema to validate a simple data structure composed of
+    a map (a hash, dict, js Object, or the like) with at least four and maybe
+    five entries.  Each entry in the map has its own schema for validation,
+    even though some of the schemata are as simple as "must be a string."
+  </p>
+
+  <p>
+    You can see the example schema expressed in either YAML or JSON by clicking
+    the button.
+  </p>
+
+  <h2 id='using'>Using Rx</h2>
+  <p>
+    Right now, implementations of Rx have been written in Perl and JavaScript.
+    Since Rx itself is still undergoing design refinements, relying on either
+    implementation in production would be a bad idea.  You can find them an
+    play with them in <a href='http://git.codesimply.com/?p=Rx'>their git
+    repository</a>.
+  </p>
+
+  <h2 id='hacking'>Hacking on Rx</h2>
+  <p>
+    One of Rx's strengths is its simplicity.  It should be easy to implement in
+    any language into which JSON can be easily loaded, and one of its design
+    goals was to keep its core types simple to implement on any such language.
+    The core tests for proving the acceptability of an Rx implementation are
+    written in JSON, so new implementations need only write a loader and runner
+    for the test suite.
+  </p>
+
+  <p>
+    To have a look at the existing Rx code and test suite, check out <a
+    href='http://git.codesimply.com/?p=Rx'>its git repository</a>.
+  </p>
+
+</div>
+
+<div id='sidebar'>
+</div>
 
 <div id='footer'>
-  <hr />
-  Rx, Copyright 2008, (code (simply))
+  <p>
+  Rx, Copyright 2008,
+  <span class="logo">(<span class='cons'>code</span> (<span
+  class='cdr'>simply</span><span style='font-size:.5em'> </span>))</span>
+  </p>
 </div>
 
 </body>
