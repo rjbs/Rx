@@ -18,7 +18,7 @@ body {
   min-width:775px;
 }
 #content {
-  background-color: rgb( 45, 134,  76);
+  background-color: rgb( 55, 144,  86);
   margin:0 auto;
   width:775px;
 }
@@ -46,8 +46,7 @@ body {
   padding-left:1em;
 }
 #main {
-  /*background:#dde;*/
-  background-color: rgb(110, 129, 183);
+  background-color: rgb(120, 139, 193);
   float:right;
   width:625px;
 }
@@ -58,7 +57,7 @@ body {
   padding:0 20px;
 }
 #sidebar {
-  background-color: rgb( 45, 134,  76);
+  background-color: rgb( 55, 144,  86);
   float:right;
   width:140px;
 }
@@ -103,8 +102,8 @@ pre {
   text-align: left;
   -moz-border-radius: 10px;
 }
-pre.yaml { background-color: #ecc; }
-pre.json { background-color: #cce; }
+pre.yaml { background-color: #cce; }
+pre.json { background-color: #cec; }
 
 
 span.logo  { white-space: nowrap; }
