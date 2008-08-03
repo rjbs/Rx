@@ -19,7 +19,7 @@ $(function() {
     function () { $('pre.yaml').show(); $('pre.json').hide(); }
   );
 
-  $($('h2').get().reverse()).each(function () {
+  $('h2').each(function () {
     var $this = $(this);
     $('#sidebar').append(
       '<p><a href="#' + $this.attr('id') + '">' + $this.text() + '</a></p>'

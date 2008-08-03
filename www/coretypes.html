@@ -18,6 +18,13 @@ $(function() {
     function () { $('pre.json').show(); $('pre.yaml').hide(); },
     function () { $('pre.yaml').show(); $('pre.json').hide(); }
   );
+
+  $('h2').each(function () {
+    var $this = $(this);
+    $('#sidebar').append(
+      '<p><a href="#' + $this.attr('id') + '">' + $this.text() + '</a></p>'
+    );
+  });
 });
 </script>
 
@@ -33,7 +40,7 @@ $(function() {
 </div>
 
 <div id='main'>
-  <h2 id='glossary'>Types and Schemata</h2>
+  <h2 id='terms'>Terminology</h2>
 
   <p>
     There are really only two things you need to know about in Rx: types and
@@ -128,9 +135,6 @@ $(function() {
 </div>
 
 <div id='sidebar'>
-  <p><a href='#glossary'>Terminology</a></p>
-  <p><a href='#single'>Single Types</a></p>
-  <p><a href='#collect'>Collection Types</a></p>
 </div>
 
 <div id='footer'>
