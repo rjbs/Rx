@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Rx: Simple, Extensible Schemata - Core Types</title>
+  <link rel='stylesheet' href='rx.css' />
+</head>
+
+<body>
+
+<script src='http://rjbs.manxome.org/js/jquery.js' /></script>
+<script lang='text/javascript'>
+$(function() {
+  $('pre.yaml').before("<button class='jy'>show alternate</button>");
+  $('pre.json').hide();
+  $('button.jy').toggle(
+    function () { $('pre.json').show(); $('pre.yaml').hide(); },
+    function () { $('pre.yaml').show(); $('pre.json').hide(); }
+  );
+});
+</script>
+
+<div class='docheader'>Rx: Simple, Extensible Schemata</div>
+
+<!--
+<ul>
+  <li><a href='#example'>Example</a></li>
+  <li><a href='#download'>Download and Use</a></li>
+  <li><a href='#hacking'>Hacking on Rx</a></li>
+</ul>
+-->
+
+<div class='secheader'>Types and Schemata</div>
+
+<p>
+  There are really only two things you need to know about in Rx: types and
+  schemata.  A type is an abstract descripition of a type of data.  For
+  example, "an integer" or "an associative array" are data types.  When they're
+  made into concrete, checkable constraints, they become schemata.  This is
+  done by parameterizing them.
+</p>
+
+<p>
+  A Rx type is identified by a string, its type name.  The type name is broken
+  down into two parts, the authority and the subname.  It's written like this:
+  <tt>/authority/subname</tt>
+</p>
+
+<p>
+  While users can define their own custom types, quite a lot of data validation
+  rules can be expressed using the <em>core types</em> that come with a basic
+  implementation of Rx.  These types use the empty string as their authority,
+  which means that they look like this: <tt>//subname</tt>
+</p>
+
+<p>
+  This page gives a brief overview of the core types, which will be defined
+  in detail elsewhere, later.
+</p>
+
+<div id='scalartypes' class='secheader'>Simple Scalar Type</div>
+
+<p>
+  The basic scalar (one-value) types are:
+</p>
+
+<dl>
+  <dt>//bool</dt>
+  <dd>a value that is either true or false</dd>
+
+  <dt>//num</dt>
+  <dd>a number; may be parameterized by a range</dd>
+
+  <dt>//int</dt>
+  <dd>a integer; any number such that <tt>(x == floor(x))</tt>; may be
+  parameterized by range</dd>
+
+  <dt>//str</dt>
+  <dd>a string, even the empty string</dd>
+
+  <dt>//nil</dt>
+  <dd>the lack of a value (undef, null, nil, etc)</dd>
+
+  <dt>//def</dt>
+  <dd>any defined value; anything that is not //nil</dd>
+
+  <dt>//scalar</dt>
+  <dd>any single value (or //nil) -- anything but a collecting type</dd>
+</dl>
+
+<p>
+  The basic collecting (many-value) types are:
+</p>
+
+<dl>
+  <dt>//arr</dt>
+  <dd>a list of values all of one type; may be parameterized by length</dd>
+
+  <dt>//seq</dt>
+  <dd>a list of values all of varying types; each slot has a schema</dd>
+
+  <dt>//map</dt>
+  <dd>a mapping of string keys to values; parameterized by required and
+  optional keys, and how to treat unknown keys</dd>
+</dt>
+
+<div id='footer'>
+  <hr />
+  Rx, Copyright 2008, (code (simply))
+</div>
+
+</body>
+</html>
