@@ -1,12 +1,11 @@
 {
   "schema": {
     "type": "//seq",
-    "contents": [ "//int", "//str", "//int" }
-    ],
+    "contents": [ "//int", "//str", "//int" ]
     "tail": {
       "type": "//arr",
       "contents": "//bool",
-      "length":   { "max": 2 }
+      "length"  : { "max": 2 }
     }
   },
 
