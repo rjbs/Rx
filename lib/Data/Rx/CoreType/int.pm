@@ -31,7 +31,6 @@ sub check {
   my ($self, $value) = @_;
   return unless $self->SUPER::check($value);
   return unless $value == int $value;
-  return if $self->{range_check} && ! $self->{range_check}->($value);
   return 1;
 }
 

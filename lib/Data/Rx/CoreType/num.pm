@@ -16,6 +16,27 @@ sub _val_re {
        . '\z';
 }
 
+sub new {
+  my ($class, $arg, $rx) = @_;
+  my $self = {};
+
+  Carp::croak("unknown arguments to new")
+    unless Data::Rx::Util->_x_subset_keys_y($arg, {range=>1});
+
+  if ($arg->{range}) {
+    $self->{range_check} = Data::Rx::Util->_make_range_check(
+      {
+        allow_negative  => 1,
+        allow_fraction  => 1,
+        allow_exclusive => 1,
+      },
+      $arg->{range},
+    );
+  }
+
+  bless $self => $class;
+}
+
 sub check {
   my ($self, $value) = @_;
 
@@ -27,6 +48,7 @@ sub check {
   return if ref $value;
 
   return unless $value =~ $self->_val_re;
+  return if $self->{range_check} && ! $self->{range_check}->($value);
   return 1;
 }
 

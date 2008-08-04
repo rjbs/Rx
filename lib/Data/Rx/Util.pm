@@ -27,7 +27,7 @@ sub _make_range_check {
     %$mk_arg,
   };
   
-  Carp::croak "no arguments given" unless $arg and keys %$arg;
+  return unless $arg and keys %$arg;
 
   my @keys = $var->{allow_exclusive} ? qw(min min-ex max-ex max) : qw(min max);
 
