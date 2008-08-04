@@ -57,7 +57,6 @@ body {
 #main ul {
   padding:0 20px;
 }
-#main textarea { margin: 0 15px; }
 #main a:hover { color: #036; border-bottom: #036 1px dotted }
 #sidebar {
   background-color: rgb( 55, 144,  86);
@@ -129,6 +128,12 @@ td {
   width: 25em;
 }
 
+table#demoInputs { margin: 0 10px; }
+table#demoInputs td{
+  margin: 0;
+  border-spacing: 0
+
+}
 #status        {
   background-color: #eee;
   border: 1px black solid;

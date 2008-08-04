@@ -4,30 +4,39 @@
 
 <h2 id='demo'>Demonstration</h2>
 <p id='status' class='neutral'>(status indicator)</p>
-<h3>Schema (in JSON)</h3>
-<textarea id='jsonSchema' rows='14' cols='66'>
+<table id='demoInputs'>
+  <tr>
+    <td>
+      <h3>Schema (in JSON)</h3>
+<textarea id='jsonSchema' rows='14' cols='35'>
+
 {
-  "type": "//map",
-  "required": {
-    "foo": { "type": "//int" }
-  },
-  "optional": {
-    "bar": {
-      "type": "//arr",
-      "contents": { "type": "//num" },
-      "length": { "min": 1, "max": 6 }
-    }
-  },
+ "type": "//map",
+ "required": {
+   "foo": { "type": "//int" }
+ },
+ "optional": {
+   "bar": {
+     "type": "//arr",
+     "contents": { "type": "//num" },
+     "length": { "min": 1, "max": 6 }
+   }
+ },
 }
 </textarea>
+    </td>
+    <td>
+      <h3>Input Data (in JSON)</h3>
+      <textarea id='jsonInput' rows='14' cols='35'>
 
-<h3>Input Data (in JSON)</h3>
-<textarea id='jsonInput' rows='14' cols='66'>
 {
   "foo": 8675309,
   "bar": [ 1, 2.002, 3 ]
 }
 </textarea>
+    </td>
+  </tr>
+</table>
 
 <script lang='text/javascript'>
 //console.log('Initializing demo...');
