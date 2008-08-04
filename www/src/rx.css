@@ -45,6 +45,7 @@ body {
   padding:0;
   padding-left:1em;
 }
+#nav a:hover { color: #555; border-bottom: #555 1px dotted }
 #main {
   background-color: rgb(120, 139, 193);
   float:right;
@@ -56,6 +57,7 @@ body {
 #main ul {
   padding:0 20px;
 }
+#main a:hover { color: #036; border-bottom: #036 1px dotted }
 #sidebar {
   background-color: rgb( 55, 144,  86);
   float:right;
@@ -72,8 +74,8 @@ body {
   border-bottom: 1px #fff dotted;
 }
 #sidebar a:hover {
-  color: #ff0;
-  border-bottom: 1px #ff0 dotted;
+  color: #040;
+  border-bottom: 1px #040 dotted;
 }
 #footer {
   background: #ccc;
@@ -83,9 +85,10 @@ body {
   padding:5px;
   margin:0;
 }
+
 button {
   border:1px black solid;
-  font-size: 125%;
+  font-size: 100%;
   background-color: #aaa;
 }
 
@@ -98,7 +101,7 @@ div.sample {
   width: 80%;
 }
 pre {
-  padding: 1em;
+  padding: 1em 0;
   text-align: left;
   -moz-border-radius: 10px;
 }
