@@ -6,9 +6,8 @@
 <p>
   In this demo, you can define a schema (in JSON) and provide input data (in
   JSON) and find out whether your schema is valid and whether the input data
-  validates against the schema.  Note that because JSON must be an array or
-  object, you can't validate things against a bare <tt>//int</tt> schema (for
-  example).
+  validates against the schema.  You can also enter input strings that wouldn't
+  normally be a valid JSON value, like numbers, strings, and bools.
 </p>
 
 <p id='status' class='neutral'>(status indicator)</p>
@@ -58,7 +57,8 @@ $(function() {
     status.text('(status indicator)').attr('class','');
     var jsonSchema;
     try {
-      jsonSchema = jsonParse( $('#jsonSchema').val() );
+      jsonSchema = (jsonParse( "[" + $('#jsonSchema').val() + "]" ))[0];
+      if (jsonSchema.constructor == String) jsonSchema = { type: jsonSchema };
     } catch (e) {
       status.text('failed to parse schema').attr('class', 'error');
       return;
@@ -78,7 +78,8 @@ $(function() {
 
     var jsonInput;
     try {
-      jsonInput = jsonParse( $('#jsonInput').val() );
+      var wrappedJson = "[" + $('#jsonInput').val() + "]";
+      jsonInput = (jsonParse( wrappedJson ))[0];
     } catch (e) {
       status.text('failed to parse input block').attr('class', 'error');
       return;
