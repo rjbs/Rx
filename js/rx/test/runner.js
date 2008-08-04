@@ -27,7 +27,7 @@ for (i in schemaToTest) {
       print('ok ' + currentTest++ + ' - BAD SCHEMA: ' + schemaName);
       continue;
     }
-    print("# exception thrown: " + e.message);
+    print("# exception thrown when creating schema " + schemaName + ": " + e.message);
     throw e;
   }
 

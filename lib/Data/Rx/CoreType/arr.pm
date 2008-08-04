@@ -12,8 +12,8 @@ sub new {
   my ($class, $arg, $rx) = @_;
   my $self = $class->SUPER::new({}, $rx);
 
-  Carp::croak("no contents hash given")
-    unless $arg->{contents} and (ref $arg->{contents} eq 'HASH');
+  Carp::croak("no contents schema given")
+    unless $arg->{contents} and (ref $arg->{contents} || 'HASH' eq 'HASH');
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, {length=>1, contents=>1});

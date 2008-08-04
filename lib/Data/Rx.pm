@@ -28,6 +28,8 @@ sub make_schema {
   my ($self, $schema, $arg) = @_;
   $arg ||= {};
 
+  $schema = { type => $schema } unless ref $schema;
+
   Carp::croak("no type name given") unless my $type = $schema->{type};
   my ($authority, $subname) = $type =~ m{\A / (\w*) / (\w+) \z}x;
 

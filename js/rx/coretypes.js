@@ -63,7 +63,7 @@ Rx.CoreType.arrType  = function (opt, rx) {
   if (! Rx.Util._x_subset_keys_y(opt, { type: 1, contents: 1, length: 1 }))
     throw new Rx.Error('unknown argument for arr type');
   if (! opt.contents) throw new Rx.Error('no contents argument for arr type');
-  if (! opt.contents.type)
+  if ((opt.contents.constructor != String) && (! opt.contents.type))
     throw new Rx.Error('contents arg for arr type must declare a type');
 
   this.content_check = rx.makeSchema(opt.contents);
