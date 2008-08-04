@@ -9,7 +9,7 @@
 
 <body>
 
-<script src='http://rjbs.manxome.org/js/jquery.js' /></script>
+<script src='http://rjbs.manxome.org/js/jquery.js'></script>
 <script lang='text/javascript'>
 $(function() {
   $('pre.yaml').before("<button class='jy'>show alternate</button>");

@@ -21,7 +21,7 @@ for my $file (File::Find::Rule->file->in('www/src')) {
   my $leaf = pop @parts;
   shift @parts for (1 .. 2);
   my $path = join '/', @parts;
-  mkpath $path;
+  mkpath "www/out/$path";
 
   if ($leaf =~ /\.html/) {
     open my $fh, '>', "www/out/$path/$leaf";

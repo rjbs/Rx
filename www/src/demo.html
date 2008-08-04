@@ -1,0 +1,89 @@
+<script lang='text/javascript' src='json_sans_eval.js'></script>
+<script lang='text/javascript' src='rx.js'></script>
+<script lang='text/javascript' src='rx/coretypes.js'></script>
+
+<h2 id='demo'>Demonstration</h2>
+<p id='status' class='neutral'>(status indicator)</p>
+<h3>Schema (in JSON)</h3>
+<textarea id='jsonSchema' rows='14' cols='66'>
+{
+  "type": "//map",
+  "required": {
+    "foo": { "type": "//int" }
+  },
+  "optional": {
+    "bar": {
+      "type": "//arr",
+      "contents": { "type": "//num" },
+      "length": { "min": 1, "max": 6 }
+    }
+  },
+}
+</textarea>
+
+<h3>Input Data (in JSON)</h3>
+<textarea id='jsonInput' rows='14' cols='66'>
+{
+  "foo": 8675309,
+  "bar": [ 1, 2.002, 3 ]
+}
+</textarea>
+
+<script lang='text/javascript'>
+//console.log('Initializing demo...');
+$(function() {
+  var rx = new Rx({});
+  for (coreType in Rx.CoreType) {
+    //console.log("registering type", coreType);
+    rx.registerType( Rx.CoreType[coreType] );
+  }
+
+  $('#checkData').click(function () {
+    var status = $('#status');
+    status.text('(status indicator)').attr('class','');
+    var jsonSchema;
+    try {
+      jsonSchema = jsonParse( $('#jsonSchema').val() );
+    } catch (e) {
+      status.text('failed to parse schema').attr('class', 'error');
+      return;
+    }
+
+    //console.log('schema obj: ', jsonSchema);
+
+    var schema;
+    try {
+      schema = rx.makeSchema(jsonSchema);
+    } catch (e) {
+      status.text('invalid schema definition').attr('class', 'error');
+      return;
+    }
+
+    //console.log('schema: ', schema);
+
+    var jsonInput;
+    try {
+      jsonInput = jsonParse( $('#jsonInput').val() );
+    } catch (e) {
+      status.text('failed to parse input block').attr('class', 'error');
+      return;
+    }
+
+    var result;
+    try {
+      result = schema.check(jsonInput);
+    } catch (e) {
+      status.text('exception raised during check').attr('class', 'error');
+      return;
+    }
+
+    if (result) {
+      status.text('schema accepts the input').attr('class', 'accept');
+    } else {
+      status.text('schema rejects the input').attr('class', 'reject');
+    }
+  });
+});
+</script>
+
+<button id='checkData'>Check Data</button>

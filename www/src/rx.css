@@ -57,6 +57,7 @@ body {
 #main ul {
   padding:0 20px;
 }
+#main textarea { margin: 0 15px; }
 #main a:hover { color: #036; border-bottom: #036 1px dotted }
 #sidebar {
   background-color: rgb( 55, 144,  86);
@@ -127,3 +128,13 @@ td {
   text-align: left;
   width: 25em;
 }
+
+#status        {
+  background-color: #eee;
+  border: 1px black solid;
+  width: 80%;
+  margin-left: 7%;
+}
+#status.error  { color: red    }
+#status.accept { color: green  }
+#status.reject { color: orange }
