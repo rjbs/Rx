@@ -19,24 +19,47 @@ Rx.CoreType.defType.typeName = Rx.parseTypeName('//def');
 Rx.CoreType.defType.prototype.check  = function (v) { return v != null; };
 
 Rx.CoreType.intType  = function (opt) {
-  if (! Rx.Util._x_subset_keys_y(opt, { type: true }))
+  if (! Rx.Util._x_subset_keys_y(opt, { type: true, range: true }))
     throw new Rx.Error('unknown argument for int type');
+
+  if (opt.range) {
+    this.range_check = new Rx.Util.RangeChecker(
+      { allowNegative: true, allowFraction: false, allowExclusive: true },
+      opt.range
+    );
+  }
 };
 Rx.CoreType.intType.typeName = Rx.parseTypeName('//int');
 Rx.CoreType.intType.prototype.check  = function (v) {
-  return(
-    ((typeof(v) == 'number') || (v instanceof Number)) && (Math.floor(v) == v)
-  );
+  if (v == null) return false;
+  if (v.constructor != Number) return false;
+  if (Math.floor(v) != v) return false;
+  if (this.range_check && ! this.range_check.check(v)) return false;
+  return true;
 };
 
 Rx.CoreType.nilType  = function (opt) {};
 Rx.CoreType.nilType.typeName = Rx.parseTypeName('//nil');
 Rx.CoreType.nilType.prototype.check  = function (v) { return v === null };
 
-Rx.CoreType.numType  = function (opt) {};
+Rx.CoreType.numType  = function (opt) {
+  if (! Rx.Util._x_subset_keys_y(opt, { type: true, range: true }))
+    throw new Rx.Error('unknown argument for num type');
+
+  if (opt.range) {
+    this.range_check = new Rx.Util.RangeChecker(
+      { allowNegative: true, allowFraction: true, allowExclusive: true },
+      opt.range
+    );
+  }
+};
+
 Rx.CoreType.numType.typeName = Rx.parseTypeName('//num');
 Rx.CoreType.numType.prototype.check  = function (v) {
-  return((typeof(v) == 'number') || (v instanceof Number));
+  if (v == null) return false;
+  if (v.constructor != Number) return false;
+  if (this.range_check && ! this.range_check.check(v)) return false;
+  return true;
 };
 
 Rx.CoreType.strType  = function (opt) {};
