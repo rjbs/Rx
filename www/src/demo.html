@@ -20,13 +20,11 @@
 
 {
  "type": "//map",
- "required": {
-   "foo": { "type": "//int" }
- },
+ "required": { "foo": "//int" },
  "optional": {
    "bar": {
      "type": "//arr",
-     "contents": { "type": "//num" },
+     "contents": "//num",
      "length": { "min": 1, "max": 6 }
    }
  },
