@@ -155,6 +155,22 @@ Rx.CoreType.mapType.prototype.check  = function (v) {
   return true;
 };
 
+Rx.CoreType.mapallType = function (opt, rx) {
+  if (! Rx.Util._x_subset_keys_y(opt, { type: true, values: true }))
+    throw new Rx.Error('unknown argument for mapall type');
+
+  this.valueSchema = rx.makeSchema(opt.values);
+};
+Rx.CoreType.mapallType.typeName = Rx.parseTypeName('//mapall');
+Rx.CoreType.mapallType.prototype.check  = function (v) {
+  if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
+    return false;
+
+  for (prop in v) if (! this.valueSchema.check(v[prop])) return false;
+
+  return true;
+};
+
 Rx.CoreType.seqType  = function (opt, rx) {
   if (! Rx.Util._x_subset_keys_y(opt, { type: 1, contents: 1, tail: 1 }))
     throw new Rx.Error('unknown argument for seq type');
