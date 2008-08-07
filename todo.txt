@@ -1,0 +1,17 @@
+TYPE:
+  //date
+  //datetime
+  //map/uniform
+  //or
+
+  /meta/
+  /extra/
+  /text/
+
+errors that indicate source of first problem
+Rx for API
+Rx-assisted emitter
+Rx Capsule - a data structure that declares the promised schema of contents
+instruction to learn composite schema
+parameterized composite types
+

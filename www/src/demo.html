@@ -52,9 +52,26 @@ $(function() {
     rx.registerType( Rx.CoreType[coreType] );
   }
 
+  $('textarea').each(function () {
+    this._old_content = $(this).val();
+  });
+
+  $('textarea').keypress(function () {
+    var content = $(this).val();
+    if (content == this._old_content) return;
+
+    this._old_content = content;
+    $('#status').text('(status indicator)').attr('class', '');
+  });
+
   $('#checkData').click(function () {
     var status = $('#status');
-    status.text('(status indicator)').attr('class','');
+    status.text('(status indicator)').attr('class', '');
+
+    $('textarea').each(function () {
+      this._old_content = $(this).val();
+    });
+
     var jsonSchema;
     try {
       jsonSchema = (jsonParse( "[" + $('#jsonSchema').val() + "]" ))[0];
