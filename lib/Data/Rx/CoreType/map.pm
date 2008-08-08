@@ -13,25 +13,14 @@ sub new {
   my $self = $class->SUPER::new({}, $rx);
 
   Carp::croak("unknown arguments to new") unless
-  Data::Rx::Util->_x_subset_keys_y($arg, { required => 1, optional => 1 });
+  Data::Rx::Util->_x_subset_keys_y($arg, { values => 1 });
 
   my $content_schema = {};
 
-  TYPE: for my $type (qw(required optional)) {
-    next TYPE unless my $entries = $arg->{$type};
+  Carp::croak("no values constraint given") unless $arg->{values};
 
-    for my $entry (keys %$entries) {
-      Carp::croak("$entry appears in both required and optional")
-        if $content_schema->{ $entry };
+  $self->{value_constraint} = $rx->make_schema($arg->{values});
 
-      $content_schema->{ $entry } = {
-        optional => $type eq 'optional',
-        schema   => $rx->make_schema($entries->{ $entry }),
-      };
-    }
-  };
-
-  $self->{content_schema} = $content_schema;
   return $self;
 }
 
@@ -41,13 +30,8 @@ sub check {
   return unless
     ! Scalar::Util::blessed($value) and ref $value eq 'HASH';
 
-  my $c_schema = $self->{content_schema};
-  return unless Data::Rx::Util->_x_subset_keys_y($value, $c_schema);
-
-  for my $key (keys %$c_schema) {
-    my $check = $c_schema->{$key};
-    return if not $check->{optional} and not exists $value->{$key};
-    return if exists $value->{$key} and ! $check->{schema}->check($value->{$key});
+  for my $entry_value (values %$value) {
+    return unless $self->{value_constraint}->check($entry_value);
   }
 
   return 1;
