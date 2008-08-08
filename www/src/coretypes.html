@@ -75,18 +75,22 @@
 
 <table class='types'>
   <tr>
-  <th>//arr</th>
-  <td>a list of values all of one type; may be parameterized by length</td>
+    <th>//arr</th>
+    <td>a list of values all of one type; may be parameterized by length</td>
   </tr>
 
   <tr>
-  <th>//seq</th>
-  <td>a list of values all of varying types; each slot has a schema</td>
+    <th>//seq</th>
+    <td>a list of values all of varying types; each slot has a schema</td>
   </tr>
 
   <tr>
-  <th>//rec</th>
-  <td>a mapping of string keys to values; parameterized by required and
-  optional keys, and how to treat unknown keys</td>
+    <th>//rec</th>
+    <td>a record of named entries, each with its own schema</td>
+  </tr>
+
+  <tr>
+    <th>//map</th>
+    <td>a map of names to values, with all the values matching one schema</td>
   </tr>
 </table>
