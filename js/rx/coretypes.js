@@ -135,7 +135,7 @@ Rx.CoreType.mapType = function (opt, rx) {
   }
 };
 Rx.CoreType.mapType._valid_options =  { type: 1, required: 1, optional: 1 };
-Rx.CoreType.mapType.typeName = Rx.parseTypeName('//map');
+Rx.CoreType.mapType.typeName = Rx.parseTypeName('//rec');
 Rx.CoreType.mapType.prototype.check  = function (v) {
   if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
     return false;

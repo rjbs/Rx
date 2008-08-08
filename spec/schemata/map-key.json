@@ -1,6 +1,6 @@
 {
   "schema": {
-    "type": "//map",
+    "type": "//rec",
     "required": {
       "key": { "type": "//int" }
     }

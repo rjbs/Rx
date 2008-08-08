@@ -36,14 +36,14 @@ $VAR1 = {
                                      'contents' => {
                                                      'type' => '//int'
                                                    },
-                                     'type' => '//map/uniform'
+                                     'type' => '//rec/uniform'
                                    },
                           'foo' => {
                                      'required' => 1,
                                      'type' => '//int'
                                    }
                         },
-          'type' => '//map'
+          'type' => '//rec'
         };
 
 $VAR1 = {
@@ -68,7 +68,7 @@ $VAR1 = {
                                                                  'type' => '//int'
                                                                }
                                                     },
-                                      'type' => '//map'
+                                      'type' => '//rec'
                                     },
                       'type' => '//array',
                       'size' => {
@@ -153,6 +153,6 @@ $VAR1 = {
                                             'type' => '/pobox.com/account'
                                           }
                         },
-          'type' => '//map'
+          'type' => '//rec'
         };
 

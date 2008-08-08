@@ -29,14 +29,14 @@
          "contents" : {
             "type" : "//int"
          },
-         "type" : "//map/uniform"
+         "type" : "//rec/uniform"
       },
       "foo" : {
          "required" : 1,
          "type" : "//int"
       }
    },
-   "type" : "//map"
+   "type" : "//rec"
 }
 {
    "contents" : {
@@ -59,7 +59,7 @@
                "type" : "//int"
             }
          },
-         "type" : "//map"
+         "type" : "//rec"
       },
       "type" : "//array",
       "size" : {
@@ -141,5 +141,5 @@
          "type" : "/pobox.com/account"
       }
    },
-   "type" : "//map"
+   "type" : "//rec"
 }

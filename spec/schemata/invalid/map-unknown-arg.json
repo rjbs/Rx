@@ -1,7 +1,7 @@
 {
   "invalid": true,
   "schema" : {
-    "type": "//map",
+    "type": "//rec",
     "unknown": "this will cause things to explode"
   }
 }

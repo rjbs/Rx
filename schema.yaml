@@ -13,12 +13,12 @@ type: //datetime
 ---
 type: //str
 ---
-type: //map
+type: //rec
 contents:
   foo: { type: //int }
   bar: { type: //int, optional: 1 }
   baz:
-    type: //map/uniform
+    type: //rec/uniform
     optional: 0
     contents: { type: //int }
 ---
@@ -35,7 +35,7 @@ tail:
   type: //arr
   size: { min: 0, max: 1 }
   contents:
-    type: //map
+    type: //rec
     contents:
       foo: { type: //int }
 ---
@@ -60,7 +60,7 @@ tail:
   size: { min: 1, max: 100 }
   contents: { type: //str }
 ---
-type: //map
+type: //rec
 contents:
   account_id: { type: /pobox.com/account }
   sender:     { type: /pobox.com/email/env_addr }
