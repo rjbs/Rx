@@ -15,3 +15,14 @@ Rx Capsule - a data structure that declares the promised schema of contents
 instruction to learn composite schema
 parameterized composite types
 
+parameterizable aggregate types:
+
+  /codesimply.com/something = {
+    "type": "//int",
+    "range": { "max": "{max}" },
+  };
+
+then:
+
+  make_schema('/codesimply.com/something', { max => 10 });
+
