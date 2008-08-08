@@ -68,15 +68,15 @@ Rx.CoreType.strType.prototype.check  = function (v) {
   return((typeof(v) == 'string') || (v instanceof String));
 };
 
-Rx.CoreType.scalarType  = function (opt) {};
-Rx.CoreType.scalarType.typeName = Rx.parseTypeName('//scalar');
-Rx.CoreType.scalarType.prototype.check = function (v) {
+Rx.CoreType.oneType  = function (opt) {};
+Rx.CoreType.oneType.typeName = Rx.parseTypeName('//one');
+Rx.CoreType.oneType.prototype.check = function (v) {
   // for some reason this was false: (false instanceof Boolean)
+  if (v == null) return false;
   return (
-    (v === null)
-    || ((typeof(v) == 'string')  || (v instanceof String))
-    || ((typeof(v) == 'boolean') || (v instanceof Boolean))
-    || ((typeof(v) == 'number')  || (v instanceof Number))
+       (v.constructor == String)
+    || (v.constructor == Boolean)
+    || (v.constructor == Number)
   );
 };
 
@@ -110,8 +110,8 @@ Rx.CoreType.arrType.prototype.check  = function (v) {
   return true;
 }
 
-Rx.CoreType.mapType = function (opt, rx) {
-  if (! Rx.Util._x_subset_keys_y(opt, Rx.CoreType.mapType._valid_options))
+Rx.CoreType.recType = function (opt, rx) {
+  if (! Rx.Util._x_subset_keys_y(opt, Rx.CoreType.recType._valid_options))
     throw new Rx.Error('unknown argument for map type');
 
   this.allowed = {};
@@ -134,9 +134,9 @@ Rx.CoreType.mapType = function (opt, rx) {
     }
   }
 };
-Rx.CoreType.mapType._valid_options =  { type: 1, required: 1, optional: 1 };
-Rx.CoreType.mapType.typeName = Rx.parseTypeName('//rec');
-Rx.CoreType.mapType.prototype.check  = function (v) {
+Rx.CoreType.recType._valid_options =  { type: 1, required: 1, optional: 1 };
+Rx.CoreType.recType.typeName = Rx.parseTypeName('//rec');
+Rx.CoreType.recType.prototype.check  = function (v) {
   if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
     return false;
 
@@ -155,14 +155,14 @@ Rx.CoreType.mapType.prototype.check  = function (v) {
   return true;
 };
 
-Rx.CoreType.mapallType = function (opt, rx) {
+Rx.CoreType.mapType = function (opt, rx) {
   if (! Rx.Util._x_subset_keys_y(opt, { type: true, values: true }))
     throw new Rx.Error('unknown argument for mapall type');
 
   this.valueSchema = rx.makeSchema(opt.values);
 };
-Rx.CoreType.mapallType.typeName = Rx.parseTypeName('//map');
-Rx.CoreType.mapallType.prototype.check  = function (v) {
+Rx.CoreType.mapType.typeName = Rx.parseTypeName('//map');
+Rx.CoreType.mapType.prototype.check  = function (v) {
   if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
     return false;
 
@@ -206,3 +206,4 @@ Rx.CoreType.seqType.prototype.check  = function (v) {
 
   return true;
 };
+
