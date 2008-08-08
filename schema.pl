@@ -36,7 +36,7 @@ $VAR1 = {
                                      'contents' => {
                                                      'type' => '//int'
                                                    },
-                                     'type' => '//rec/uniform'
+                                     'type' => '//map'
                                    },
                           'foo' => {
                                      'required' => 1,

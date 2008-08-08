@@ -18,7 +18,7 @@ contents:
   foo: { type: //int }
   bar: { type: //int, optional: 1 }
   baz:
-    type: //rec/uniform
+    type: //map
     optional: 0
     contents: { type: //int }
 ---
