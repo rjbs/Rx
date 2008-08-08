@@ -1,7 +1,6 @@
 TYPE:
   //date
   //datetime
-  //map
   //or
 
   /meta/
@@ -9,20 +8,9 @@ TYPE:
   /text/
 
 errors that indicate source of first problem
-Rx for API
-Rx-assisted emitter
-Rx Capsule - a data structure that declares the promised schema of contents
 instruction to learn composite schema
+Rx Capsule - a data structure that declares the promised schema of contents
+Rx for API
 parameterized composite types
-
-parameterizable aggregate types:
-
-  /codesimply.com/something = {
-    "type": "//int",
-    "range": { "max": "{max}" },
-  };
-
-then:
-
-  make_schema('/codesimply.com/something', { max => 10 });
+Rx-assisted emitter
 
