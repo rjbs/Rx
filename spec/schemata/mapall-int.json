@@ -1,6 +1,6 @@
 {
   "schema": {
-    "type": "//mapall",
+    "type": "//map",
     "values": {
       "type": "//int"
     }

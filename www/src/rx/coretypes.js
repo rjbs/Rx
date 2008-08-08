@@ -161,7 +161,7 @@ Rx.CoreType.mapallType = function (opt, rx) {
 
   this.valueSchema = rx.makeSchema(opt.values);
 };
-Rx.CoreType.mapallType.typeName = Rx.parseTypeName('//mapall');
+Rx.CoreType.mapallType.typeName = Rx.parseTypeName('//map');
 Rx.CoreType.mapallType.prototype.check  = function (v) {
   if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
     return false;
