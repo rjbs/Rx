@@ -68,15 +68,15 @@ Rx.CoreType.strType.prototype.check  = function (v) {
   return((typeof(v) == 'string') || (v instanceof String));
 };
 
-Rx.CoreType.scalarType  = function (opt) {};
-Rx.CoreType.scalarType.typeName = Rx.parseTypeName('//scalar');
-Rx.CoreType.scalarType.prototype.check = function (v) {
+Rx.CoreType.oneType  = function (opt) {};
+Rx.CoreType.oneType.typeName = Rx.parseTypeName('//one');
+Rx.CoreType.oneType.prototype.check = function (v) {
   // for some reason this was false: (false instanceof Boolean)
+  if (v == null) return false;
   return (
-    (v === null)
-    || ((typeof(v) == 'string')  || (v instanceof String))
-    || ((typeof(v) == 'boolean') || (v instanceof Boolean))
-    || ((typeof(v) == 'number')  || (v instanceof Number))
+       (v.constructor == String)
+    || (v.constructor == Boolean)
+    || (v.constructor == Number)
   );
 };
 
