@@ -2,7 +2,6 @@
 <?php
 require 'Test.php';
 require 'Rx.php';
-plan(1);
 
 $index_json = file_get_contents('spec/index.json');
 $index = json_decode($index_json);
@@ -10,7 +9,6 @@ $index = json_decode($index_json);
 $test_data = array();
 $test_schemata = array();
 
-# $x = json_decode('{"foo":1}');
 foreach ($index as $file) {
   if ($file == 'spec/index.json') continue;
   $parts = explode('/', $file);

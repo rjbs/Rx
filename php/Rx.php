@@ -34,8 +34,14 @@ class Rx {
     $ct['//arr']  = 'RxCoretypeArr';
     $ct['//bool'] = 'RxCoretypeBool';
     $ct['//def']  = 'RxCoretypeDef';
-    $ct['//num']  = 'RxCoretypeNum';
     $ct['//int']  = 'RxCoretypeInt';
+    $ct['//map']  = 'RxCoretypeMap';
+    $ct['//nil']  = 'RxCoretypeNil';
+    $ct['//num']  = 'RxCoretypeNum';
+    $ct['//one']  = 'RxCoretypeOne';
+    $ct['//rec']  = 'RxCoretypeRec';
+    $ct['//seq']  = 'RxCoretypeSeq';
+    $ct['//str']  = 'RxCoretypeStr';
   }
 
   function make_schema($schema) {
@@ -83,19 +89,62 @@ class RxCoreTypeInt {
   var $subname   = 'int';
   function check($value) { return is_int($value); }
 }
-  
-# map
-# one
-# rec
-# seq
-# str
 
 class RxCoretypeDef {
+  var $authority = '';
+  var $subname   = 'def';
   function check($value) { return ! is_null($value); }
 }
 
 class RxCoretypeNil {
+  var $authority = '';
+  var $subname   = 'nil';
   function check($value) { return is_null($value); }
+}
+
+class RxCoretypeOne {
+  var $authority = '';
+  var $subname   = 'one';
+  function check($value) { return is_scalar($value); }
+}
+
+class RxCoretypeStr {
+  var $authority = '';
+  var $subname   = 'str';
+  function check($value) { return RxUtil::is_seq_int_array($value); }
+}
+
+class RxCoretypeSeq {
+  var $authority = '';
+  var $subname   = 'seq';
+  function check($value) { return RxUtil::is_seq_int_array($value); }
+}
+
+class RxCoretypeMap {
+  var $authority = '';
+  var $subname   = 'map';
+  function check($value) {
+    return (get_class($value) == 'stdClass');
+  }
+}
+
+class RxCoretypeRec {
+  var $authority = '';
+  var $subname   = 'rec';
+  function check($value) {
+    return (get_class($value) == 'stdClass');
+  }
+}
+
+class RxUtil {
+  function is_seq_int_array($value) {
+    if (! is_array($value)) return false;
+
+    for ($i = 0; $i < count($value); $i++)
+      if (! array_key_exists($i, $value)) return false;
+
+    return true;
+  }
 }
 
 ?>
