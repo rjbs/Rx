@@ -39,8 +39,7 @@ foreach ($test_data as $k => $v) {
     $new_v = new stdClass();
 
     foreach ($v as $entry) {
-      $v_arr = json_decode("[ $entry ]");
-      $new_v->$entry = $v_arr[0];
+      $new_v->$entry = $entry;
     }
 
     $test_data[$k] = $v = $new_v;
@@ -49,6 +48,7 @@ foreach ($test_data as $k => $v) {
   foreach ($test_data[$k] as $entry => $json) {
     $j_arr = json_decode("[ $json ]");
     $test_data[$k]->$entry = $j_arr[0];
+    # diag("loaded $json ($k/$entry) as " . var_export($j_arr[0], true));
   }
 }
 
@@ -60,6 +60,9 @@ $Rx = new Rx();
 
 asort($test_schemata);
 foreach ($test_schemata as $schema_name => $test) {
+  if ($_ENV["RX_TEST_SCHEMA"] and $_ENV["RX_TEST_SCHEMA"] != $schema_name)
+    continue;
+
   $schema = null;
 
   try {
@@ -78,7 +81,6 @@ foreach ($test_schemata as $schema_name => $test) {
     continue;
   }
 
-  diag("testing $schema_name");
   if (! $schema) die("did not get thinger");
 
   foreach (array('pass', 'fail') as $pf) {
@@ -87,18 +89,19 @@ foreach ($test_schemata as $schema_name => $test) {
     foreach ($test->$pf as $source => $which) {
       if (is_string(which) and ($which == "*")) {
         $which = array();
-        foreach ($test_data[$source] as $name => $x) array_push($which, $name);
+        foreach ($test_data[$source] as $name => $x)
+          $which[ count($which) ] = $name;
       }
 
       foreach ($which as $entry) {
-        # diag(">> " . var_dump($test_data[$source]->$entry));
-        $result = $schema->check($test_data[$source]->$entry);
+        $value = $test_data[$source]->$entry;
+
+        $result = $schema->check($value);
         if ($pf == 'fail') $result = ! $result;
         ok($result, "$expect: $source/$entry against $schema_name");
       }
     }
   }
-  #foreach 
 }
 
 ?>
