@@ -1,6 +1,7 @@
 #!/usr/bin/php
 <?php
 require 'Test.php';
+require 'Rx.php';
 plan(1);
 
 $index_json = file_get_contents('spec/index.json');
@@ -18,7 +19,7 @@ foreach ($index as $file) {
   $type = array_shift($parts);
 
   $leaf = $parts[ count($parts) - 1 ];
-  preg_replace('/\.json$/', '', $leaf);
+  $leaf = preg_replace('/\.json$/', '', $leaf);
 
   if ($type == 'schemata') {
     $file = join("/", $parts);
@@ -57,25 +58,45 @@ function test_json($x, $y) {
   return false;
 }
 
-ok(1, 'this is a test test');
+$Rx = new Rx();
 
+asort($test_schemata);
 foreach ($test_schemata as $schema_name => $test) {
+  $schema = null;
+
+  try {
+    $schema = $Rx->make_schema($test->schema);
+  } catch (Exception $e) {
+    if ($test->invalid) {
+      pass("BAD SCHEMA: $schema_name");
+      continue;
+    } else {
+      throw $e;
+    }
+  }
+
   if ($test->invalid) {
-    ok(0, "BAD SCHEMA: $schema_name");
+    fail("BAD SCHEMA: $schema_name");
     continue;
   }
 
+  diag("testing $schema_name");
+  if (! $schema) die("did not get thinger");
+
   foreach (array('pass', 'fail') as $pf) {
     $expect = ($pf == 'pass') ? 'VALID  ' : 'INVALID';
-
+    if ($test->$pf == null) continue;
     foreach ($test->$pf as $source => $which) {
-      if (is_string(which) and ($which== "*")) {
+      if (is_string(which) and ($which == "*")) {
         $which = array();
-        foreach ($test_data[$source] as $e) array_push($which, $e);
+        foreach ($test_data[$source] as $name => $x) array_push($which, $name);
       }
 
       foreach ($which as $entry) {
-        ok(0, "testing $source/$entry against $schema_name");
+        # diag(">> " . var_dump($test_data[$source]->$entry));
+        $result = $schema->check($test_data[$source]->$entry);
+        if ($pf == 'fail') $result = ! $result;
+        ok($result, "$expect: $source/$entry against $schema_name");
       }
     }
   }
