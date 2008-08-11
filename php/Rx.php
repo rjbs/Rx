@@ -31,8 +31,11 @@ class Rx {
 
   function _initialize_core_types ($ct) {
     $ct['//any']  = 'RxCoretypeAny';
+    $ct['//arr']  = 'RxCoretypeArr';
     $ct['//bool'] = 'RxCoretypeBool';
     $ct['//def']  = 'RxCoretypeDef';
+    $ct['//num']  = 'RxCoretypeNum';
+    $ct['//int']  = 'RxCoretypeInt';
   }
 
   function make_schema($schema) {
@@ -62,6 +65,32 @@ class RxCoretypeBool {
   var $subname   = 'bool';
   function check($value) { return is_bool($value); }
 }
+
+class RxCoreTypeArr {
+  var $authority = '';
+  var $subname   = 'arr';
+  function check($value) { return is_array($value); }
+}
+
+class RxCoreTypeNum {
+  var $authority = '';
+  var $subname   = 'arr';
+  function check($value) { return is_numeric($value); }
+}
+
+class RxCoreTypeInt {
+  var $authority = '';
+  var $subname   = 'arr';
+  function check($value) { return is_int($value); }
+}
+  
+# int
+# map
+# num
+# one
+# rec
+# seq
+# str
 
 class RxCoretypeDef {
   function check($value) { return ! is_null($value); }
