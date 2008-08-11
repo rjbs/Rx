@@ -74,19 +74,17 @@ class RxCoreTypeArr {
 
 class RxCoreTypeNum {
   var $authority = '';
-  var $subname   = 'arr';
+  var $subname   = 'num';
   function check($value) { return is_numeric($value); }
 }
 
 class RxCoreTypeInt {
   var $authority = '';
-  var $subname   = 'arr';
+  var $subname   = 'int';
   function check($value) { return is_int($value); }
 }
   
-# int
 # map
-# num
 # one
 # rec
 # seq
