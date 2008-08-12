@@ -87,7 +87,29 @@ class RxCoreTypeNum {
 class RxCoreTypeInt {
   var $authority = '';
   var $subname   = 'int';
-  function check($value) { return is_int($value); }
+
+  var $range_checker;
+
+  function check($value) {
+    if (! is_int($value)) return false;
+    if ($this->range_checker and ! $this->range_checker->check($value))
+      return false;
+
+    return true;
+  }
+
+  function RxCoretypeInt ($schema) {
+    if ($schema->range) {
+      $this->range_checker = new RxRangeChecker(
+        $schema->range,
+        array(
+          'allow_fractional' => false,
+          'allow_exclusive'  => true,
+          'allow_negative'   => true
+        )
+      );
+    }
+  }
 }
 
 class RxCoretypeDef {
@@ -142,6 +164,41 @@ class RxUtil {
 
     for ($i = 0; $i < count($value); $i++)
       if (! array_key_exists($i, $value)) return false;
+
+    return true;
+  }
+}
+
+class RxRangeChecker {
+  var $min;
+  var $min_ex;
+  var $max_ex;
+  var $max;
+
+  function RxRangeChecker ($arg, $rules) {
+    $valid_names = array('min', 'max');
+
+    if ($rules['allow_exclusive'])
+      array_push($valid_names, 'min_ex', 'max_ex');
+
+    foreach ($valid_names as $name) {
+      if (! property_exists($arg, $name)) continue;
+
+      if (! $rules['allow_negative'] and $arg->$name < 0)
+        throw new Exception("negative $name not allowed in range");
+
+      if (! $rules['allow_fractional'] and ! is_int($arg->$name))
+        throw new Exception("fractional $name not allowed in range");
+
+      $this->$name = $arg->$name;
+    }
+  }
+
+  function check($value) {
+    if (! is_null($this->min)    and $value >  $this->min   ) return false;
+    if (! is_null($this->min_ex) and $value >= $this->min_ex) return false;
+    if (! is_null($this->max_ex) and $value <= $this->max_ex) return false;
+    if (! is_null($this->max)    and $value <  $this->max   ) return false;
 
     return true;
   }
