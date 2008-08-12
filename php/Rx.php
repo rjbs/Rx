@@ -54,7 +54,7 @@ class Rx {
     $type_class = $this->registry->$type;
 
     if ($type_class)
-      return new $type_class($schema);
+      return new $type_class($schema, $this);
 
     return false;
   }
@@ -75,7 +75,37 @@ class RxCoretypeBool {
 class RxCoreTypeArr {
   var $authority = '';
   var $subname   = 'arr';
-  function check($value) { return RxUtil::is_seq_int_array($value); }
+
+  var $content_schema;
+  var $length_checker;
+
+  function RxCoretypeArr($schema, $rx) {
+    $this->content_schema = $rx->make_schema($schema->contents);
+
+    if ($schema->length) {
+      $this->length_checker = new RxRangeChecker(
+        $schema->length,
+        array(
+          'allow_fractional' => false,
+          'allow_exclusive'  => false,
+          'allow_negative'   => false
+        )
+      );
+    }
+  }
+
+  function check($value) {
+    if (! RxUtil::is_seq_int_array($value)) return false;
+
+    if ($this->length_checker)
+      if (! $this->length_checker->check(count($value))) return false;
+
+    foreach ($value as $i => $entry) {
+      if (! $this->content_schema->check($entry)) return false;
+    }
+
+    return true;
+  }
 }
 
 class RxCoreTypeNum {
