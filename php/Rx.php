@@ -75,7 +75,7 @@ class RxCoretypeBool {
 class RxCoreTypeArr {
   var $authority = '';
   var $subname   = 'arr';
-  function check($value) { return is_array($value); }
+  function check($value) { return RxUtil::is_seq_int_array($value); }
 }
 
 class RxCoreTypeNum {
@@ -111,7 +111,7 @@ class RxCoretypeOne {
 class RxCoretypeStr {
   var $authority = '';
   var $subname   = 'str';
-  function check($value) { return RxUtil::is_seq_int_array($value); }
+  function check($value) { return is_string($value); }
 }
 
 class RxCoretypeSeq {
