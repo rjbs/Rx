@@ -81,7 +81,30 @@ class RxCoreTypeArr {
 class RxCoreTypeNum {
   var $authority = '';
   var $subname   = 'num';
-  function check($value) { return is_numeric($value); }
+
+  var $range_checker;
+
+  function check($value) {
+    if (! (is_int($value) or is_float($value))) return false;
+
+    if ($this->range_checker and ! $this->range_checker->check($value))
+      return false;
+
+    return true;
+  }
+
+  function RxCoretypeNum ($schema) {
+    if ($schema->range) {
+      $this->range_checker = new RxRangeChecker(
+        $schema->range,
+        array(
+          'allow_fractional' => true,
+          'allow_exclusive'  => true,
+          'allow_negative'   => true
+        )
+      );
+    }
+  }
 }
 
 class RxCoreTypeInt {
@@ -91,7 +114,8 @@ class RxCoreTypeInt {
   var $range_checker;
 
   function check($value) {
-    if (! is_int($value)) return false;
+    if (! (is_int($value) || is_float($value))) return false;
+    if (is_float($value) and $value != floor($value)) return false;
     if ($this->range_checker and ! $this->range_checker->check($value))
       return false;
 
@@ -179,7 +203,7 @@ class RxRangeChecker {
     $valid_names = array('min', 'max');
 
     if ($rules['allow_exclusive'])
-      array_push($valid_names, 'min_ex', 'max_ex');
+      array_push($valid_names, 'min-ex', 'max-ex');
 
     foreach ($valid_names as $name) {
       if (! property_exists($arg, $name)) continue;
@@ -190,15 +214,16 @@ class RxRangeChecker {
       if (! $rules['allow_fractional'] and ! is_int($arg->$name))
         throw new Exception("fractional $name not allowed in range");
 
-      $this->$name = $arg->$name;
+      $prop_name = preg_replace('/-/', '_', $name);
+      $this->$prop_name = $arg->$name;
     }
   }
 
   function check($value) {
-    if (! is_null($this->min)    and $value >  $this->min   ) return false;
-    if (! is_null($this->min_ex) and $value >= $this->min_ex) return false;
-    if (! is_null($this->max_ex) and $value <= $this->max_ex) return false;
-    if (! is_null($this->max)    and $value <  $this->max   ) return false;
+    if (! is_null($this->min)    and $value <  $this->min   ) return false;
+    if (! is_null($this->min_ex) and $value <= $this->min_ex) return false;
+    if (! is_null($this->max_ex) and $value >= $this->max_ex) return false;
+    if (! is_null($this->max)    and $value >  $this->max   ) return false;
 
     return true;
   }
