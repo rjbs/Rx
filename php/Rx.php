@@ -200,22 +200,122 @@ class RxCoretypeStr {
 class RxCoretypeSeq {
   var $authority = '';
   var $subname   = 'seq';
-  function check($value) { return RxUtil::is_seq_int_array($value); }
+
+  var $content_schemata;
+  var $tail_schema;
+
+  function check($value) {
+    if (! RxUtil::is_seq_int_array($value)) return false;
+  
+    foreach ($this->content_schemata as $i => $schema) {
+      if (! array_key_exists($i, $value)) return false;
+      if (! $schema->check($value[$i])) return false;
+    }
+
+    if (count($value) > count($this->content_schemata)) {
+      if (! $this->tail_schema) return false;
+
+      $tail = array_slice(
+        $value,
+        count($this->content_schemata),
+        count($value) - count($this->content_schemata)
+      );
+
+      if (! $this->tail_schema->check($tail)) return false;
+    }
+
+    return true;
+  }
+
+  function RxCoretypeSeq($schema, $rx) {
+    if (! $schema->contents)
+      throw new Exception('no contents entry for //seq schema');
+  
+    if (! is_array($schema->contents))
+      throw new Exception('contents entry for //seq schema is not an array');
+
+    $this->content_schemata = array();
+
+    foreach ($schema->contents as $i => $entry) {
+      array_push($this->content_schemata, $rx->make_schema($entry));
+    }
+
+    if ($schema->tail) $this->tail_schema = $rx->make_schema($schema->tail);
+  }
 }
 
 class RxCoretypeMap {
   var $authority = '';
   var $subname   = 'map';
+  
+  var $values_schema;
+
   function check($value) {
-    return (get_class($value) == 'stdClass');
+    if (get_class($value) != 'stdClass') return false;
+
+    if ($this->values_schema) {
+      foreach ($value as $key => $entry) {
+        if (! $this->values_schema->check($entry)) return false;
+      }
+    }
+
+    return true;
+  }
+
+  function RxCoretypeMap($schema, $rx) {
+    if ($schema->values)
+      $this->values_schema = $rx->make_schema($schema->values);
   }
 }
 
 class RxCoretypeRec {
   var $authority = '';
   var $subname   = 'rec';
+
+  var $required;
+  var $optional;
+  var $allowed;
+
   function check($value) {
-    return (get_class($value) == 'stdClass');
+    if (get_class($value) != 'stdClass') return false;
+
+    foreach ($value as $key => $entry) {
+      if (! $this->allowed->$key) return false;
+    }
+
+    foreach ($this->required as $key => $schema) {
+      if (! property_exists($value, $key)) return false;
+      if (! $schema->check($value->$key)) return false;
+    }
+
+    foreach ($this->optional as $key => $schema) {
+      if (! array_key_exists($key, $value)) continue;
+      if (! $schema->check($value->$key)) return false;
+    }
+
+    return true;
+  }
+
+  function RxCoretypeRec($schema, $rx) {
+    $this->allowed  = new stdClass();
+    $this->required = new stdClass();
+    $this->optional = new stdClass();
+
+    if ($schema->required) {
+      foreach ($schema->required as $key => $entry) {
+        $this->allowed->$key = true;
+        $this->required->$key = $rx->make_schema($entry);
+      }
+    }
+
+    if ($schema->optional) {
+      foreach ($schema->optional as $key => $entry) {
+        if ($this->allowed->$key)
+          throw new Exception("$key is both required and optional in //map");
+
+        $this->optional->$key = $rx->make_schema($entry);
+      }
+    }
   }
 }
 
