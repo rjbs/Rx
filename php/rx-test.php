@@ -66,12 +66,16 @@ foreach ($test_schemata as $schema_name => $test) {
   $schema = null;
 
   try {
+    diag("here we go! $schema_name...");
     $schema = $Rx->make_schema($test->schema);
+    diag("...made the schema!");
   } catch (Exception $e) {
+    diag("...time to rethrow!!");
     if ($test->invalid) {
       pass("BAD SCHEMA: $schema_name");
       continue;
     } else {
+      diag("...time to rethrow!!");
       throw $e;
     }
   }

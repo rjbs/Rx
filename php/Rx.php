@@ -46,11 +46,15 @@ class Rx {
 
   function make_schema($schema) {
     if (! is_object($schema)) {
+      $schema_name = $schema;
       $schema = new stdClass();
-      $schema->type = $schema;
+      $schema->type = $schema_name;
     }
 
     $type = $schema->type;
+
+    if (! $type) throw new Exception("can't make a schema with no type");
+
     $type_class = $this->registry->$type;
 
     if ($type_class)
@@ -80,6 +84,9 @@ class RxCoreTypeArr {
   var $length_checker;
 
   function RxCoretypeArr($schema, $rx) {
+    if (! $schema->contents)
+      throw new Exception('no contents entry for //arr schema');
+
     $this->content_schema = $rx->make_schema($schema->contents);
 
     if ($schema->length) {
