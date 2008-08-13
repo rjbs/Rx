@@ -83,7 +83,15 @@ class RxCoreTypeArr {
   var $content_schema;
   var $length_checker;
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'contents' and $key != 'length' and $key != 'type')
+        throw new Exception("unknown parameter $key for //arr schema");
+  }
+
   function RxCoretypeArr($schema, $rx) {
+    RxCoretypeArr::_check_schema($schema);
+
     if (! $schema->contents)
       throw new Exception('no contents entry for //arr schema');
 
@@ -130,7 +138,15 @@ class RxCoreTypeNum {
     return true;
   }
 
+  function _check_schema($schema, $type) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'range' and $key != 'type')
+        throw new Exception("unknown parameter $key for $type schema");
+  }
+
   function RxCoretypeNum ($schema) {
+    RxCoretypeNum::_check_schema($schema, '//num');
+
     if ($schema->range) {
       $this->range_checker = new RxRangeChecker(
         $schema->range,
@@ -160,6 +176,8 @@ class RxCoreTypeInt {
   }
 
   function RxCoretypeInt ($schema) {
+    RxCoretypeNum::_check_schema($schema, '//int');
+
     if ($schema->range) {
       $this->range_checker = new RxRangeChecker(
         $schema->range,
@@ -262,7 +280,15 @@ class RxCoretypeMap {
     return true;
   }
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'values' and $key != 'type')
+        throw new Exception("unknown parameter $key for //map schema");
+  }
+
   function RxCoretypeMap($schema, $rx) {
+    RxCoretypeMap::_check_schema($schema);
+
     if ($schema->values)
       $this->values_schema = $rx->make_schema($schema->values);
   }
@@ -289,14 +315,22 @@ class RxCoretypeRec {
     }
 
     foreach ($this->optional as $key => $schema) {
-      if (! array_key_exists($key, $value)) continue;
+      if (! property_exists($value, $key)) continue;
       if (! $schema->check($value->$key)) return false;
     }
 
     return true;
   }
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'optional' and $key != 'required' and $key != 'type')
+        throw new Exception("unknown parameter $key for //rec schema");
+  }
+
   function RxCoretypeRec($schema, $rx) {
+    RxCoretypeRec::_check_schema($schema);
+
     $this->allowed  = new stdClass();
     $this->required = new stdClass();
     $this->optional = new stdClass();
@@ -313,6 +347,7 @@ class RxCoretypeRec {
         if ($this->allowed->$key)
           throw new Exception("$key is both required and optional in //map");
 
+        $this->allowed->$key = true;
         $this->optional->$key = $rx->make_schema($entry);
       }
     }
