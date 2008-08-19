@@ -9,7 +9,7 @@ Rx.parseTypeName = function (name) {
 
   return {
     authorityName: matches[1],
-    subName      : matches[2],
+    subName      : matches[2]
   };
 }
 
@@ -62,7 +62,7 @@ Rx.Util._x_subset_keys_y = function (x, y) {
   var validRules = {
     allowNegative : true,
     allowFraction : true,
-    allowExclusive: true,
+    allowExclusive: true
   };
 
   Rx.Util.RangeChecker = function (rule, opt) {
