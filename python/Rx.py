@@ -14,6 +14,38 @@ class Util(object):
       "subname"  : m.group(2),
     }
 
+  @staticmethod
+  def make_range_check(rule, opt):
+    rule.setdefault("allow_negative",  True)
+    rule.setdefault("allow_fraction",  True)
+    rule.setdefault("allow_exclusive", True)
+
+    range = {}
+
+    for entry in opt.keys():
+      if entry not in ('min', 'max', 'min-ex', 'max-ex'):
+        raise "illegal argument to make_range_check"
+
+      if not(rule.get('allow_exclusive', True)) and entry[-3:] == '-ex':
+        raise "given argument %s for range when not allowed" % entry
+
+      if not(rule.get('allow_negative', True)) and opt[entry] < 0:
+        raise "given negative %s for range when not allowed" % entry
+
+      if not(rule.get('allow_fraction', True)) and opt[entry] % 1 != 0:
+        raise "given fractional %s for range when not allowed" % entry
+
+      range[entry] = opt[entry]
+
+    def check_range(value):
+      if range.get('min'   ) != None and value <  range['min'   ]: return False
+      if range.get('min-ex') != None and value <= range['min-ex']: return False
+      if range.get('max-ex') != None and value >= range['max-ex']: return False
+      if range.get('max'   ) != None and value >  range['max'   ]: return False
+      return True
+
+    return check_range
+
 class Factory(object):
   def __init__(self, opt={}):
     self.registry = {}
@@ -90,9 +122,20 @@ class IntType(_CoreType):
   @staticmethod
   def subname(): return 'int'
 
+  def __init__(self, schema, rx):
+    self.range = None
+    if schema.get('range'):
+      self.range = Util.make_range_check(
+        {
+          "allow_fractional": False,
+        },
+        schema["range"],
+      )
+
   def check(self, value):
     if not(type(value) in (float, int, long)): return False
     if value % 1 != 0: return False
+    if self.range and not self.range(value): return False
     return True
 
 class MapType(_CoreType):
@@ -113,8 +156,18 @@ class NumType(_CoreType):
   @staticmethod
   def subname(): return 'num'
 
+  def __init__(self, schema, rx):
+    self.range = None
+
+    if schema.get('range'):
+      self.range = Util.make_range_check(
+        { },
+        schema["range"],
+      )
+
   def check(self, value):
     if not(type(value) in (float, int, long)): return False
+    if self.range and not self.range(value): return False
     return True
 
 class OneType(_CoreType):
