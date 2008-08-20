@@ -4,6 +4,9 @@ import types
 
 core_types = [ ]
 
+class Error(Exception):
+  pass
+
 class Util(object):
   @staticmethod
   def parse_type_name(type_name):
@@ -64,8 +67,11 @@ class Factory(object):
     self.registry[t_authority][t_subname] = t
 
   def make_schema(self, schema):
-    if not(type(schema) is type({})):
+    if type(schema) in (str, unicode):
       schema = { "type": schema }
+
+    if not type(schema) is dict:
+      raise Error('invalid schema argument to make_schema')
   
     sn = Util.parse_type_name(schema["type"])
 
@@ -78,9 +84,6 @@ class Factory(object):
     type_class = self.registry[ sn["authority"] ][ sn["subname"] ]
 
     return type_class(schema, self)
-
-class Error(Exception):
-  pass
 
 class _CoreType(object):
   @staticmethod
@@ -102,6 +105,9 @@ class ArrType(_CoreType):
 
   def __init__(self, schema, rx):
     self.length = None
+
+    if not set(schema.keys()).issubset(set(('type', 'contents', 'length'))):
+      raise Error('unknown parameter for //arr')
     
     if not schema.get('contents'):
       raise Error('no contents provided for //arr')
@@ -142,6 +148,9 @@ class IntType(_CoreType):
   def subname(): return 'int'
 
   def __init__(self, schema, rx):
+    if not set(schema.keys()).issubset(set(('type', 'range'))):
+      raise Error('unknown parameter for //int')
+    
     self.range = None
     if schema.get('range'):
       self.range = Util.make_range_check(
@@ -188,6 +197,9 @@ class NumType(_CoreType):
   def subname(): return 'num'
 
   def __init__(self, schema, rx):
+    if not set(schema.keys()).issubset(set(('type', 'range'))):
+      raise Error('unknown parameter for //num')
+
     self.range = None
 
     if schema.get('range'):
@@ -215,6 +227,9 @@ class RecType(_CoreType):
   def subname(): return 'rec'
 
   def __init__(self, schema, rx):
+    if not set(schema.keys()).issubset(set(('type', 'required', 'optional'))):
+      raise Error('unknown parameter for //rec')
+
     self.allowed = set()
 
     for which in ('required', 'optional'):

@@ -56,6 +56,7 @@ for schema_name in schema_names:
   except Rx.Error, e:
     if schema_test_spec.get("invalid", False):
       ok(1, "BAD SCHEMA: schemata %s" % schema_name)
+      continue
     else:
       raise
 
