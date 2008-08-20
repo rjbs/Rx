@@ -52,9 +52,8 @@ for schema_name in schema_names:
   schema_test_spec = test_schemata[ schema_name ]
 
   try:
-    schema = rx.make_checker(schema_test_spec["schema"])
+    schema = rx.make_schema(schema_test_spec["schema"])
   except Rx.Error, e:
-    diag("got an Rx.Error")
     if schema_test_spec.get("invalid", False):
       ok(1, "BAD SCHEMA: schemata %s" % schema_name)
     else:

@@ -63,7 +63,7 @@ class Factory(object):
 
     self.registry[t_authority][t_subname] = t
 
-  def make_checker(self, schema):
+  def make_schema(self, schema):
     if not(type(schema) is type({})):
       schema = { "type": schema }
   
@@ -100,8 +100,27 @@ class ArrType(_CoreType):
   @staticmethod
   def subname(): return 'arr'
 
+  def __init__(self, schema, rx):
+    self.length = None
+    
+    if not schema.get('contents'):
+      raise Error('no contents provided for //arr')
+
+    self.content_schema = rx.make_schema(schema['contents'])
+
+    if schema.get('length'):
+      self.length = Util.make_range_check(
+        { },
+        schema["length"],
+      )
+
   def check(self, value):
     if not(type(value) in [ type([]), type(()) ]): return False
+    if self.length and not self.length(len(value)): return False
+
+    for item in value:
+      if not self.content_schema.check(item): return False
+
     return True;
 
 class BoolType(_CoreType):
@@ -142,8 +161,20 @@ class MapType(_CoreType):
   @staticmethod
   def subname(): return 'map'
 
+  def __init__(self, schema, rx):
+    self.allowed = set()
+
+    if not schema.get('values'):
+      raise Error('no values given for //map')
+
+    self.value_schema = rx.make_schema(schema['values'])
+
   def check(self, value):
     if not(type(value) is type({})): return False
+
+    for v in value.values():
+      if not self.value_schema.check(v): return False
+
     return True;
 
 class NilType(_CoreType):
@@ -183,16 +214,67 @@ class RecType(_CoreType):
   @staticmethod
   def subname(): return 'rec'
 
+  def __init__(self, schema, rx):
+    self.allowed = set()
+
+    for which in ('required', 'optional'):
+      self.__setattr__(which, { })
+      for field in schema.get(which, {}).keys():
+        if field in self.allowed:
+          raise Error('%s appears in both required and optional' % field)
+
+        self.allowed.add(field)
+
+        self.__getattribute__(which)[field] = rx.make_schema(
+          schema[which][field]
+        )
+
   def check(self, value):
     if not(type(value) is type({})): return False
+
+    for field in value.keys():
+      if not field in self.allowed: return False
+
+    for field in self.required.keys(): 
+      if not value.has_key(field): return False
+      if not self.required[field].check( value[field] ): return False
+
+    for field in self.optional.keys():
+      if not value.has_key(field): continue
+      if not self.optional[field].check( value[field] ): return False
+
     return True;
 
 class SeqType(_CoreType):
   @staticmethod
   def subname(): return 'seq'
 
+  def __init__(self, schema, rx):
+    if not schema.get('contents'):
+      raise Error('no contents provided for //seq')
+
+    self.content_schema = [ rx.make_schema(s) for s in schema["contents"] ]
+
+    self.tail_schema = None
+    if (schema.get('tail')):
+      self.tail_schema = rx.make_schema(schema['tail'])
+
   def check(self, value):
     if not(type(value) in [ type([]), type(()) ]): return False
+
+    if len(value) < len(self.content_schema):
+      return False
+
+    for i in range(0, len(self.content_schema)):
+      if not self.content_schema[i].check(value[i]):
+        return False
+
+    if len(value) > len(self.content_schema):
+      if not self.tail_schema: return False
+
+      if not self.tail_schema.check(value[ len(self.content_schema) :  ]):
+        return False
+
     return True;
 
 class StrType(_CoreType):
