@@ -28,7 +28,12 @@ class Rx
   end
 
   def make_schema(schema)
-    schema = { 'type' => schema } unless schema.instance_of?(Hash)
+    schema = { 'type' => schema } if schema.instance_of?(String)
+
+    if not (schema.instance_of?(Hash) and schema['type']) then
+      raise Rx::Exception.new('invalid type')
+    end
+
     sn = parse_name(schema['type'])
 
     authority = @registry[ sn[:authority] ]
@@ -69,10 +74,19 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Arr < Rx::Type::Core
-    def initialize(param, rx); end;
+    def initialize(param, rx)
+      if param['contents'] then
+        @contents_schema = rx.make_schema( param['contents'] )
+      end
+    end
 
     def check(value)
       return false unless value.instance_of?(Array)
+
+      if @contents_schema then
+        value.each { |v| return false unless @contents_schema.check(v) }
+      end
+
       return true
     end
   end
@@ -138,7 +152,8 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Rec < Rx::Type::Core
-    def initialize(param, rx); end;
+    def initialize(param, rx);
+    end;
 
     def check(value)
       return false unless value.instance_of?(Hash)
