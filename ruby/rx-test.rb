@@ -31,10 +31,12 @@ Dir.open('spec/data').each { |file|
 }
 
 class TAP_Emitter
+  attr_reader :i
+
   def ok(bool, desc)
     @i = 0 if @i === nil
     @i += 1
-    printf("%s %s %s\n", bool ? 'ok' : 'not ok', @i, desc);
+    printf("%s %s - %s\n", bool ? 'ok' : 'not ok', @i, desc);
   end
 end
 
@@ -51,7 +53,7 @@ Find.find('spec/schemata') { |path|
   test_schema[leaf] = JSON.parse(json)
 }
 
-rx = Rx.new
+rx  = Rx.new({ :load_core => true })
 tap = TAP_Emitter.new
 
 test_schema.keys.sort.each { |schema_name|
@@ -59,7 +61,7 @@ test_schema.keys.sort.each { |schema_name|
 
   begin
     schema = rx.make_schema(schema_test_desc['schema'])
-  rescue Rx::Error => e
+  rescue Rx::Exception => e
     if schema_test_desc['invalid'] then
       tap.ok(true, "BAD SCHEMA: #{ schema_name }")
       next
@@ -77,7 +79,31 @@ test_schema.keys.sort.each { |schema_name|
     tap.ok(false, "BAD SCHEMA: #{ schema_name }")
     next
   end
+
+  [ 'pass', 'fail' ].each { |pf|
+    next unless schema_test_desc[pf]
+
+    schema_test_desc[pf].each_pair { |source, entries|
+      if entries == '*' then
+        entries = test_data[source].keys
+      end
+
+      entries.each { |entry|
+        result = schema.check(test_data[source][entry])
+        ok = (pf == 'pass' and result) || (pf == 'fail' and !result)
+
+        desc = sprintf "%s: %s/%s against %s",
+          (pf == 'pass' ? 'VALID  ' : 'INVALID'),
+          source, entry,
+          schema_name
+
+        tap.ok(ok, desc)
+      }
+    }
+  }
 }
+
+puts "1..#{tap.i}"
 
 # puts test_data.inspect
 # puts test_schema.inspect
