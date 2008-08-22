@@ -46,6 +46,53 @@ class Rx
   end
 end
 
+class Rx::Helper; end;
+class Rx::Helper::Range
+  def initialize(rule, arg)
+    rule.default = true
+
+    # allow_negative",  True)
+    # allow_fraction",  True)
+    # allow_exclusive", True)
+
+    @range = { }
+
+    arg.each_pair { |key,value|
+      if not ['min', 'max', 'min-ex', 'max-ex'].index(key) then
+        raise Rx::Exception.new("illegal argument for Rx::Helper::Range")
+      end
+
+      if key.match(/-ex\z/) and not rule[:allow_exclusive] then
+        raise Rx::Exception.new(
+          "given exclusive argument for range when not allowed"
+        )
+      end
+
+      if value < 0 and not rule[:allow_negative] then
+        raise Rx::Exception.new(
+          "given negative value for range when not allowed"
+        )
+      end
+
+      if (value % 1 != 0) and not rule[:allow_fraction] then
+        raise Rx::Exception.new(
+          "given fractional value for range when not allowed"
+        )
+      end
+
+      @range[ key ] = value
+    }
+  end
+
+  def check(value)
+    return false if ! @range['min'   ].nil? and value <  @range['min'   ]
+    return false if ! @range['min-ex'].nil? and value <= @range['min-ex']
+    return false if ! @range['max-ex'].nil? and value >= @range['max-ex']
+    return false if ! @range['max'   ].nil? and value >  @range['max'   ]
+    return true
+  end
+end
+
 class Rx::Type
   def check(value)
     raise Rx::Exception.new("Rx::Type subclass didn't implement .new")
@@ -78,10 +125,25 @@ class Rx::Type::Core < Rx::Type
       if param['contents'] then
         @contents_schema = rx.make_schema( param['contents'] )
       end
+
+      if param['length'] then
+        @length_range = Rx::Helper::Range.new(
+          {
+            :allow_exclusive  => false,
+            :allow_fractional => false,
+            :allow_negative   => false,
+          },
+          param['length']
+        )
+      end
     end
 
     def check(value)
       return false unless value.instance_of?(Array)
+
+      if @length_range
+        return false unless @length_range.check(value.length)
+      end
 
       if @contents_schema then
         value.each { |v| return false unless @contents_schema.check(v) }
@@ -107,11 +169,21 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Int < Rx::Type::Core
-    def initialize(param, rx); end;
+    def initialize(param, rx)
+      if param['range'] then
+        @value_range = Rx::Helper::Range.new(
+          {
+            :allow_fractional => false,
+          },
+          param['range']
+        )
+      end
+    end
 
     def check(value)
       if not value.kind_of?(Numeric) then; return false; end;
       if value % 1 != 0 then; return false; end
+      return false if @value_range and not @value_range.check(value)
       return true;
     end
   end
@@ -131,10 +203,18 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Num < Rx::Type::Core
-    def initialize(param, rx); end;
+    def initialize(param, rx)
+      if param['range'] then
+        @value_range = Rx::Helper::Range.new(
+          { },
+          param['range']
+        )
+      end
+    end
 
     def check(value)
       if not value.kind_of?(Numeric) then; return false; end;
+      return false if @value_range and not @value_range.check(value)
       return true;
     end
   end
