@@ -121,10 +121,20 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Arr < Rx::Type::Core
+    @@allowed = { 'contents' => true, 'length' => true, 'type' => true }
+
     def initialize(param, rx)
-      if param['contents'] then
-        @contents_schema = rx.make_schema( param['contents'] )
+      unless param['contents'] then
+        raise Rx::Exception.new('no contents schema given for //arr')
       end
+
+      param.each_key { |k|
+        unless @@allowed[k] then
+          raise Rx::Exception.new("unknown parameter #{k} for //arr")
+        end
+      }
+
+      @contents_schema = rx.make_schema( param['contents'] )
 
       if param['length'] then
         @length_range = Rx::Helper::Range.new(
@@ -169,7 +179,15 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Int < Rx::Type::Core
+    @@allowed = { 'range' => true, 'type' => true }
+
     def initialize(param, rx)
+      param.each_key { |k|
+        unless @@allowed[k] then
+          raise Rx::Exception.new("unknown parameter #{k} for //int")
+        end
+      }
+
       if param['range'] then
         @value_range = Rx::Helper::Range.new(
           {
@@ -189,10 +207,19 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Map < Rx::Type::Core
-    def initialize(param, rx); end;
+    def initialize(param, rx)
+      if param['values'] then
+        @value_schema = rx.make_schema(param['values'])
+      end
+    end
 
     def check(value)
       return false unless value.instance_of?(Hash)
+
+      if @value_schema
+        value.each_value { |v| return false unless @value_schema.check(v) }
+      end
+
       return true
     end
   end
@@ -232,20 +259,84 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Rec < Rx::Type::Core
-    def initialize(param, rx);
-    end;
+    @@allowed = { 'required' => true, 'optional' => true, 'type' => true }
+
+    def initialize(param, rx)
+      param.each_key { |k|
+        unless @@allowed[k] then
+          raise Rx::Exception.new("unknown parameter #{k} for //int")
+        end
+      }
+
+      @field = { }
+
+      [ 'optional', 'required' ].each { |type|
+        next unless param[type]
+        param[type].keys.each { |field|
+          if @field[field] then
+            raise Rx::Exception.new("#{field} in both required and optional")
+          end
+
+          @field[field] = {
+            :required => (type == 'required'),
+            :schema   => rx.make_schema(param[type][field]),
+          }
+        }
+      }
+    end
 
     def check(value)
       return false unless value.instance_of?(Hash)
+
+      value.each_pair { |field, field_value|
+        return false unless @field[field]
+        return false unless @field[field][:schema].check(field_value)
+      }
+
+      @field.select { |k,v| @field[k][:required] }.each { |pair|
+        return false unless value.has_key?(pair[0])
+      }
+
       return true
     end
   end
 
   class Seq < Rx::Type::Core
-    def initialize(param, rx); end;
+    @@allowed = { 'tail' => true, 'contents' => true, 'type' => true }
+
+    def initialize(param, rx)
+      param.each_key { |k|
+        unless @@allowed[k] then
+          raise Rx::Exception.new("unknown parameter #{k} for //int")
+        end
+      }
+
+      unless param['contents'] and param['contents'].kind_of?(Array) then
+        raise Rx::Exception.new('missing or invalid contents for //seq')
+      end
+
+      @content_schemata = param['contents'].map { |s| rx.make_schema(s) }
+
+      if param['tail'] then
+        @tail_schema = rx.make_schema(param['tail'])
+      end
+    end
 
     def check(value)
       return false unless value.instance_of?(Array)
+      return false if value.length < @content_schemata.length
+
+      @content_schemata.each_index { |i|
+        return false unless @content_schemata[i].check(value[i])
+      }
+
+      if value.length > @content_schemata.length then
+        return false unless @tail_schema and @tail_schema.check(value[
+          @content_schemata.length,
+          value.length - @content_schemata.length
+        ])
+      end
+
       return true
     end
   end
