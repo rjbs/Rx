@@ -10,15 +10,18 @@ my $harness = TAP::Harness->new({
     return [ 'java', -jar => 'js.jar', $filename ] if $filename =~ /\.js$/;
     return [ 'ruby', -I => 'ruby', $filename ] if $filename =~ /\.rb$/;
     return [ 'python', $filename ] if $filename =~ /\.py$/;
+    return [ 'php', $filename ] if $filename =~ /\.php$/;
   },
 });
 
 # You may only choose one of 'exec', 'stream', 'tap' or 'source' at - line 12
 
 $harness->runtests(qw(
+  js/rx/test/runner.js
   perl/t/spec.t
   perl/t/util-range.t
-  ruby/rx-test.rb
+  php/rx-test.php
+  php/util-test.php
   python/rx-test.py
-  js/rx/test/runner.js
+  ruby/rx-test.rb
 ));
