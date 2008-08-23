@@ -5,16 +5,17 @@ package Test::RxSpec;
 use autodie;
 use Data::Rx;
 use File::Find::Rule;
-use JSON::XS;
+use JSON::XS ();
 use Test::More;
 
 my $JSON = JSON::XS->new;
+sub decode_json { $JSON->decode($_[0]) }
 
 sub slurp_json {
   my ($fn) = shift || $_;
   $fn = "spec/$fn.json";
   my $json = do { local $/; open my $fh, '<', $fn; <$fh> };
-  my $data = eval { $JSON->decode( $json ) };
+  my $data = eval { decode_json($json) };
   die "$@ (in $fn)" unless $data;
   return $data;
 }
@@ -102,7 +103,7 @@ sub test_spec {
       for my $entry (@entries) {
         my $json  = data->{ $source }->{ $entry };
 
-        my $input = $JSON->decode("[ $json ]")->[0];
+        my $input = decode_json("[ $json ]")->[0];
 
         TODO: {
           my $reason = fudge_reason($schema_fn, $source, $entry);
