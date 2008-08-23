@@ -227,18 +227,20 @@ class RecType(_CoreType):
   def subname(): return 'rec'
 
   def __init__(self, schema, rx):
-    if not set(schema.keys()).issubset(set(('type', 'required', 'optional'))):
+    if not set(schema.keys()).issubset(set(('type', 'rest', 'required', 'optional'))):
       raise Error('unknown parameter for //rec')
 
-    self.allowed = set()
+    self.known = set()
+    self.rest_schema = None
+    if schema.get('rest'): self.rest_schema = rx.make_schema(schema['rest'])
 
     for which in ('required', 'optional'):
       self.__setattr__(which, { })
       for field in schema.get(which, {}).keys():
-        if field in self.allowed:
+        if field in self.known:
           raise Error('%s appears in both required and optional' % field)
 
-        self.allowed.add(field)
+        self.known.add(field)
 
         self.__getattribute__(which)[field] = rx.make_schema(
           schema[which][field]
@@ -247,8 +249,11 @@ class RecType(_CoreType):
   def check(self, value):
     if not(type(value) is type({})): return False
 
+    unknown = [ ]
     for field in value.keys():
-      if not field in self.allowed: return False
+      if not field in self.known: unknown.append(field)
+
+    if len(unknown) and not self.rest_schema: return False
 
     for field in self.required.keys(): 
       if not value.has_key(field): return False
@@ -257,6 +262,11 @@ class RecType(_CoreType):
     for field in self.optional.keys():
       if not value.has_key(field): continue
       if not self.optional[field].check( value[field] ): return False
+
+    if len(unknown):
+      rest = { }
+      for field in unknown: rest[field] = value[field]
+      if not self.rest_schema.check(rest): return False
 
     return True;
 
