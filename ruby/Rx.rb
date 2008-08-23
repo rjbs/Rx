@@ -264,7 +264,7 @@ class Rx::Type::Core < Rx::Type
     def initialize(param, rx)
       param.each_key { |k|
         unless @@allowed[k] then
-          raise Rx::Exception.new("unknown parameter #{k} for //int")
+          raise Rx::Exception.new("unknown parameter #{k} for //rec")
         end
       }
 
@@ -307,7 +307,7 @@ class Rx::Type::Core < Rx::Type
     def initialize(param, rx)
       param.each_key { |k|
         unless @@allowed[k] then
-          raise Rx::Exception.new("unknown parameter #{k} for //int")
+          raise Rx::Exception.new("unknown parameter #{k} for //seq")
         end
       }
 
