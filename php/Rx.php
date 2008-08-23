@@ -300,14 +300,23 @@ class RxCoretypeRec {
 
   var $required;
   var $optional;
-  var $allowed;
+  var $known;
+  var $rest_schema;
 
   function check($value) {
     if (get_class($value) != 'stdClass') return false;
 
+    $rest = new stdClass();
+    $have_rest = false;
+
     foreach ($value as $key => $entry) {
-      if (! $this->allowed->$key) return false;
+      if (! $this->known->$key) {
+        $have_rest = true;
+        $rest->$key = $entry;
+      }
     }
+
+    if ($have_rest and ! $this->rest_schema) return false;
 
     foreach ($this->required as $key => $schema) {
       if (! property_exists($value, $key)) return false;
@@ -319,35 +328,39 @@ class RxCoretypeRec {
       if (! $schema->check($value->$key)) return false;
     }
 
+    if ($have_rest and ! $this->rest_schema->check($rest)) return false;
+
     return true;
   }
 
   function _check_schema($schema) {
     foreach ($schema as $key => $entry)
-      if ($key != 'optional' and $key != 'required' and $key != 'type')
+      if ($key != 'optional' and $key != 'required' and $key != 'rest' and $key != 'type')
         throw new Exception("unknown parameter $key for //rec schema");
   }
 
   function RxCoretypeRec($schema, $rx) {
     RxCoretypeRec::_check_schema($schema);
 
-    $this->allowed  = new stdClass();
+    $this->known  = new stdClass();
     $this->required = new stdClass();
     $this->optional = new stdClass();
 
+    if ($schema->rest) $this->rest_schema = $rx->make_schema($schema->rest);
+
     if ($schema->required) {
       foreach ($schema->required as $key => $entry) {
-        $this->allowed->$key = true;
+        $this->known->$key = true;
         $this->required->$key = $rx->make_schema($entry);
       }
     }
 
     if ($schema->optional) {
       foreach ($schema->optional as $key => $entry) {
-        if ($this->allowed->$key)
+        if ($this->known->$key)
           throw new Exception("$key is both required and optional in //map");
 
-        $this->allowed->$key = true;
+        $this->known->$key = true;
         $this->optional->$key = $rx->make_schema($entry);
       }
     }
