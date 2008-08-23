@@ -114,12 +114,12 @@ Rx.CoreType.recType = function (opt, rx) {
   if (! Rx.Util._x_subset_keys_y(opt, Rx.CoreType.recType._valid_options))
     throw new Rx.Error('unknown argument for map type');
 
-  this.allowed = {};
+  this.known = {};
 
   if (opt.required) {
     this.required = {};
     for (prop in opt.required) {
-      this.allowed[prop] = true;
+      this.known[prop] = true;
       if (opt.optional && opt.optional[prop])
         throw new Rx.Error(prop + ' appears in both optional and required');
       this.required[prop] = rx.makeSchema(opt.required[prop]);
@@ -129,18 +129,32 @@ Rx.CoreType.recType = function (opt, rx) {
   if (opt.optional) {
     this.optional = {};
     for (prop in opt.optional) {
-      this.allowed[prop] = true;
+      this.known[prop] = true;
       this.optional[prop] = rx.makeSchema(opt.optional[prop]);
     }
   }
+
+  if (opt.rest) this.restSchema = rx.makeSchema(opt.rest);
 };
-Rx.CoreType.recType._valid_options =  { type: 1, required: 1, optional: 1 };
+Rx.CoreType.recType._valid_options = {
+  type: true,
+  rest: true,
+  required: true,
+  optional: true
+};
 Rx.CoreType.recType.typeName = Rx.parseTypeName('//rec');
 Rx.CoreType.recType.prototype.check  = function (v) {
   if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
     return false;
 
-  for (prop in v) if (! this.allowed[prop]) return false;
+  var rest = {};
+  var have_rest = false;
+  for (prop in v) if (! this.known[prop]) {
+    have_rest = true;
+    rest[ prop ] = v[ prop ];
+  }
+  
+  if (have_rest && ! this.restSchema) return false
 
   for (prop in this.required) {
     if (v[prop] == null) return false;
@@ -151,6 +165,8 @@ Rx.CoreType.recType.prototype.check  = function (v) {
     if (v[prop] == null) continue;
     if (! this.optional[prop].check( v[prop] ) ) return false;
   }
+
+  if (have_rest && ! this.restSchema.check(rest)) return false;
 
   return true;
 };
