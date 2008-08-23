@@ -13,9 +13,15 @@ sub new {
   my $self = $class->SUPER::new({}, $rx);
 
   Carp::croak("unknown arguments to new") unless
-  Data::Rx::Util->_x_subset_keys_y($arg, { required => 1, optional => 1 });
+  Data::Rx::Util->_x_subset_keys_y($arg, {
+    rest     => 1,
+    required => 1,
+    optional => 1,
+  });
 
   my $content_schema = {};
+
+  $self->{rest_schema} = $rx->make_schema($arg->{rest}) if $arg->{rest};
 
   TYPE: for my $type (qw(required optional)) {
     next TYPE unless my $entries = $arg->{$type};
@@ -42,12 +48,19 @@ sub check {
     ! Scalar::Util::blessed($value) and ref $value eq 'HASH';
 
   my $c_schema = $self->{content_schema};
-  return unless Data::Rx::Util->_x_subset_keys_y($value, $c_schema);
+
+  my @rest_keys = grep { ! exists $c_schema->{$_} } keys %$value;
+  return if @rest_keys and not $self->{rest_schema};
 
   for my $key (keys %$c_schema) {
     my $check = $c_schema->{$key};
     return if not $check->{optional} and not exists $value->{$key};
     return if exists $value->{$key} and ! $check->{schema}->check($value->{$key});
+  }
+
+  if (@rest_keys) {
+    my %rest = map { $_ => $value->{$_} } @rest_keys;
+    return unless $self->{rest_schema}->check(\%rest);
   }
 
   return 1;
