@@ -259,7 +259,12 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Rec < Rx::Type::Core
-    @@allowed = { 'required' => true, 'optional' => true, 'type' => true }
+    @@allowed = {
+      'type' => true,
+      'rest' => true,
+      'required' => true,
+      'optional' => true,
+    }
 
     def initialize(param, rx)
       param.each_key { |k|
@@ -269,6 +274,8 @@ class Rx::Type::Core < Rx::Type
       }
 
       @field = { }
+
+      @rest_schema = rx.make_schema(param['rest']) if param['rest']
 
       [ 'optional', 'required' ].each { |type|
         next unless param[type]
@@ -288,14 +295,27 @@ class Rx::Type::Core < Rx::Type
     def check(value)
       return false unless value.instance_of?(Hash)
 
+      rest = [ ]
+
       value.each_pair { |field, field_value|
-        return false unless @field[field]
+        unless @field[field] then
+          rest.push(field)
+          next
+        end
+
         return false unless @field[field][:schema].check(field_value)
       }
 
       @field.select { |k,v| @field[k][:required] }.each { |pair|
         return false unless value.has_key?(pair[0])
       }
+
+      if rest.length > 0 then
+        return unless @rest_schema
+        rest_hash = { }
+        rest.each { |field| rest_hash[field] = value[field] }
+        return false unless @rest_schema.check(rest_hash)
+      end
 
       return true
     end
