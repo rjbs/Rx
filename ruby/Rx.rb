@@ -113,11 +113,31 @@ end
 
 class Rx::Type::Core < Rx::Type
   class Any < Rx::Type::Core
-    include Rx::Type::NoParams
+    @@allowed = { 'of' => true, 'type' => true }
+
+    def initialize(param, rx)
+      param.each_key { |k|
+        unless @@allowed[k] then
+          raise Rx::Exception.new("unknown parameter #{k} for //any")
+        end
+      }
+
+      if param['of'] then
+        @alts = [ ]
+        param['of'].each { |alt| @alts.push(rx.make_schema(alt)) }
+      end
+    end
+
     def authority; return ''   ; end
     def subname  ; return 'any'; end
 
-    def check(value); return true; end
+    def check(value)
+      return true unless @alts
+
+      @alts.each { |alt| return true if alt.check(value) }
+
+      return false
+    end
   end
 
   class Arr < Rx::Type::Core
