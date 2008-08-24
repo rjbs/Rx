@@ -1,0 +1,18 @@
+{
+  "schema": {
+    "type": "//any",
+    "of": [ "//bool", "//nil" ]
+  },
+
+  "pass": {
+    "bool": "*",
+    "null": "*"
+  },
+
+  "fail": {
+    "arr" : "*",
+    "num" : "*",
+    "obj" : "*",
+    "str" : "*"
+  }
+}
