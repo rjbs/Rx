@@ -5,8 +5,6 @@ import re
 
 plan(None)
 
-ok(1, "Let's get this party started.")
-
 rx = Rx.Factory({ "register_core_types": True });
 
 isa_ok(rx, Rx.Factory)

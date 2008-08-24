@@ -7,6 +7,9 @@ Rx.CoreType = {};
 Rx.CoreType.anyType = function (opt, rx) {
   this.alts = null;
   if (opt.of) {
+    if (opt.of.length == 0)
+      throw new Rx.Error('no alternatives given for //any of');
+
     this.alts = [ ];
     for (i in opt.of) this.alts.push( rx.makeSchema(opt.of[i]) )
   }

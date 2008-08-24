@@ -15,7 +15,7 @@ sub new {
 
   if (my $of = $arg->{of}) {
     Carp::croak("invalid 'of' argument to //any") unless
-      Scalar::Util::reftype $of eq 'ARRAY';
+      Scalar::Util::reftype $of eq 'ARRAY' and @$of;
     
     $self->{of} = [ map {; $rx->make_schema($_) } @$of ];
   }

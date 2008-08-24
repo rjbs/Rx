@@ -123,6 +123,10 @@ class Rx::Type::Core < Rx::Type
       }
 
       if param['of'] then
+        if param['of'].length == 0 then
+          raise Rx::Exception.new("no alternatives provided for 'of' in //any")
+        end
+
         @alts = [ ]
         param['of'].each { |alt| @alts.push(rx.make_schema(alt)) }
       end

@@ -97,11 +97,11 @@ class AnyType(_CoreType):
   @staticmethod
   def subname(): return 'any'
 
-
   def __init__(self, schema, rx):
     self.alts = None
 
-    if schema.get('of'):
+    if schema.get('of') != None:
+      if not schema['of']: raise Error('no alternatives given in //any of')
       self.alts = [ rx.make_schema(alt) for alt in schema['of'] ]
 
   def check(self, value):

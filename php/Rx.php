@@ -77,7 +77,10 @@ class RxCoretypeAny {
   }
 
   function RxCoretypeAny($schema, $rx) {
-    if ($schema->of) {
+    if ($schema->of !== null) {
+      if (count($schema->of) == 0)
+        throw new Exception("no alternatives given for //any of");
+
       $this->alts = Array();
       foreach ($schema->of as $alt)
         array_push($this->alts, $rx->make_schema($alt));
