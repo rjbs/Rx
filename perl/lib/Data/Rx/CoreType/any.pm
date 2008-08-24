@@ -28,7 +28,7 @@ sub check {
 
   my ($self, $value) = @_;
   
-  $_->check($value) && return 1 for @{ $self->{of} }
+  $_->check($value) && return 1 for @{ $self->{of} };
   return;
 }
 
