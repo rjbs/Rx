@@ -4,9 +4,20 @@ Rx.CoreType = {};
 
 // Simple types
 
-Rx.CoreType.anyType  = function (opt) {};
+Rx.CoreType.anyType = function (opt, rx) {
+  this.alts = null;
+  if (opt.of) {
+    this.alts = [ ];
+    for (i in opt.of) this.alts.push( rx.makeSchema(opt.of[i]) )
+  }
+};
+
 Rx.CoreType.anyType.typeName = Rx.parseTypeName('//any');
-Rx.CoreType.anyType.prototype.check  = function (v) { return true; };
+Rx.CoreType.anyType.prototype.check  = function (v) {
+  if (! this.alts) return true;
+  for (i in this.alts) if (this.alts[i].check(v)) return true;
+  return false;
+};
 
 Rx.CoreType.boolType = function (opt) {};
 Rx.CoreType.boolType.typeName = Rx.parseTypeName('//bool');

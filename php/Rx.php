@@ -67,7 +67,22 @@ class Rx {
 class RxCoretypeAny {
   var $authority = '';
   var $subname   = 'any';
-  function check($value) { return true; }
+
+  var $alts;
+
+  function check($value) {
+    if ($this->alts == null) return true;
+    foreach ($this->alts as $alt) if ($alt->check($value)) return true;
+    return false;
+  }
+
+  function RxCoretypeAny($schema, $rx) {
+    if ($schema->of) {
+      $this->alts = Array();
+      foreach ($schema->of as $alt)
+        array_push($this->alts, $rx->make_schema($alt));
+    }
+  }
 }
 
 class RxCoretypeBool {
