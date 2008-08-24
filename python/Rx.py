@@ -97,7 +97,20 @@ class AnyType(_CoreType):
   @staticmethod
   def subname(): return 'any'
 
-  def check(self, value): return True
+
+  def __init__(self, schema, rx):
+    self.alts = None
+
+    if schema.get('of'):
+      self.alts = [ rx.make_schema(alt) for alt in schema['of'] ]
+
+  def check(self, value):
+    if self.alts is None: return True
+    
+    for alt in self.alts:
+      if alt.check(value): return True
+
+    return False
 
 class ArrType(_CoreType):
   @staticmethod
