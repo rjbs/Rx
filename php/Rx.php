@@ -30,6 +30,7 @@ class Rx {
   }
 
   function _initialize_core_types ($ct) {
+    $ct['//all']  = 'RxCoretypeAll';
     $ct['//any']  = 'RxCoretypeAny';
     $ct['//arr']  = 'RxCoretypeArr';
     $ct['//bool'] = 'RxCoretypeBool';
@@ -61,6 +62,28 @@ class Rx {
       return new $type_class($schema, $this);
 
     return false;
+  }
+}
+
+class RxCoretypeAll {
+  var $authority = '';
+  var $subname   = 'all';
+
+  var $alts;
+
+  function check($value) {
+    foreach ($this->alts as $alt) if (! $alt->check($value)) return false;
+    return true;
+  }
+
+  function RxCoretypeAll($schema, $rx) {
+    if (! $schema->of) {
+      throw new Exception("no alternatives given for //any of");
+
+      $this->alts = Array();
+      foreach ($schema->of as $alt)
+        array_push($this->alts, $rx->make_schema($alt));
+    }
   }
 }
 
