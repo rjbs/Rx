@@ -1,0 +1,18 @@
+<h2>//all</h2>
+
+<p>
+  <tt>//all</tt> will only accept values accepted by every schema given in a
+  list.
+</p>
+
+<div class='sample'>
+  <p>Match integers between 3 and 18:</p>
+  <pre class='json'>{
+    "type": "//all",
+    "of": [
+      { "type": "//num", "range": { "min-ex": 0, "max": 18 } },
+      { "type": "//num", "range": { "min": 3 } },
+      "//int",
+    ]
+}</pre>
+</div>

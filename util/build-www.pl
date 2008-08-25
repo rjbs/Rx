@@ -26,7 +26,10 @@ for my $file (File::Find::Rule->file->in('www/src')) {
   if ($leaf =~ /\.html/) {
     open my $fh, '>', "www/out/$path/$leaf";
     my $content = `cat $file`;
-    my $html = $template->fill_in(HASH => { content => \$content });
+    my $html = $template->fill_in(HASH => {
+      content => \$content,
+      depth   => \(scalar @parts),
+    });
     print $fh $html;
   } else {
     `cp $file www/out/$path`;

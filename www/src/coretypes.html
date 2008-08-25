@@ -1,5 +1,15 @@
 <h2 id='terms'>Terminology</h2>
 
+<script lang='text/javascript'>
+$(function() {
+  $('table.types th').each(function () {
+    var $this = $(this);
+    var m = $this.text().match(/^\/\/(\w+)$/);
+    $this.html('<a href="coretype/' + m[1] + '.html">' + m[0] + '</a>');
+  });
+});
+</script>
+
 <p>
   There are really only two things you need to know about in Rx: types and
   schemata.  A type is an abstract descripition of a type of data.  For

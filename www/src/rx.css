@@ -100,6 +100,7 @@ div.sample {
   -moz-border-radius: 10px;
   width: 80%;
 }
+div.sample p { text-align: left }
 pre {
   padding: 1em;
   text-align: left;

@@ -1,0 +1,26 @@
+<h2>//any</h2>
+
+<p>
+  Any has two uses: either it accepts absolutely any value or it accepts a
+  value accepted by any of a list of alternatives.  These two forms look like
+  this:
+</p>
+
+<div class='sample'>
+  <p>Match absolutely anything:</p>
+  <pre class='json'>{ "type": "//any" }</pre>
+
+  <p>Match either no value or an integer from 1 to 6:</p>
+  <pre class='json'>{
+    "type": "//any",
+    "of": [
+      "//nil",
+      { "type": "//int", "range": { "min": 1, "max": 6 } }
+    ]
+}</pre>
+</div>
+
+<p>
+  "<tt>of</tt>" is the only permissible for <tt>//any</tt>, and if given it
+  must be a list of one or more valid schema definitions.
+</p>
