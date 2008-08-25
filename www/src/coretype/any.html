@@ -1,9 +1,9 @@
 <h2>//any</h2>
 
 <p>
-  Any has two uses: either it accepts absolutely any value or it accepts a
-  value accepted by any of a list of alternatives.  These two forms look like
-  this:
+  Any has two uses: either it accepts absolutely any value (including the lack
+  of a value) or it accepts a value accepted by any of a list of alternatives.
+  These two forms look like this:
 </p>
 
 <div class='sample'>
@@ -24,3 +24,20 @@
   "<tt>of</tt>" is the only permissible for <tt>//any</tt>, and if given it
   must be a list of one or more valid schema definitions.
 </p>
+
+<div class='sample'>
+  <p>/.meta/any, the schema for //any definitions:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "required": {
+    "type": { "type": "//str", "value": "//any" },
+  },
+  "optional": {
+    "of": {
+      "type": "/arr",
+      "contents": "/.meta/schema",
+      "length": { "min": 1 },
+    }
+  }
+}</pre>
+</div>

@@ -8,11 +8,26 @@
 <div class='sample'>
   <p>Match integers between 3 and 18:</p>
   <pre class='json'>{
-    "type": "//all",
-    "of": [
-      { "type": "//num", "range": { "min-ex": 0, "max": 18 } },
-      { "type": "//num", "range": { "min": 3 } },
-      "//int",
-    ]
+  "type": "//all",
+  "of": [
+    { "type": "//num", "range": { "min-ex": 0, "max": 18 } },
+    { "type": "//num", "range": { "min": 3 } },
+    "//int",
+  ]
+}</pre>
+</div>
+
+<div class='sample'>
+  <p>/.meta/all, the schema for //all definitions:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "required": {
+    "type": { "type": "//str", "value": "//all" },
+    "of":   {
+      "type": "//arr",
+      "contents": "/.meta/schema",
+      "length": { "min": 1 }
+    }
+  }
 }</pre>
 </div>

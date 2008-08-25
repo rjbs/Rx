@@ -1,0 +1,20 @@
+<h2>//def</h2>
+
+<p>
+  <tt>//def</tt> will accept absolutely any value that has a value.  That is,
+  anything that would not be matched by <tt>//nil</tt>.
+</p>
+
+<p>
+  The <tt>//def</tt> type takes no parameters.
+</p>
+
+<div class='sample'>
+  <p>/.meta/def, the schema for //def definitions:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "required": {
+    "type": { "type": "//str", "value": "//def" }
+  }
+}</pre>
+</div>

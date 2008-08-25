@@ -1,0 +1,37 @@
+<h2>//int</h2>
+
+<p>
+  The <tt>//int</tt> type is exactly like <tt>//num</tt>, but the value must
+  have a zero fractional part.  That is: when the value is divided by one,
+  there must no remainder.  Being an integer does <em>not</em> mean that a
+  number may not be represented as a rational or other implementation-specific
+  datatype that allows for fractional parts.  It means only that the fractional
+  part must be equal to zero.
+</p>
+
+<p>
+  The optional <tt>value</tt> parameter may provide an exact value to be
+  compared against.  If this parameter is given, the schema will only accept
+  values that are numerically equal to the parameter's value.
+</p>
+
+<p>
+  The optional <tt>range</tt> parameter may provide a range of values to
+  accept.  Providing both <tt>range</tt> and <tt>value</tt> is not an error,
+  but the Rx implementation may choose to return a <tt>//fail</tt> schema if no
+  value could possibly satisfy the combination of the given range and value.
+</p>
+
+<div class='sample'>
+  <p>/.meta/int, the schema for //int definitions:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "required": {
+    "type": { "type": "//str", "value": "//int" }
+  },
+  "optional": {
+    "value": { "type": "//int" },
+    "range": { "type": "/.meta/range" }
+  }
+}</pre>
+</div>

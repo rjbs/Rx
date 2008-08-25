@@ -22,3 +22,18 @@
   <tt>length</tt> is optional, and is a range to be checked against the number
   of items in tested lists.
 </p>
+
+<div class='sample'>
+  <p>/.meta/arr, the schema for //arr definitions:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "required": {
+    "type": { "type": "//str", "value": "//arr" },
+    "contents": "/.meta/schema"
+  },
+  "optional": {
+    "length": "/.meta/range"
+  }
+}</pre>
+</div>
+
