@@ -13,16 +13,8 @@ sub new {
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, {range=>1});
 
-  if ($arg->{range}) {
-    $self->{range_check} = Data::Rx::Util->_make_range_check(
-      {
-        allow_negative  => 1,
-        allow_fraction  => 0,
-        allow_exclusive => 1,
-      },
-      $arg->{range},
-    );
-  }
+  $self->{range_check} = Data::Rx::Util->_make_range_check($arg->{range})
+    if $arg->{range};
 
   bless $self => $class;
 }

@@ -54,10 +54,7 @@ Rx.CoreType.intType  = function (opt) {
     throw new Rx.Error('unknown argument for int type');
 
   if (opt.range) {
-    this.range_check = new Rx.Util.RangeChecker(
-      { allowNegative: true, allowFraction: false, allowExclusive: true },
-      opt.range
-    );
+    this.range_check = new Rx.Util.RangeChecker( opt.range );
   }
 };
 Rx.CoreType.intType.typeName = Rx.parseTypeName('//int');
@@ -78,10 +75,7 @@ Rx.CoreType.numType  = function (opt) {
     throw new Rx.Error('unknown argument for num type');
 
   if (opt.range) {
-    this.range_check = new Rx.Util.RangeChecker(
-      { allowNegative: true, allowFraction: true, allowExclusive: true },
-      opt.range
-    );
+    this.range_check = new Rx.Util.RangeChecker( opt.range );
   }
 };
 
@@ -122,10 +116,7 @@ Rx.CoreType.arrType  = function (opt, rx) {
 
   this.content_check = rx.makeSchema(opt.contents);
   if (opt.length) {
-    this.length_check = new Rx.Util.RangeChecker(
-      { allowNegative: false, allowFraction: false, allowExclusive: false },
-      opt.length
-    );
+    this.length_check = new Rx.Util.RangeChecker( opt.length );
   }
 };
 Rx.CoreType.arrType.typeName = Rx.parseTypeName('//arr');

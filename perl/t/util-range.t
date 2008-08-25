@@ -6,10 +6,7 @@ use Test::More 'no_plan';
 use Data::Rx::Util;
 
 {
-  my $sub = Data::Rx::Util->_make_range_check(
-    {},
-    { min => 1, max => 10 },
-  );
+  my $sub = Data::Rx::Util->_make_range_check( { min => 1, max => 10 } );
 
   ok(! $sub->(0),  "! 1 <= 1 <= 10");
   ok($sub->(1),    "1 <= 1 <= 10");
@@ -20,7 +17,6 @@ use Data::Rx::Util;
 
 {
   my $sub = Data::Rx::Util->_make_range_check(
-    {},
     { min => 1, max => 10, 'max-ex' => 7 },
   );
 

@@ -49,36 +49,12 @@ end
 
 class Rx::Helper; end;
 class Rx::Helper::Range
-  def initialize(rule, arg)
-    rule.default = true
-
-    # allow_negative",  True)
-    # allow_fraction",  True)
-    # allow_exclusive", True)
-
+  def initialize(arg)
     @range = { }
 
     arg.each_pair { |key,value|
       if not ['min', 'max', 'min-ex', 'max-ex'].index(key) then
         raise Rx::Exception.new("illegal argument for Rx::Helper::Range")
-      end
-
-      if key.match(/-ex\z/) and not rule[:allow_exclusive] then
-        raise Rx::Exception.new(
-          "given exclusive argument for range when not allowed"
-        )
-      end
-
-      if value < 0 and not rule[:allow_negative] then
-        raise Rx::Exception.new(
-          "given negative value for range when not allowed"
-        )
-      end
-
-      if (value % 1 != 0) and not rule[:allow_fraction] then
-        raise Rx::Exception.new(
-          "given fractional value for range when not allowed"
-        )
       end
 
       @range[ key ] = value
@@ -191,14 +167,7 @@ class Rx::Type::Core < Rx::Type
       @contents_schema = rx.make_schema( param['contents'] )
 
       if param['length'] then
-        @length_range = Rx::Helper::Range.new(
-          {
-            :allow_exclusive  => false,
-            :allow_fractional => false,
-            :allow_negative   => false,
-          },
-          param['length']
-        )
+        @length_range = Rx::Helper::Range.new( param['length'] )
       end
     end
 
@@ -243,12 +212,7 @@ class Rx::Type::Core < Rx::Type
       }
 
       if param['range'] then
-        @value_range = Rx::Helper::Range.new(
-          {
-            :allow_fractional => false,
-          },
-          param['range']
-        )
+        @value_range = Rx::Helper::Range.new( param['range'] )
       end
     end
 
@@ -286,10 +250,7 @@ class Rx::Type::Core < Rx::Type
   class Num < Rx::Type::Core
     def initialize(param, rx)
       if param['range'] then
-        @value_range = Rx::Helper::Range.new(
-          { },
-          param['range']
-        )
+        @value_range = Rx::Helper::Range.new( param['range'] )
       end
     end
 

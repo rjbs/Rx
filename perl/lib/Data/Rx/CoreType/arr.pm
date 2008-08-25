@@ -22,16 +22,8 @@ sub new {
 
   $self->{content_check} = $content_check;
 
-  if ($arg->{length}) {
-    $self->{length_check} = Data::Rx::Util->_make_range_check(
-      {
-        allow_negative  => 0,
-        allow_fraction  => 0,
-        allow_exclusive => 0,
-      },
-      $arg->{length},
-    );
-  }
+  $self->{length_check} = Data::Rx::Util->_make_range_check($arg->{length})
+    if $arg->{length};
 
   bless $self => $class;
 }

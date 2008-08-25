@@ -116,14 +116,7 @@ class RxCoreTypeArr {
     $this->content_schema = $rx->make_schema($schema->contents);
 
     if ($schema->length) {
-      $this->length_checker = new RxRangeChecker(
-        $schema->length,
-        array(
-          'allow_fractional' => false,
-          'allow_exclusive'  => false,
-          'allow_negative'   => false
-        )
-      );
+      $this->length_checker = new RxRangeChecker( $schema->length );
     }
   }
 
@@ -166,14 +159,7 @@ class RxCoreTypeNum {
     RxCoretypeNum::_check_schema($schema, '//num');
 
     if ($schema->range) {
-      $this->range_checker = new RxRangeChecker(
-        $schema->range,
-        array(
-          'allow_fractional' => true,
-          'allow_exclusive'  => true,
-          'allow_negative'   => true
-        )
-      );
+      $this->range_checker = new RxRangeChecker( $schema->range );
     }
   }
 }
@@ -197,14 +183,7 @@ class RxCoreTypeInt {
     RxCoretypeNum::_check_schema($schema, '//int');
 
     if ($schema->range) {
-      $this->range_checker = new RxRangeChecker(
-        $schema->range,
-        array(
-          'allow_fractional' => false,
-          'allow_exclusive'  => true,
-          'allow_negative'   => true
-        )
-      );
+      $this->range_checker = new RxRangeChecker( $schema->range );
     }
   }
 }
@@ -402,20 +381,11 @@ class RxRangeChecker {
   var $max_ex;
   var $max;
 
-  function RxRangeChecker ($arg, $rules) {
-    $valid_names = array('min', 'max');
-
-    if ($rules['allow_exclusive'])
-      array_push($valid_names, 'min-ex', 'max-ex');
+  function RxRangeChecker ($arg) {
+    $valid_names = array('min', 'max', 'min-ex', 'max-ex');
 
     foreach ($valid_names as $name) {
       if (! property_exists($arg, $name)) continue;
-
-      if (! $rules['allow_negative'] and $arg->$name < 0)
-        throw new Exception("negative $name not allowed in range");
-
-      if (! $rules['allow_fractional'] and ! is_int($arg->$name))
-        throw new Exception("fractional $name not allowed in range");
 
       $prop_name = preg_replace('/-/', '_', $name);
       $this->$prop_name = $arg->$name;

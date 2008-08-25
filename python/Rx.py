@@ -18,25 +18,11 @@ class Util(object):
     }
 
   @staticmethod
-  def make_range_check(rule, opt):
-    rule.setdefault("allow_negative",  True)
-    rule.setdefault("allow_fraction",  True)
-    rule.setdefault("allow_exclusive", True)
-
-    range = {}
-
+  def make_range_check(opt):
+    range = { }
     for entry in opt.keys():
       if entry not in ('min', 'max', 'min-ex', 'max-ex'):
         raise "illegal argument to make_range_check"
-
-      if not(rule.get('allow_exclusive', True)) and entry[-3:] == '-ex':
-        raise "given argument %s for range when not allowed" % entry
-
-      if not(rule.get('allow_negative', True)) and opt[entry] < 0:
-        raise "given negative %s for range when not allowed" % entry
-
-      if not(rule.get('allow_fraction', True)) and opt[entry] % 1 != 0:
-        raise "given fractional %s for range when not allowed" % entry
 
       range[entry] = opt[entry]
 
@@ -143,10 +129,7 @@ class ArrType(_CoreType):
     self.content_schema = rx.make_schema(schema['contents'])
 
     if schema.get('length'):
-      self.length = Util.make_range_check(
-        { },
-        schema["length"],
-      )
+      self.length = Util.make_range_check( schema["length"] )
 
   def check(self, value):
     if not(type(value) in [ type([]), type(()) ]): return False
@@ -181,12 +164,7 @@ class IntType(_CoreType):
     
     self.range = None
     if schema.get('range'):
-      self.range = Util.make_range_check(
-        {
-          "allow_fractional": False,
-        },
-        schema["range"],
-      )
+      self.range = Util.make_range_check( schema["range"] )
 
   def check(self, value):
     if not(type(value) in (float, int, long)): return False
@@ -231,10 +209,7 @@ class NumType(_CoreType):
     self.range = None
 
     if schema.get('range'):
-      self.range = Util.make_range_check(
-        { },
-        schema["range"],
-      )
+      self.range = Util.make_range_check( schema["range"] )
 
   def check(self, value):
     if not(type(value) in (float, int, long)): return False

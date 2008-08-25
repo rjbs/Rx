@@ -65,6 +65,7 @@ foreach ($test_schemata as $schema_name => $test) {
 
   $schema = null;
 
+  diag("making $schema_name: " . var_export($test->schema, true));
   try {
     $schema = $Rx->make_schema($test->schema);
   } catch (Exception $e) {
@@ -81,7 +82,7 @@ foreach ($test_schemata as $schema_name => $test) {
     continue;
   }
 
-  if (! $schema) die("did not get thinger");
+  if (! $schema) die("did not get schema for valid input");
 
   foreach (array('pass', 'fail') as $pf) {
     $expect = ($pf == 'pass') ? 'VALID  ' : 'INVALID';
