@@ -77,13 +77,12 @@ class RxCoretypeAll {
   }
 
   function RxCoretypeAll($schema, $rx) {
-    if (! $schema->of) {
-      throw new Exception("no alternatives given for //any of");
+    if (! $schema->of)
+      throw new Exception("no alternatives given for //all of");
 
-      $this->alts = Array();
-      foreach ($schema->of as $alt)
-        array_push($this->alts, $rx->make_schema($alt));
-    }
+    $this->alts = Array();
+    foreach ($schema->of as $alt)
+      array_push($this->alts, $rx->make_schema($alt));
   }
 }
 
