@@ -37,6 +37,7 @@ $(function() {
     <li><a href='coretypes.html'>Core Types</a></li>
     <li><a href='demo.html'>Demonstration</a></li>
     <li><a href='download.html'>Download</a></li>
+    <li><a href='faq.html'>FAQ</a></li>
   </ul>
 </div>
 

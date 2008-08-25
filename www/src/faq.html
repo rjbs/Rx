@@ -1,0 +1,55 @@
+<h1>Frequently Anticipated Questions</h1>
+
+<h2 id='data-not-strs'>Only JSON?</h2>
+<p>
+  Rx isn't only for JSON.  It's just that JSON is a very good least common
+  denomenator for common datatypes, and using JSON for the reference tests
+  makes it very easy to implement elsewhere -- there are JSON implementations
+  nearly oheverywhere.
+</p>
+
+<p>
+  Rx is all about data structures, not the mechanism you used to transport
+  them.  It doesn't know about JSON, YAML, XML, or any other way to serialize
+  or exchange data.  There are a few unfortunate exceptions, though.  For
+  example, because Perl has no native boolean type, it relies on encountering
+  the kind of object that a JSON::XS deserializer would create.  These
+  exceptions are always about language constraints, and never about Rx itself.
+</p>
+
+<p>
+  In short, Rx validates data, not JSON strings.
+</p>
+
+<h2 id='why-not-use'>Why not use ... ?</h2>
+<p>
+  There are other systems for validating simple data structures, of course.
+  Rx was only written after the other available systems proved inadequate.
+</p>
+
+<p>
+  XML-centric systems like XSD and RELAX NG had a few problems, but the biggest
+  was that they were made for validating data as represented in XML, which
+  tends to be different than (or a subset of) the data representations found in
+  JSON, YAML, or just in program code.  Even if this wasn't a problem, there
+  just aren't enough simple implementations of these validators.
+</p>
+
+<p>
+  <a href='http://www.kuwata-lab.com/kwalify/'>Kwalify</a> was designed as a
+  schema system for YAML, but its design has portability issues.  For example,
+  it allows regular expressions, the implementation of which differ between
+  platforms.  Its implementation of "mapping merging" requires references,
+  which are not a feature of JSON, and no system for emulating them in JSON is
+  given.  This means that a Kwalify schema might not be representable in JSON,
+  which is a shame, since JSON is far more widely-implemented than JSON.  Its
+  Ruby implementation includes its own YAML parser, which doesn't conform to
+  current YAML specs.  There are other problems, too.
+</p>
+
+<p>
+  <a href='http://json-schema.org/'>JSON Schema</a> is fairly similar in
+  conception to Rx, but is more complex to implement and is less
+  straightforward to safely extend with more types.  It does offer some
+  features that Rx does not, like subclassing and references.
+</p>
