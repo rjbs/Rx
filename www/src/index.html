@@ -34,30 +34,30 @@
 ---
 type: //rec
 required:
-  from: { type: //str }
+  from: //str
   to  : 
     type  : //arr
     length: { min: 1 }
     contents: { type: //str }
-  subj: { type: //str }
-  body: { type: //str }
+  subj: //str
+  body: //str
 optional:
-  user: { type: /example.com/account }</pre>
+  user: /example.com/account</pre>
 <pre class='json'>
 {
   "type": "//rec",
   "required": {
-    "from": { "type": "//str" },
+    "from": "//str",
     "to"  : {
       "type"    : "//arr",
       "length"  : { "min": 1 },
       "contents": { "type": "//str" }
     },
-    "subj": { "type": "//str" },
-    "body": { "type": "//str" }
+    "subj": "//str",
+    "body": "//str"
   },
   "optional": {
-    "user": { "type": "/example.com/account" }
+    "user": "/example.com/account"
   }
 }</pre>
 </div>
