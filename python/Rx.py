@@ -93,6 +93,21 @@ class _CoreType(object):
 
   def check(self, value): return False
 
+class AllType(_CoreType):
+  @staticmethod
+  def subname(): return 'all'
+
+  def __init__(self, schema, rx):
+    if not(schema.get('of') and len(schema.get('of'))):
+      raise Error('no alternatives given in //all of')
+
+    self.alts = [ rx.make_schema(s) for s in schema['of'] ]
+
+  def check(self, value):
+    for schema in self.alts:
+      if (not schema.check(value)): return False
+    return True
+
 class AnyType(_CoreType):
   @staticmethod
   def subname(): return 'any'
@@ -323,6 +338,7 @@ class StrType(_CoreType):
     return type(value) in (str, unicode)
 
 core_types = [
+  AllType,
   AnyType, ArrType, BoolType, DefType,
   IntType, MapType, NilType,  NumType,
   OneType, RecType, SeqType,  StrType

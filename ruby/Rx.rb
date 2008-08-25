@@ -5,6 +5,7 @@ class Rx
 
     if opt[:load_core] then
       @registry[''] = {
+        'all'  => Rx::Type::Core::All,
         'any'  => Rx::Type::Core::Any,
         'arr'  => Rx::Type::Core::Arr,
         'bool' => Rx::Type::Core::Bool,
@@ -112,6 +113,35 @@ class Rx::Exception < Exception
 end
 
 class Rx::Type::Core < Rx::Type
+  class All < Rx::Type::Core
+    @@allowed = { 'of' => true, 'type' => true }
+
+    def initialize(param, rx)
+      param.each_key { |k|
+        unless @@allowed[k] then
+          raise Rx::Exception.new("unknown parameter #{k} for //all")
+        end
+      }
+
+      if param['of'] then
+        if param['of'].length == 0 then
+          raise Rx::Exception.new("no schemata provided for 'of' in //all")
+        end
+
+        @alts = [ ]
+        param['of'].each { |alt| @alts.push(rx.make_schema(alt)) }
+      end
+    end
+
+    def authority; return ''   ; end
+    def subname  ; return 'all'; end
+
+    def check(value)
+      @alts.each { |alt| return false if ! alt.check(value) }
+      return true
+    end
+  end
+
   class Any < Rx::Type::Core
     @@allowed = { 'of' => true, 'type' => true }
 

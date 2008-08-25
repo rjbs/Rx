@@ -4,6 +4,23 @@ Rx.CoreType = {};
 
 // Simple types
 
+Rx.CoreType.allType = function (opt, rx) {
+  this.alts = null;
+  if (opt.of) {
+    if (opt.of.length == 0)
+      throw new Rx.Error('no alternatives given for //all of');
+
+    this.alts = [ ];
+    for (i in opt.of) this.alts.push( rx.makeSchema(opt.of[i]) )
+  }
+};
+
+Rx.CoreType.allType.typeName = Rx.parseTypeName('//all');
+Rx.CoreType.allType.prototype.check  = function (v) {
+  for (i in this.alts) if (! this.alts[i].check(v)) return false;
+  return true;
+};
+
 Rx.CoreType.anyType = function (opt, rx) {
   this.alts = null;
   if (opt.of) {
