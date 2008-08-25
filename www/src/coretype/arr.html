@@ -1,0 +1,24 @@
+<h2>//arr</h2>
+
+<p>
+  An array is a list of values, with each value validated against the same
+  schema.
+</p>
+
+<div class='sample'>
+  <p>Matches three or more integers:</p>
+  <pre class='json'>{
+    "type": "//any",
+    "contents": "//int",
+    "length": { "min": 3 }
+}</pre>
+</div>
+
+<p>
+  <tt>contents</tt> must be supplied and must be a valid schema.
+</p>
+
+<p>
+  <tt>length</tt> is optional, and is a range to be checked against the number
+  of items in tested lists.
+</p>
