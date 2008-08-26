@@ -54,7 +54,7 @@ Rx.CoreType.failType.typeName = Rx.parseTypeName('//fail');
 Rx.CoreType.failType.prototype.check  = function (v) { false; };
 
 Rx.CoreType.intType  = function (opt) {
-  if (! Rx.Util._x_subset_keys_y(opt, { type: true, range: true }))
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true, range: true, value: true }))
     throw new Rx.Error('unknown argument for int type');
 
   if (opt.range) {
@@ -75,7 +75,7 @@ Rx.CoreType.nilType.typeName = Rx.parseTypeName('//nil');
 Rx.CoreType.nilType.prototype.check  = function (v) { return v === null };
 
 Rx.CoreType.numType  = function (opt) {
-  if (! Rx.Util._x_subset_keys_y(opt, { type: true, range: true }))
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true, range: true, value: true }))
     throw new Rx.Error('unknown argument for num type');
 
   if (opt.range) {
@@ -91,7 +91,10 @@ Rx.CoreType.numType.prototype.check  = function (v) {
   return true;
 };
 
-Rx.CoreType.strType  = function (opt) {};
+Rx.CoreType.strType  = function (opt) {
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true, value: true }))
+    throw new Rx.Error('unknown argument for str type');
+};
 Rx.CoreType.strType.typeName = Rx.parseTypeName('//str');
 Rx.CoreType.strType.prototype.check  = function (v) {
   return((typeof(v) == 'string') || (v instanceof String));

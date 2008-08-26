@@ -208,7 +208,7 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Int < Rx::Type::Core
-    @@allowed = { 'range' => true, 'type' => true }
+    @@allowed = { 'range' => true, 'type' => true, 'value' => true }
 
     def initialize(param, rx)
       param.each_key { |k|
@@ -254,7 +254,15 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Num < Rx::Type::Core
+    @@allowed = { 'range' => true, 'type' => true, 'value' => true }
+
     def initialize(param, rx)
+      param.each_key { |k|
+        unless @@allowed[k] then
+          raise Rx::Exception.new("unknown parameter #{k} for //num")
+        end
+      }
+
       if param['range'] then
         @value_range = Rx::Helper::Range.new( param['range'] )
       end
@@ -383,7 +391,15 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Str < Rx::Type::Core
-    def initialize(param, rx); end;
+    @@allowed = { 'type' => true, 'value' => true }
+
+    def initialize(param, rx)
+      param.each_key { |k|
+        unless @@allowed[k] then
+          raise Rx::Exception.new("unknown parameter #{k} for //str")
+        end
+      }
+    end
 
     def check(value)
       return false unless value.instance_of?(String)

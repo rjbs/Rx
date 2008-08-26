@@ -14,7 +14,7 @@ sub new {
 
   # XXX: We should be able to reject num values, too. :( -- rjbs, 2008-08-25
   Carp::croak(sprintf 'invalid value for %s', $class->type_name)
-    if exists $arg->{value} and ref $arg->{value} or ! defined $arg->{value};
+    if exists $arg->{value} and (ref $arg->{value} or ! defined $arg->{value});
 
   $self->{value} = $arg->{value} if defined $arg->{value};
 

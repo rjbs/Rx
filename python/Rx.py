@@ -165,7 +165,7 @@ class IntType(_CoreType):
   def subname(): return 'int'
 
   def __init__(self, schema, rx):
-    if not set(schema.keys()).issubset(set(('type', 'range'))):
+    if not set(schema.keys()).issubset(set(('type', 'range', 'value'))):
       raise Error('unknown parameter for //int')
     
     self.range = None
@@ -209,7 +209,7 @@ class NumType(_CoreType):
   def subname(): return 'num'
 
   def __init__(self, schema, rx):
-    if not set(schema.keys()).issubset(set(('type', 'range'))):
+    if not set(schema.keys()).issubset(set(('type', 'range', 'value'))):
       raise Error('unknown parameter for //num')
 
     self.range = None
@@ -314,6 +314,10 @@ class SeqType(_CoreType):
 class StrType(_CoreType):
   @staticmethod
   def subname(): return 'str'
+
+  def __init__(self, schema, rx):
+    if not set(schema.keys()).issubset(set(('type', 'value'))):
+      raise Error('unknown parameter for //str')
 
   def check(self, value):
     return type(value) in (str, unicode)

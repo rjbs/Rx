@@ -174,7 +174,7 @@ class RxCoreTypeNum {
 
   function _check_schema($schema, $type) {
     foreach ($schema as $key => $entry)
-      if ($key != 'range' and $key != 'type')
+      if ($key != 'range' and $key != 'type' and $key != 'value')
         throw new Exception("unknown parameter $key for $type schema");
   }
 
