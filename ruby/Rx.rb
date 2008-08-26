@@ -10,6 +10,7 @@ class Rx
         'arr'  => Rx::Type::Core::Arr,
         'bool' => Rx::Type::Core::Bool,
         'def'  => Rx::Type::Core::Def,
+        'fail' => Rx::Type::Core::Fail,
         'int'  => Rx::Type::Core::Int,
         'map'  => Rx::Type::Core::Map,
         'nil'  => Rx::Type::Core::Nil,
@@ -194,6 +195,11 @@ class Rx::Type::Core < Rx::Type
       return true if value.instance_of?(FalseClass)
       return false
     end
+  end
+
+  class Fail < Rx::Type::Core
+    include Rx::Type::NoParams
+    def check(value); return false; end
   end
 
   class Def < Rx::Type::Core

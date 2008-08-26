@@ -154,6 +154,12 @@ class DefType(_CoreType):
 
   def check(self, value): return not(value is None)
 
+class FailType(_CoreType):
+  @staticmethod
+  def subname(): return 'fail'
+
+  def check(self, value): return False
+
 class IntType(_CoreType):
   @staticmethod
   def subname(): return 'int'
@@ -313,8 +319,7 @@ class StrType(_CoreType):
     return type(value) in (str, unicode)
 
 core_types = [
-  AllType,
-  AnyType, ArrType, BoolType, DefType,
-  IntType, MapType, NilType,  NumType,
-  OneType, RecType, SeqType,  StrType
+  AllType,  AnyType, ArrType, BoolType, DefType,
+  FailType, IntType, MapType, NilType,  NumType,
+  OneType,  RecType, SeqType, StrType
 ]

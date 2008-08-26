@@ -49,6 +49,10 @@ Rx.CoreType.defType  = function (opt) {};
 Rx.CoreType.defType.typeName = Rx.parseTypeName('//def');
 Rx.CoreType.defType.prototype.check  = function (v) { return v != null; };
 
+Rx.CoreType.failType  = function (opt) {};
+Rx.CoreType.failType.typeName = Rx.parseTypeName('//fail');
+Rx.CoreType.failType.prototype.check  = function (v) { false; };
+
 Rx.CoreType.intType  = function (opt) {
   if (! Rx.Util._x_subset_keys_y(opt, { type: true, range: true }))
     throw new Rx.Error('unknown argument for int type');

@@ -35,6 +35,7 @@ class Rx {
     $ct['//arr']  = 'RxCoretypeArr';
     $ct['//bool'] = 'RxCoretypeBool';
     $ct['//def']  = 'RxCoretypeDef';
+    $ct['//fail'] = 'RxCoretypeFail';
     $ct['//int']  = 'RxCoretypeInt';
     $ct['//map']  = 'RxCoretypeMap';
     $ct['//nil']  = 'RxCoretypeNil';
@@ -214,6 +215,12 @@ class RxCoretypeDef {
   var $authority = '';
   var $subname   = 'def';
   function check($value) { return ! is_null($value); }
+}
+
+class RxCoretypeFail {
+  var $authority = '';
+  var $subname   = 'fail';
+  function check($value) { return false; }
 }
 
 class RxCoretypeNil {
