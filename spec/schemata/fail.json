@@ -1,0 +1,14 @@
+{
+  "schema": { "type": "//fail" },
+
+  "pass": { },
+
+  "fail": {
+    "arr" : "*",
+    "bool": "*",
+    "null": "*",
+    "num" : "*",
+    "obj" : "*",
+    "str" : "*"
+  }
+}
