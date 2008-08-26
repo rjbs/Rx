@@ -5,14 +5,13 @@ Rx.CoreType = {};
 // Simple types
 
 Rx.CoreType.allType = function (opt, rx) {
-  this.alts = null;
-  if (opt.of) {
-    if (opt.of.length == 0)
-      throw new Rx.Error('no alternatives given for //all of');
+  if (! opt.of) throw new Rx.Error('no of given for //all');
 
-    this.alts = [ ];
-    for (i in opt.of) this.alts.push( rx.makeSchema(opt.of[i]) )
-  }
+  if (opt.of.length == 0)
+    throw new Rx.Error('no alternatives given for //all of');
+
+  this.alts = [ ];
+  for (i in opt.of) this.alts.push( rx.makeSchema(opt.of[i]) )
 };
 
 Rx.CoreType.allType.typeName = Rx.parseTypeName('//all');
@@ -116,7 +115,7 @@ Rx.CoreType.strType  = function (opt) {
 Rx.CoreType.strType.typeName = Rx.parseTypeName('//str');
 Rx.CoreType.strType.prototype.check  = function (v) {
   if (! ((typeof(v) == 'string') || (v instanceof String))) return false;
-  if (this.value && v != this.value) return false;
+  if (this.value != null && v != this.value) return false;
   return true;
 };
 

@@ -13,12 +13,14 @@ sub new {
 
   my $self = bless { } => $class;
 
-  if (my $of = $arg->{of}) {
-    Carp::croak("invalid 'of' argument to //all") unless
-      Scalar::Util::reftype $of eq 'ARRAY' and @$of;
+  Carp::croak("no 'of' parameter given to //all") unless exists $arg->{of};
+
+  my $of = $arg->{of};
+
+  Carp::croak("invalid 'of' argument to //all") unless
+    defined $of and Scalar::Util::reftype $of eq 'ARRAY' and @$of;
     
-    $self->{of} = [ map {; $rx->make_schema($_) } @$of ];
-  }
+  $self->{of} = [ map {; $rx->make_schema($_) } @$of ];
 
   return $self;
 }

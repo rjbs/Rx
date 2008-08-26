@@ -100,14 +100,16 @@ class Rx::Type::Core < Rx::Type
         end
       }
 
-      if param['of'] then
-        if param['of'].length == 0 then
-          raise Rx::Exception.new("no schemata provided for 'of' in //all")
-        end
-
-        @alts = [ ]
-        param['of'].each { |alt| @alts.push(rx.make_schema(alt)) }
+      if ! param.has_key?('of') then
+        raise Rx::Exception.new("no 'of' parameter provided for //all")
       end
+
+      if param['of'].length == 0 then
+        raise Rx::Exception.new("no schemata provided for 'of' in //all")
+      end
+
+      @alts = [ ]
+      param['of'].each { |alt| @alts.push(rx.make_schema(alt)) }
     end
 
     def authority; return ''   ; end
@@ -273,7 +275,7 @@ class Rx::Type::Core < Rx::Type
       }
 
       if param.has_key?('value') then
-        if ! param['value'].kind_of?('Numeric') then
+        if ! param['value'].kind_of?(Numeric) then
           raise Rx::Exception.new("invalid value parameter for //num")
         end
 

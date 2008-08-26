@@ -46,6 +46,7 @@ my $fudge = {
   num => { str => "Perl has trouble with num/str distinction", },
   str => { num => "Perl has trouble with num/str distinction", },
 
+  'num-0'           => { str => "Perl has trouble with num/str distinction", },
   'int-0'           => { str => "Perl has trouble with num/str distinction", },
   'int-range-empty' => { str => "Perl has trouble with num/str distinction", },
   'num-range' => {
