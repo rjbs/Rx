@@ -217,6 +217,14 @@ class Rx::Type::Core < Rx::Type
         end
       }
 
+      if param.has_key?('value') then
+        if ! param['value'].kind_of?(Numeric) or param['value'] % 1 != 0 then
+          raise Rx::Exception.new("invalid value parameter for //int")
+        end
+
+        @value = param['value']
+      end
+
       if param['range'] then
         @value_range = Rx::Helper::Range.new( param['range'] )
       end
@@ -226,7 +234,8 @@ class Rx::Type::Core < Rx::Type
       if not value.kind_of?(Numeric) then; return false; end;
       if value % 1 != 0 then; return false; end
       return false if @value_range and not @value_range.check(value)
-      return true;
+      return false if @value and value != @value
+      return true
     end
   end
 
@@ -263,6 +272,14 @@ class Rx::Type::Core < Rx::Type
         end
       }
 
+      if param.has_key?('value') then
+        if ! param['value'].kind_of?('Numeric') then
+          raise Rx::Exception.new("invalid value parameter for //num")
+        end
+
+        @value = param['value']
+      end
+
       if param['range'] then
         @value_range = Rx::Helper::Range.new( param['range'] )
       end
@@ -271,7 +288,8 @@ class Rx::Type::Core < Rx::Type
     def check(value)
       if not value.kind_of?(Numeric) then; return false; end;
       return false if @value_range and not @value_range.check(value)
-      return true;
+      return false if @value and value != @value
+      return true
     end
   end
 
@@ -399,10 +417,19 @@ class Rx::Type::Core < Rx::Type
           raise Rx::Exception.new("unknown parameter #{k} for //str")
         end
       }
+
+      if param.has_key?('value') then
+        if ! param['value'].instance_of?(String) then
+          raise Rx::Exception.new("invalid value parameter for //str")
+        end
+
+        @value = param['value']
+      end
     end
 
     def check(value)
       return false unless value.instance_of?(String)
+      return false if @value and value != @value
       return true
     end
   end

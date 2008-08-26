@@ -167,15 +167,24 @@ class IntType(_CoreType):
   def __init__(self, schema, rx):
     if not set(schema.keys()).issubset(set(('type', 'range', 'value'))):
       raise Error('unknown parameter for //int')
-    
+
+    self.value = None
+    if schema.has_key('value'):
+      if not type(schema['value']) in (float, int, long):
+        raise Error('invalid value parameter for //int')
+      if schema['value'] % 1 != 0:
+        raise Error('invalid value parameter for //int')
+      self.value = schema['value']
+
     self.range = None
-    if schema.get('range'):
+    if schema.has_key('range'):
       self.range = Util.make_range_check( schema["range"] )
 
   def check(self, value):
     if not(type(value) in (float, int, long)): return False
     if value % 1 != 0: return False
     if self.range and not self.range(value): return False
+    if (not self.value is None) and value != self.value: return False
     return True
 
 class MapType(_CoreType):
@@ -212,6 +221,12 @@ class NumType(_CoreType):
     if not set(schema.keys()).issubset(set(('type', 'range', 'value'))):
       raise Error('unknown parameter for //num')
 
+    self.value = None
+    if schema.has_key('value'):
+      if not type(schema['value']) in (float, int, long):
+        raise Error('invalid value parameter for //num')
+      self.value = schema['value']
+
     self.range = None
 
     if schema.get('range'):
@@ -220,6 +235,7 @@ class NumType(_CoreType):
   def check(self, value):
     if not(type(value) in (float, int, long)): return False
     if self.range and not self.range(value): return False
+    if (not self.value is None) and value != self.value: return False
     return True
 
 class OneType(_CoreType):
@@ -319,8 +335,16 @@ class StrType(_CoreType):
     if not set(schema.keys()).issubset(set(('type', 'value'))):
       raise Error('unknown parameter for //str')
 
+    self.value = None
+    if schema.has_key('value'):
+      if not type(schema['value']) in (str, unicode):
+        raise Error('invalid value parameter for //str')
+      self.value = schema['value']
+
   def check(self, value):
-    return type(value) in (str, unicode)
+    if not type(value) in (str, unicode): return False
+    if (not self.value is None) and value != self.value: return False
+    return True
 
 core_types = [
   AllType,  AnyType, ArrType, BoolType, DefType,
