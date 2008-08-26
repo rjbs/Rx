@@ -26,9 +26,16 @@ sub new {
   $self->{range_check} = Data::Rx::Util->_make_range_check($arg->{range})
     if $arg->{range};
 
-  Carp::croak(sprintf 'invalid value for %s', $class->type_name)
-    if exists $arg->{value}
-    and ((! defined $arg->{value}) or ($arg->{value} !~ $class->_val_re));
+  if (
+    exists $arg->{value}
+    and (
+      (! defined $arg->{value})
+      or ref $arg->{value}
+      or ($arg->{value} !~ $class->_val_re)
+    )
+  ) {
+    Carp::croak(sprintf 'invalid value for %s', $class->type_name)
+  }
 
   $self->{value} = $arg->{value} if defined $arg->{value};
 

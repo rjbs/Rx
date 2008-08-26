@@ -1,7 +1,7 @@
 {
   "schema": { "type": "//str", "value": "x" },
   "pass": {
-    "str": "true"
+    "str": [ "x" ]
   },
   "fail": {
     "arr" : "*",
