@@ -9,7 +9,11 @@ sub check {
   return(
     defined($value)
     and ref($value)
-    and eval { $value->isa('JSON::XS::Boolean') }
+    and (
+      eval { $value->isa('JSON::XS::Boolean') }
+      or
+      eval { $value->isa('boolean') }
+    )
   );
 }
 

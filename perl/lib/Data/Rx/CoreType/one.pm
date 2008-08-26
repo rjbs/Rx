@@ -7,7 +7,11 @@ sub check {
   my ($self, $value) = @_;
 
   return if ! defined $value;
-  return if ref $value and ! eval { $value->isa('JSON::XS::Boolean'); };
+  return if ref $value and ! (
+    eval { $value->isa('JSON::XS::Boolean') }
+    or
+    eval { $value->isa('boolean') }
+  );
   return 1;
 }
 

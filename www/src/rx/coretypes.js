@@ -57,6 +57,11 @@ Rx.CoreType.intType  = function (opt) {
   if (! Rx.Util._x_subset_keys_y(opt, {type: true, range: true, value: true }))
     throw new Rx.Error('unknown argument for int type');
 
+  if (typeof(opt.value) != "undefined")
+    if (opt.value.constructor != Number || opt.value % 1 != 0)
+      throw new Rx.Error('invalid value parameter for int type');
+    this.value = opt.value;
+
   if (opt.range) {
     this.range_check = new Rx.Util.RangeChecker( opt.range );
   }
@@ -66,7 +71,10 @@ Rx.CoreType.intType.prototype.check  = function (v) {
   if (v == null) return false;
   if (v.constructor != Number) return false;
   if (Math.floor(v) != v) return false;
+
+  if (this.value != null && v != this.value) return false;
   if (this.range_check && ! this.range_check.check(v)) return false;
+
   return true;
 };
 
@@ -78,6 +86,11 @@ Rx.CoreType.numType  = function (opt) {
   if (! Rx.Util._x_subset_keys_y(opt, {type: true, range: true, value: true }))
     throw new Rx.Error('unknown argument for num type');
 
+  if (typeof(opt.value) != "undefined")
+    if (opt.value.constructor != Number)
+      throw new Rx.Error('invalid value parameter for str type');
+    this.value = opt.value;
+
   if (opt.range) {
     this.range_check = new Rx.Util.RangeChecker( opt.range );
   }
@@ -88,16 +101,23 @@ Rx.CoreType.numType.prototype.check  = function (v) {
   if (v == null) return false;
   if (v.constructor != Number) return false;
   if (this.range_check && ! this.range_check.check(v)) return false;
+  if (this.value != null && v != this.value) return false;
   return true;
 };
 
 Rx.CoreType.strType  = function (opt) {
   if (! Rx.Util._x_subset_keys_y(opt, {type: true, value: true }))
     throw new Rx.Error('unknown argument for str type');
+  if (typeof(opt.value) != "undefined")
+    if (opt.value.constructor != String)
+      throw new Rx.Error('invalid value parameter for str type');
+    this.value = opt.value;
 };
 Rx.CoreType.strType.typeName = Rx.parseTypeName('//str');
 Rx.CoreType.strType.prototype.check  = function (v) {
-  return((typeof(v) == 'string') || (v instanceof String));
+  if (! ((typeof(v) == 'string') || (v instanceof String))) return false;
+  if (this.value && v != this.value) return false;
+  return true;
 };
 
 Rx.CoreType.oneType  = function (opt) {};
