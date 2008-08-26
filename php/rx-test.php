@@ -65,7 +65,6 @@ foreach ($test_schemata as $schema_name => $test) {
 
   $schema = null;
 
-  diag("making $schema_name: " . var_export($test->schema, true));
   try {
     $schema = $Rx->make_schema($test->schema);
   } catch (Exception $e) {

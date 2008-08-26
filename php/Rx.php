@@ -162,9 +162,15 @@ class RxCoreTypeNum {
   var $subname   = 'num';
 
   var $range_checker;
+  var $fixed_value;
 
   function check($value) {
     if (! (is_int($value) or is_float($value))) return false;
+
+    if ($this->fixed_value !== null) {
+      if ($value != $this->fixed_value)
+      return false;
+    }
 
     if ($this->range_checker and ! $this->range_checker->check($value))
       return false;
@@ -181,6 +187,13 @@ class RxCoreTypeNum {
   function RxCoretypeNum ($schema) {
     RxCoretypeNum::_check_schema($schema, '//num');
 
+    if ($schema->value !== null) {
+      if (! (is_int($schema->value) || is_float($schema->value)))
+        throw new Exception('invalid value for //num schema');
+
+      $this->fixed_value = $schema->value;
+    }
+
     if ($schema->range) {
       $this->range_checker = new RxRangeChecker( $schema->range );
     }
@@ -192,10 +205,17 @@ class RxCoreTypeInt {
   var $subname   = 'int';
 
   var $range_checker;
+  var $fixed_value;
 
   function check($value) {
     if (! (is_int($value) || is_float($value))) return false;
     if (is_float($value) and $value != floor($value)) return false;
+
+    if ($this->fixed_value !== null) {
+      if ($value != $this->fixed_value)
+      return false;
+    }
+
     if ($this->range_checker and ! $this->range_checker->check($value))
       return false;
 
@@ -204,6 +224,16 @@ class RxCoreTypeInt {
 
   function RxCoretypeInt ($schema) {
     RxCoretypeNum::_check_schema($schema, '//int');
+
+    if ($schema->value !== null) {
+      if (! (is_int($schema->value) || is_float($schema->value)))
+        throw new Exception('invalid value for //int schema');
+
+      if (is_float($schema->value) and $schema->value != floor($schema->value))
+        throw new Exception('invalid value for //int schema');
+
+      $this->fixed_value = $schema->value;
+    }
 
     if ($schema->range) {
       $this->range_checker = new RxRangeChecker( $schema->range );
@@ -238,7 +268,23 @@ class RxCoretypeOne {
 class RxCoretypeStr {
   var $authority = '';
   var $subname   = 'str';
-  function check($value) { return is_string($value); }
+  var $fixed_value;
+
+  function check($value) {
+    if (! is_string($value)) return false;
+    if ($this->fixed_value !== null and $value != $this->fixed_value)
+      return false;
+    return true;
+  }
+
+  function RxCoretypeStr($schema, $rx) {
+    if ($schema->value !== null) {
+      if (! is_string($schema->value))
+        throw new Exception('invalid value for //str schema');
+
+      $this->fixed_value = $schema->value;
+    }
+  }
 }
 
 class RxCoretypeSeq {
