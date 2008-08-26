@@ -8,4 +8,8 @@ sub new {
   bless { rx => $rx } => $class;
 }
 
+sub type_name {
+  sprintf '/%s/%s', $_[0]->authority, $_[0]->subname
+}
+
 1;

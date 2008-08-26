@@ -15,5 +15,6 @@ my @files = File::Find::Rule->file->in('spec/schemata');
 for my $type (@files) {
   $type =~ s{^spec/schemata/}{};
   $type =~ s{\.json$}{};
+  next if $ENV{RX_TEST_SCHEMA} and $ENV{RX_TEST_SCHEMA} ne $type;
   Test::RxSpec->test_spec($type);
 }

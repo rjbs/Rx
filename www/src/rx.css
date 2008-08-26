@@ -121,6 +121,7 @@ table.types {
 
 th {
   text-align: left;
+  vertical-align: top;
   width: 4em;
 }
 

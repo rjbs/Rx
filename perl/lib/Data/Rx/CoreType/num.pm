@@ -21,10 +21,16 @@ sub new {
   my $self = {};
 
   Carp::croak("unknown arguments to new")
-    unless Data::Rx::Util->_x_subset_keys_y($arg, {range=>1});
+    unless Data::Rx::Util->_x_subset_keys_y($arg, { range => 1, value => 1});
 
   $self->{range_check} = Data::Rx::Util->_make_range_check($arg->{range})
     if $arg->{range};
+
+  Carp::croak(sprintf 'invalid value for %s', $class->type_name)
+    if exists $arg->{value}
+    and ((! defined $arg->{value}) or ($arg->{value} !~ $class->_val_re));
+
+  $self->{value} = $arg->{value} if defined $arg->{value};
 
   bless $self => $class;
 }
@@ -41,6 +47,7 @@ sub check {
 
   return unless $value =~ $self->_val_re;
   return if $self->{range_check} && ! $self->{range_check}->($value);
+  return if defined($self->{value}) && $value != $self->{value};
   return 1;
 }
 
