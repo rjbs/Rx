@@ -1,0 +1,35 @@
+<h2>//seq</h2>
+
+<p>
+  The <tt>//seq</tt> type is for a sequence of values that may be of differing
+  types.  It must have a <tt>contents</tt> parameter, which is a list of zero
+  or more schemata.  To be accepted, input must have at least as many entries
+  as the contents parameter, and each item in the input must match the schema
+  in the corresponding position in the <tt>//seq</tt> contents.
+</p>
+
+<p>
+  If a <tt>tail</tt> parameter is given, it will be used to check the contents
+  of the input beyond the last item of the <tt>contents</tt>.  In other words,
+  given a five-item input against a three-item <tt>//seq</tt>, the
+  <tt>tail</tt> will be used to check the last two items.
+</p>
+
+<p>
+  If there are more input items than content schemata and no <tt>tail</tt> is
+  provided, the input will be rejected.
+</p>
+
+<div class='sample'>
+  <p>/.meta/seq, the schema for //seq definitions:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "required": {
+    "type": { "type": "//str", "value": "//seq" },
+    "contents": { "type": "//arr", "value": "/.meta/schema" }
+  },
+  "optional": {
+    "tail": "/.meta/schema"
+  }
+}</pre>
+</div>

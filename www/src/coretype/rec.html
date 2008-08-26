@@ -1,0 +1,34 @@
+<h2>//rec</h2>
+
+<p>
+  A <tt>//rec</tt> is a record of structured data composed of required fields,
+  optional fields, and anything else.
+</p>
+
+<p>
+  The <tt>required</tt> and <tt>optional</tt> parameters, if given, provide
+  field names and schemata, indicating the schemata each entry must match.  If
+  a required field is not given, the input will be rejected.  If a name appears
+  in both the required and optional fields, the schema is invalid.
+</p>
+
+<p>
+  The <tt>rest</tt> parameter, if given, provides a schema to be used to
+  validate a dictionary (or hash, etc.) formed from all unknown entries in the
+  input.
+</p>
+
+<div class='sample'>
+  <p>/.meta/rec, the schema for //rec definitions:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "required": {
+    "type": { "type": "//str", "value": "//rec" }
+  },
+  "optional": {
+    "required": { "type": "//map", "values": "/.meta/schema" },
+    "optional": { "type": "//map", "values": "/.meta/schema" },
+    "rest"    : "/.meta/schema"
+  }
+}</pre>
+</div>

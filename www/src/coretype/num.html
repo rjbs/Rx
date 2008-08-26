@@ -1,0 +1,35 @@
+<h2>//num</h2>
+
+<p>
+  The <tt>//num</tt> type accepts only real numbers.  They may be rational
+  numbers, integers, positive, or negative.  There is no requirement that they
+  be representing, in the implementing language, as floating point or fixed
+  point.
+</p>
+
+<p>
+  The optional <tt>value</tt> parameter may provide an exact value to be
+  compared against.  If this parameter is given, the schema will only accept
+  values that are numerically equal to the parameter's value.
+</p>
+
+<p>
+  The optional <tt>range</tt> parameter may provide a range of values to
+  accept.  Providing both <tt>range</tt> and <tt>value</tt> is not an error,
+  but the Rx implementation may choose to return a <tt>//fail</tt> schema if no
+  value could possibly satisfy the combination of the given range and value.
+</p>
+
+<div class='sample'>
+  <p>/.meta/num, the schema for //num definitions:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "required": {
+    "type": { "type": "//str", "value": "//num" }
+  },
+  "optional": {
+    "value": { "type": "//num" },
+    "range": { "type": "/.meta/range" }
+  }
+}</pre>
+</div>

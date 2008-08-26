@@ -1,0 +1,32 @@
+<h2>//one</h2>
+
+<p>
+  The <tt>//one</tt> type accepts only defined, single values.  It rejects
+  no-values (<tt>//nil</tt>) and collections of values.
+</p>
+
+<p>
+  This is equivalent to:
+</p>
+
+<div class='sample'>
+  <p>A longer way to write <tt>//one</tt></p>
+  <pre class='json'>{
+  "type": "//any",
+  "of": [ "//bool", "//num", "//str" ]
+}</pre>
+</div>
+
+<p>
+  <tt>//one</tt> does not take any parameters.
+</p>
+
+<div class='sample'>
+  <p>/.meta/one, the schema for //one definitions:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "required": {
+    "type": { "type": "//str", "value": "//one" }
+  }
+}</pre>
+</div>
