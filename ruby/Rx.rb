@@ -281,7 +281,7 @@ class Rx::Type::Core < Rx::Type
     def subname; return 'int'; end
 
     def initialize(param, rx)
-      assert_valid_params(param)
+      super
 
       if param.has_key?('value') then
         if ! param['value'].kind_of?(Numeric) or param['value'] % 1 != 0 then
