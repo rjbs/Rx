@@ -72,8 +72,28 @@ class Rx::Helper::Range
 end
 
 class Rx::Type
-  def check(value)
-    raise Rx::Exception.new("Rx::Type subclass didn't implement .new")
+  def initialize
+    raise Rx::Exception.new("Rx::Type subclass didn't implement initialization")
+  end
+
+  def authority
+    raise Rx::Exception.new("Rx::Type subclass didn't provide authority")
+  end
+
+  def subname
+    raise Rx::Exception.new("Rx::Type subclass didn't provide subname")
+  end
+
+  def name
+    return sprintf('/%s/%s', authority, subname)
+  end
+
+  def assert_valid_params(param)
+    param.each_key { |k|
+      unless self.allowed_param?(k) then
+        raise Rx::Exception.new("unknown parameter #{k} for #{self.name}")
+      end
+    }
   end
 
   module NoParams
@@ -90,15 +110,14 @@ class Rx::Exception < Exception
 end
 
 class Rx::Type::Core < Rx::Type
+  def authority; ''; end
+
   class All < Rx::Type::Core
-    @@allowed = { 'of' => true, 'type' => true }
+    @@allowed_param = { 'of' => true, 'type' => true }
+    def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      param.each_key { |k|
-        unless @@allowed[k] then
-          raise Rx::Exception.new("unknown parameter #{k} for //all")
-        end
-      }
+      assert_valid_params(param)
 
       if ! param.has_key?('of') then
         raise Rx::Exception.new("no 'of' parameter provided for //all")
@@ -112,8 +131,7 @@ class Rx::Type::Core < Rx::Type
       param['of'].each { |alt| @alts.push(rx.make_schema(alt)) }
     end
 
-    def authority; return ''   ; end
-    def subname  ; return 'all'; end
+    def subname; return 'all'; end
 
     def check(value)
       @alts.each { |alt| return false if ! alt.check(value) }
@@ -122,14 +140,11 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Any < Rx::Type::Core
-    @@allowed = { 'of' => true, 'type' => true }
+    @@allowed_param = { 'of' => true, 'type' => true }
+    def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      param.each_key { |k|
-        unless @@allowed[k] then
-          raise Rx::Exception.new("unknown parameter #{k} for //any")
-        end
-      }
+      assert_valid_params(param)
 
       if param['of'] then
         if param['of'].length == 0 then
@@ -141,8 +156,7 @@ class Rx::Type::Core < Rx::Type
       end
     end
 
-    def authority; return ''   ; end
-    def subname  ; return 'any'; end
+    def subname; return 'any'; end
 
     def check(value)
       return true unless @alts
@@ -154,18 +168,15 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Arr < Rx::Type::Core
-    @@allowed = { 'contents' => true, 'length' => true, 'type' => true }
+    @@allowed_param = { 'contents' => true, 'length' => true, 'type' => true }
+    def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
+      assert_valid_params(param)
+
       unless param['contents'] then
         raise Rx::Exception.new('no contents schema given for //arr')
       end
-
-      param.each_key { |k|
-        unless @@allowed[k] then
-          raise Rx::Exception.new("unknown parameter #{k} for //arr")
-        end
-      }
 
       @contents_schema = rx.make_schema( param['contents'] )
 
@@ -209,15 +220,68 @@ class Rx::Type::Core < Rx::Type
     def check(value); return ! value.nil?; end
   end
 
-  class Int < Rx::Type::Core
-    @@allowed = { 'range' => true, 'type' => true, 'value' => true }
+  class Map < Rx::Type::Core
+    @@allowed_param = { 'values' => true, 'type' => true }
+    def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      param.each_key { |k|
-        unless @@allowed[k] then
-          raise Rx::Exception.new("unknown parameter #{k} for //int")
+      assert_valid_params(param)
+
+      if param['values'] then
+        @value_schema = rx.make_schema(param['values'])
+      end
+    end
+
+    def check(value)
+      return false unless value.instance_of?(Hash)
+
+      if @value_schema
+        value.each_value { |v| return false unless @value_schema.check(v) }
+      end
+
+      return true
+    end
+  end
+
+  class Nil < Rx::Type::Core
+    include Rx::Type::NoParams
+    def check(value); return value.nil?; end
+  end
+
+  class Num < Rx::Type::Core
+    def subname; return 'num'; end;
+    @@allowed_param = { 'range' => true, 'type' => true, 'value' => true }
+    def allowed_param?(p); return @@allowed_param[p]; end
+
+    def initialize(param, rx)
+      assert_valid_params(param)
+
+      if param.has_key?('value') then
+        if ! param['value'].kind_of?(Numeric) then
+          raise Rx::Exception.new("invalid value parameter for //num")
         end
-      }
+
+        @value = param['value']
+      end
+
+      if param['range'] then
+        @value_range = Rx::Helper::Range.new( param['range'] )
+      end
+    end
+
+    def check(value)
+      if not value.kind_of?(Numeric) then; return false; end;
+      return false if @value_range and not @value_range.check(value)
+      return false if @value and value != @value
+      return true
+    end
+  end
+
+  class Int < Rx::Type::Core::Num
+    def subname; return 'int'; end
+
+    def initialize(param, rx)
+      assert_valid_params(param)
 
       if param.has_key?('value') then
         if ! param['value'].kind_of?(Numeric) or param['value'] % 1 != 0 then
@@ -241,60 +305,6 @@ class Rx::Type::Core < Rx::Type
     end
   end
 
-  class Map < Rx::Type::Core
-    def initialize(param, rx)
-      if param['values'] then
-        @value_schema = rx.make_schema(param['values'])
-      end
-    end
-
-    def check(value)
-      return false unless value.instance_of?(Hash)
-
-      if @value_schema
-        value.each_value { |v| return false unless @value_schema.check(v) }
-      end
-
-      return true
-    end
-  end
-
-  class Nil < Rx::Type::Core
-    include Rx::Type::NoParams
-    def check(value); return value.nil?; end
-  end
-
-  class Num < Rx::Type::Core
-    @@allowed = { 'range' => true, 'type' => true, 'value' => true }
-
-    def initialize(param, rx)
-      param.each_key { |k|
-        unless @@allowed[k] then
-          raise Rx::Exception.new("unknown parameter #{k} for //num")
-        end
-      }
-
-      if param.has_key?('value') then
-        if ! param['value'].kind_of?(Numeric) then
-          raise Rx::Exception.new("invalid value parameter for //num")
-        end
-
-        @value = param['value']
-      end
-
-      if param['range'] then
-        @value_range = Rx::Helper::Range.new( param['range'] )
-      end
-    end
-
-    def check(value)
-      if not value.kind_of?(Numeric) then; return false; end;
-      return false if @value_range and not @value_range.check(value)
-      return false if @value and value != @value
-      return true
-    end
-  end
-
   class One < Rx::Type::Core
     include Rx::Type::NoParams
 
@@ -308,19 +318,17 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Rec < Rx::Type::Core
-    @@allowed = {
+    @@allowed_param = {
       'type' => true,
       'rest' => true,
       'required' => true,
       'optional' => true,
     }
 
+    def allowed_param?(p); return @@allowed_param[p]; end
+
     def initialize(param, rx)
-      param.each_key { |k|
-        unless @@allowed[k] then
-          raise Rx::Exception.new("unknown parameter #{k} for //rec")
-        end
-      }
+      assert_valid_params(param)
 
       @field = { }
 
@@ -371,14 +379,11 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Seq < Rx::Type::Core
-    @@allowed = { 'tail' => true, 'contents' => true, 'type' => true }
+    @@allowed_param = { 'tail' => true, 'contents' => true, 'type' => true }
+    def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      param.each_key { |k|
-        unless @@allowed[k] then
-          raise Rx::Exception.new("unknown parameter #{k} for //seq")
-        end
-      }
+      assert_valid_params(param)
 
       unless param['contents'] and param['contents'].kind_of?(Array) then
         raise Rx::Exception.new('missing or invalid contents for //seq')
@@ -411,14 +416,11 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Str < Rx::Type::Core
-    @@allowed = { 'type' => true, 'value' => true }
+    @@allowed_param = { 'type' => true, 'value' => true }
+    def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      param.each_key { |k|
-        unless @@allowed[k] then
-          raise Rx::Exception.new("unknown parameter #{k} for //str")
-        end
-      }
+      assert_valid_params(param)
 
       if param.has_key?('value') then
         if ! param['value'].instance_of?(String) then
