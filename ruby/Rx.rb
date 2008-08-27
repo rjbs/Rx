@@ -4,23 +4,23 @@ class Rx
     @registry = { }
 
     if opt[:load_core] then
-      @registry[''] = {
-        'all'  => Rx::Type::Core::All,
-        'any'  => Rx::Type::Core::Any,
-        'arr'  => Rx::Type::Core::Arr,
-        'bool' => Rx::Type::Core::Bool,
-        'def'  => Rx::Type::Core::Def,
-        'fail' => Rx::Type::Core::Fail,
-        'int'  => Rx::Type::Core::Int,
-        'map'  => Rx::Type::Core::Map,
-        'nil'  => Rx::Type::Core::Nil,
-        'num'  => Rx::Type::Core::Num,
-        'one'  => Rx::Type::Core::One,
-        'rec'  => Rx::Type::Core::Rec,
-        'seq'  => Rx::Type::Core::Seq,
-        'str'  => Rx::Type::Core::Str,
-      }
+      Rx::Type::Core.core_types.each { |t| learn_type(t) }
     end
+  end
+
+  def learn_type(type)
+    authority = type.authority
+    subname   = type.subname
+
+    @registry[ authority ] ||= {}
+
+    if @registry[ authority ].has_key?(subname) then
+      raise Rx::Exception.new(
+        "attempted to register known type #{type.type_name}"
+      )
+    end
+
+    @registry[ authority ][ subname ] = type
   end
 
   def parse_name(schema_name)
@@ -76,13 +76,18 @@ class Rx::Type
     assert_valid_params(param)
   end
 
-  def authority
-    raise Rx::Exception.new("Rx::Type subclass didn't provide authority")
+  class << self
+    def authority
+      raise Rx::Exception.new("Rx::Type subclass didn't provide authority")
+    end
+
+    def subname
+      raise Rx::Exception.new("Rx::Type subclass didn't provide subname")
+    end
   end
 
-  def subname
-    raise Rx::Exception.new("Rx::Type subclass didn't provide subname")
-  end
+  def authority; self.class.authority; end
+  def subname  ; self.class.subname  ; end
 
   def type_name
     return sprintf('/%s/%s', authority, subname)
@@ -110,7 +115,9 @@ class Rx::Exception < Exception
 end
 
 class Rx::Type::Core < Rx::Type
-  def authority; ''; end
+  class << self
+    def authority; ''; end
+  end
 
   class All < Rx::Type::Core
     @@allowed_param = { 'of' => true, 'type' => true }
@@ -131,7 +138,7 @@ class Rx::Type::Core < Rx::Type
       param['of'].each { |alt| @alts.push(rx.make_schema(alt)) }
     end
 
-    def subname; return 'all'; end
+    class << self; def subname; return 'all'; end; end
 
     def check(value)
       @alts.each { |alt| return false if ! alt.check(value) }
@@ -158,7 +165,7 @@ class Rx::Type::Core < Rx::Type
       end
     end
 
-    def subname; return 'any'; end
+    class << self; def subname; return 'any'; end; end
 
     def check(value)
       return true unless @alts
@@ -170,6 +177,8 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Arr < Rx::Type::Core
+    class << self; def subname; return 'arr'; end; end
+
     @@allowed_param = { 'contents' => true, 'length' => true, 'type' => true }
     def allowed_param?(p); return @@allowed_param[p]; end
 
@@ -203,6 +212,8 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Bool < Rx::Type::Core
+    class << self; def subname; return 'bool'; end; end
+
     include Rx::Type::NoParams
 
     def check(value)
@@ -213,16 +224,19 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Fail < Rx::Type::Core
+    class << self; def subname; return 'fail'; end; end
     include Rx::Type::NoParams
     def check(value); return false; end
   end
 
   class Def < Rx::Type::Core
+    class << self; def subname; return 'def'; end; end
     include Rx::Type::NoParams
     def check(value); return ! value.nil?; end
   end
 
   class Map < Rx::Type::Core
+    class << self; def subname; return 'map'; end; end
     @@allowed_param = { 'values' => true, 'type' => true }
     def allowed_param?(p); return @@allowed_param[p]; end
 
@@ -246,12 +260,13 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Nil < Rx::Type::Core
+    class << self; def subname; return 'nil'; end; end
     include Rx::Type::NoParams
     def check(value); return value.nil?; end
   end
 
   class Num < Rx::Type::Core
-    def subname; return 'num'; end;
+    class << self; def subname; return 'num'; end; end
     @@allowed_param = { 'range' => true, 'type' => true, 'value' => true }
     def allowed_param?(p); return @@allowed_param[p]; end
 
@@ -280,7 +295,7 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Int < Rx::Type::Core::Num
-    def subname; return 'int'; end
+    class << self; def subname; return 'int'; end; end
 
     def initialize(param, rx)
       super
@@ -298,6 +313,7 @@ class Rx::Type::Core < Rx::Type
   end
 
   class One < Rx::Type::Core
+    class << self; def subname; return 'one'; end; end
     include Rx::Type::NoParams
 
     def check(value)
@@ -310,6 +326,7 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Rec < Rx::Type::Core
+    class << self; def subname; return 'rec'; end; end
     @@allowed_param = {
       'type' => true,
       'rest' => true,
@@ -371,6 +388,7 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Seq < Rx::Type::Core
+    class << self; def subname; return 'seq'; end; end
     @@allowed_param = { 'tail' => true, 'contents' => true, 'type' => true }
     def allowed_param?(p); return @@allowed_param[p]; end
 
@@ -408,6 +426,7 @@ class Rx::Type::Core < Rx::Type
   end
 
   class Str < Rx::Type::Core
+    class << self; def subname; return 'str'; end; end
     @@allowed_param = { 'type' => true, 'value' => true }
     def allowed_param?(p); return @@allowed_param[p]; end
 
@@ -427,6 +446,27 @@ class Rx::Type::Core < Rx::Type
       return false unless value.instance_of?(String)
       return false if @value and value != @value
       return true
+    end
+  end
+
+  class << self
+    def core_types
+      return [
+        Rx::Type::Core::All,
+        Rx::Type::Core::Any,
+        Rx::Type::Core::Arr,
+        Rx::Type::Core::Bool,
+        Rx::Type::Core::Def,
+        Rx::Type::Core::Fail,
+        Rx::Type::Core::Int,
+        Rx::Type::Core::Map,
+        Rx::Type::Core::Nil,
+        Rx::Type::Core::Num,
+        Rx::Type::Core::One,
+        Rx::Type::Core::Rec,
+        Rx::Type::Core::Seq,
+        Rx::Type::Core::Str,
+      ]
     end
   end
 end
