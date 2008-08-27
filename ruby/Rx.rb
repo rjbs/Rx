@@ -72,8 +72,8 @@ class Rx::Helper::Range
 end
 
 class Rx::Type
-  def initialize
-    raise Rx::Exception.new("Rx::Type subclass didn't implement initialization")
+  def initialize(param, rx)
+    assert_valid_params(param)
   end
 
   def authority
@@ -84,14 +84,14 @@ class Rx::Type
     raise Rx::Exception.new("Rx::Type subclass didn't provide subname")
   end
 
-  def name
+  def type_name
     return sprintf('/%s/%s', authority, subname)
   end
 
   def assert_valid_params(param)
     param.each_key { |k|
       unless self.allowed_param?(k) then
-        raise Rx::Exception.new("unknown parameter #{k} for #{self.name}")
+        raise Rx::Exception.new("unknown parameter #{k} for #{type_name}")
       end
     }
   end
@@ -117,14 +117,14 @@ class Rx::Type::Core < Rx::Type
     def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      assert_valid_params(param)
+      super
 
       if ! param.has_key?('of') then
-        raise Rx::Exception.new("no 'of' parameter provided for //all")
+        raise Rx::Exception.new("no 'of' parameter provided for #{type_name}")
       end
 
       if param['of'].length == 0 then
-        raise Rx::Exception.new("no schemata provided for 'of' in //all")
+        raise Rx::Exception.new("no schemata provided for 'of' in #{type_name}")
       end
 
       @alts = [ ]
@@ -144,11 +144,13 @@ class Rx::Type::Core < Rx::Type
     def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      assert_valid_params(param)
+      super
 
       if param['of'] then
         if param['of'].length == 0 then
-          raise Rx::Exception.new("no alternatives provided for 'of' in //any")
+          raise Rx::Exception.new(
+            "no alternatives provided for 'of' in #{type_name}"
+          )
         end
 
         @alts = [ ]
@@ -172,10 +174,10 @@ class Rx::Type::Core < Rx::Type
     def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      assert_valid_params(param)
+      super
 
       unless param['contents'] then
-        raise Rx::Exception.new('no contents schema given for //arr')
+        raise Rx::Exception.new("no contents schema given for #{type_name}")
       end
 
       @contents_schema = rx.make_schema( param['contents'] )
@@ -225,7 +227,7 @@ class Rx::Type::Core < Rx::Type
     def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      assert_valid_params(param)
+      super
 
       if param['values'] then
         @value_schema = rx.make_schema(param['values'])
@@ -254,11 +256,11 @@ class Rx::Type::Core < Rx::Type
     def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      assert_valid_params(param)
+      super
 
       if param.has_key?('value') then
         if ! param['value'].kind_of?(Numeric) then
-          raise Rx::Exception.new("invalid value parameter for //num")
+          raise Rx::Exception.new("invalid value parameter for #{type_name}")
         end
 
         @value = param['value']
@@ -283,16 +285,8 @@ class Rx::Type::Core < Rx::Type
     def initialize(param, rx)
       super
 
-      if param.has_key?('value') then
-        if ! param['value'].kind_of?(Numeric) or param['value'] % 1 != 0 then
-          raise Rx::Exception.new("invalid value parameter for //int")
-        end
-
-        @value = param['value']
-      end
-
-      if param['range'] then
-        @value_range = Rx::Helper::Range.new( param['range'] )
+      if @value and @value % 1 != 0 then
+        raise Rx::Exception.new("invalid value parameter for #{type_name}")
       end
     end
 
@@ -326,7 +320,7 @@ class Rx::Type::Core < Rx::Type
     def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      assert_valid_params(param)
+      super
 
       @field = { }
 
@@ -381,10 +375,10 @@ class Rx::Type::Core < Rx::Type
     def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      assert_valid_params(param)
+      super
 
       unless param['contents'] and param['contents'].kind_of?(Array) then
-        raise Rx::Exception.new('missing or invalid contents for //seq')
+        raise Rx::Exception.new("missing or invalid contents for #{type_name}")
       end
 
       @content_schemata = param['contents'].map { |s| rx.make_schema(s) }
@@ -418,11 +412,11 @@ class Rx::Type::Core < Rx::Type
     def allowed_param?(p); return @@allowed_param[p]; end
 
     def initialize(param, rx)
-      assert_valid_params(param)
+      super
 
       if param.has_key?('value') then
         if ! param['value'].instance_of?(String) then
-          raise Rx::Exception.new("invalid value parameter for //str")
+          raise Rx::Exception.new("invalid value parameter for #{type_name}")
         end
 
         @value = param['value']
