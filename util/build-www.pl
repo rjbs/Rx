@@ -3,8 +3,9 @@ use strict;
 use warnings;
 use autodie;
 use File::Find::Rule;
-use Text::Template;
 use File::Path;
+use JSON::XS;
+use Text::Template;
 
 my $template = Text::Template->new(
   TYPE   => 'FILE',
@@ -23,13 +24,21 @@ for my $file (File::Find::Rule->file->in('www/src')) {
   my $path = join '/', @parts;
   mkpath "www/out/$path";
 
+  my @coretypes = sort map { s{.+/}{}; s{.html}{}; $_ }
+                  File::Find::Rule->file->in('www/src/coretype');
+
   if ($leaf =~ /\.html/) {
     open my $fh, '>', "www/out/$path/$leaf";
     my $content = `cat $file`;
     my $html = $template->fill_in(HASH => {
-      content => \$content,
-      depth   => \(scalar @parts),
+      content   => \$content,
+      depth     => \(scalar @parts),
+      root      => '../' x @parts,
+      coretypes => \@coretypes,
+      ct_page   => \(scalar $path =~ /coretype$/),
     });
+    die "template error: $Text::Template::ERROR" unless $html;
+
     print $fh $html;
   } else {
     `cp $file www/out/$path`;

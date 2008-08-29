@@ -77,6 +77,10 @@ body {
   color: #040;
   border-bottom: 1px #040 dotted;
 }
+#sidebar p.type {
+  margin-top: .5em;
+  margin-bottom: 0;
+}
 #footer {
   background: #ccc;
   clear:both;

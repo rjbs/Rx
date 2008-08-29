@@ -4,13 +4,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <title>Rx: Simple, Extensible Schemata</title>
-  <link rel='stylesheet' href='{{ "../" x $depth }}rx.css' />
+  <link rel='stylesheet' href='{{ $root }}rx.css' />
 </head>
 
 <body>
 
 <script src='http://rjbs.manxome.org/js/jquery.js'></script>
 <script lang='text/javascript'>
+function addSidebarLink(href, text, class) {
+  $('#sidebar').append(
+    '<p class="' + class + '"><a href="' + href + '">' + text + '</a></p>'
+  );
+}
+
 $(function() {
   $('div.toggle pre.yaml').before("<button class='jy'>toggle json/yaml</button>");
   $('div.toggle pre.json').hide();
@@ -19,12 +25,25 @@ $(function() {
     function () { $('pre.yaml').show(); $('pre.json').hide(); }
   );
 
+  console.log('chuggin');
   $('h2').each(function () {
+    if ({{ $ct_page ? 'true' : 'false' }}) return;
     var $this = $(this);
-    $('#sidebar').append(
-      '<p><a href="#' + $this.attr('id') + '">' + $this.text() + '</a></p>'
-    );
+    addSidebarLink('#' + $this.attr('id'), $this.text(), '');
   });
+
+  console.log('chuggin');
+  if ({{ $ct_page ? 'true' : 'false' }}) {
+    var types = {{ JSON::XS->new->encode(\@coretypes) }};
+    for (i in types) {
+      console.log(types[i]);
+      addSidebarLink(
+        '{{$root}}coretype/' + types[i] + '.html',
+        '//' + types[i],
+        'type'
+      );
+    }
+  }
 });
 </script>
 
@@ -33,11 +52,11 @@ $(function() {
 
 <div id='nav'>
   <ul>
-    <li><a href='index.html'>About</a></li>
-    <li><a href='coretypes.html'>Core Types</a></li>
-    <li><a href='demo.html'>Demonstration</a></li>
-    <li><a href='download.html'>Download</a></li>
-    <li><a href='faq.html'>FAQ</a></li>
+    <li><a href='{{$root}}index.html'>About</a></li>
+    <li><a href='{{$root}}coretypes.html'>Core Types</a></li>
+    <li><a href='{{$root}}demo.html'>Demonstration</a></li>
+    <li><a href='{{$root}}download.html'>Download</a></li>
+    <li><a href='{{$root}}faq.html'>FAQ</a></li>
   </ul>
 </div>
 

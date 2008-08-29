@@ -1,0 +1,29 @@
+<h2>//nil</h2>
+
+<p>
+  <tt>//nil</tt> accepts only an undefined or valueless datum.  This is
+  distinct from the lack of any data, however.  For example:
+</p>
+
+<div class='sample'>
+  <p>This array contains one entry, which <tt>//nil</tt> accepts:</p>
+  <pre class='json'>[ null ]</pre>
+
+  <p>This array contains no entries, so there's nothing for <tt>//nil</tt> to
+  consider.</p>
+  <pre class='json'>[ ]</pre>
+</div>
+
+<p>
+  The <tt>//nil</tt> type takes no parameters.
+</p>
+
+<div class='sample'>
+  <p>/.meta/nil, the schema for //nil definitions:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "required": {
+    "type": { "type": "//str", "value": "//nil" }
+  }
+}</pre>
+</div>
