@@ -104,11 +104,16 @@ div.sample {
   -moz-border-radius: 10px;
   width: 80%;
 }
-div.sample p { text-align: left }
+div.sample p {
+  text-align: left;
+  padding: 0;
+  margin: 0;
+}
 pre {
   padding: 1em;
   text-align: left;
   -moz-border-radius: 10px;
+  background-color: #cca;
 }
 pre.yaml { background-color: #cce; }
 pre.json { background-color: #cec; }

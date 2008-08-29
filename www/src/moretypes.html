@@ -1,0 +1,89 @@
+<h2 id='custom'>Custom Types</h2>
+
+<p>
+  Don't be fooled by all fact that all the core types start with <tt>//</tt>:
+  all type names don't start with double-slash.  There are two parts to a Rx
+  type name:
+</p>
+
+<div class='sample'>
+<p>The anatomy of a type name:</p>
+<pre style='font-size:150%;margin:.7em'>/authority/subname</pre>
+</div>
+
+<p>
+  The core types use the empty string as their authority, but other types will
+  use other authorities.  An authority is a string with no slashes and no
+  whitespace.  The empty authority and authorities starting with a dot (".")
+  are reserved for use by Rx.  Using a domain name as an authority should help
+  prevent conflicts.  (You could also use a <a
+  href='http://www.taguri.org/'>tag: URI</a>, but I'm not a big fan of those
+  (yet).)
+</p>
+
+<p>
+  Rx validators should be implemented to allow the registration of more types
+  by the end user.  There are two ways to do this: naming a schema constructed
+  from types or implementing a custom type in the implementation language.
+  Schemata constructed from core types are by definition portable to all
+  compliant Rx implementations, which makes it a convenient way to quickly
+  write portable types.  These types are not (yet) parameterizable, though, and
+  are limited to the features provided by core types.
+</p>
+
+<p>
+  When natively implementing a new type, consider following the example of the
+  Rx test suite in providing portable test data for other implementors to test
+  against if at all possible.  If portability isn't a goal, of course, you can
+  write types that are closely tied to your language's native types without any
+  worries.
+</p>
+
+<h2 id='meta'>Meta Schema</h2>
+
+<p>
+  Rx core types can be used to validate core type schema definitions.  In other
+  words, it is possible to write a schema that validates the input used to
+  build a schema for any core Rx type.  These schemata live under the
+  <tt>.meta</tt> authority, though implementations are not required to
+  implement them.  Their definitions are given on the <a
+  href='{{$root}}coretypes.html'>core type</a> pages for each type.
+</p>
+
+<p>
+  In addition to the metaschemata for each core type, there are two "helper"
+  schemata:
+</p>
+
+<div class='sample'>
+  <p>/.meta/range, the schema for range values:</p>
+  <pre class='json'>{
+  "type": "//rec",
+  "optional": {
+    "min"   : { "type": "//num" },
+    "max"   : { "type": "//num" },
+    "min-ex": { "type": "//num" },
+    "max-ex": { "type": "//num" }
+  }
+}</pre>
+</div>
+
+<div class='sample'>
+  <p>/.meta/schema, the schema for schemata:</p>
+  <pre class='json'>{
+  "type": "//any",
+  "of": [
+    {
+      "type"    : "//rec",
+      "required": { "type": "//str" },
+      "rest"    : "//any"
+    },
+    "//str",
+  ]
+}</pre>
+</div>
+
+<p>
+  When a schema is given as a string <tt>S</tt> it must be replaced with (the
+  equivalent of) <tt>{&nbsp;"type":&nbsp;S&nbsp;}</tt> before further evaluation.
+</p>
