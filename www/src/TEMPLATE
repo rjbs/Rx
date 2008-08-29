@@ -54,6 +54,7 @@ $(function() {
   <ul>
     <li><a href='{{$root}}index.html'>About</a></li>
     <li><a href='{{$root}}coretypes.html'>Core Types</a></li>
+    <li><a href='{{$root}}moretypes.html'>More Types</a></li>
     <li><a href='{{$root}}demo.html'>Demonstration</a></li>
     <li><a href='{{$root}}download.html'>Download</a></li>
     <li><a href='{{$root}}faq.html'>FAQ</a></li>
