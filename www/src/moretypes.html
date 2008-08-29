@@ -1,27 +1,6 @@
 <h2 id='custom'>Custom Types</h2>
 
 <p>
-  Don't be fooled by all fact that all the core types start with <tt>//</tt>:
-  all type names don't start with double-slash.  There are two parts to a Rx
-  type name:
-</p>
-
-<div class='sample'>
-<p>The anatomy of a type name:</p>
-<pre style='font-size:150%;margin:.7em'>/authority/subname</pre>
-</div>
-
-<p>
-  The core types use the empty string as their authority, but other types will
-  use other authorities.  An authority is a string with no slashes and no
-  whitespace.  The empty authority and authorities starting with a dot (".")
-  are reserved for use by Rx.  Using a domain name as an authority should help
-  prevent conflicts.  (You could also use a <a
-  href='http://www.taguri.org/'>tag: URI</a>, but I'm not a big fan of those
-  (yet).)
-</p>
-
-<p>
   Rx validators should be implemented to allow the registration of more types
   by the end user.  There are two ways to do this: naming a schema constructed
   from types or implementing a custom type in the implementation language.
@@ -44,9 +23,9 @@
 <p>
   Rx core types can be used to validate core type schema definitions.  In other
   words, it is possible to write a schema that validates the input used to
-  build a schema for any core Rx type.  These schemata live under the
-  <tt>.meta</tt> authority, though implementations are not required to
-  implement them.  Their definitions are given on the <a
+  build a schema for any core Rx type.  These schemata live under
+  <tt>tag:codesimply.com,2008:rx/.meta</tt>, though implementations are not
+  required to implement them.  Their definitions are given on the <a
   href='{{$root}}coretypes.html'>core type</a> pages for each type.
 </p>
 
@@ -85,5 +64,6 @@
 
 <p>
   When a schema is given as a string <tt>S</tt> it must be replaced with (the
-  equivalent of) <tt>{&nbsp;"type":&nbsp;S&nbsp;}</tt> before further evaluation.
+  equivalent of) <tt>{&nbsp;"type":&nbsp;S&nbsp;}</tt> before further
+  evaluation.
 </p>

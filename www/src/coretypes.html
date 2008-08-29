@@ -19,16 +19,36 @@ $(function() {
 </p>
 
 <p>
-  A Rx type is identified by a string, its type name.  The type name is broken
-  down into two parts, the authority and the subname.  It's written like this:
-  <tt>/authority/subname</tt>
+  A Rx type is identified by a unique URL, generally in the <a
+  href='http://taguri.org/'><tt>tag:</tt></a> schema.  When writing these in
+  schema definitions, there are two forms of shorthand available.  Type URIs
+  may be given as relative URIs, in which case they are assumed to be relative
+  to the processor's root, which in almost all normal cases will be
+  <tt>tag:codesimply.com,2008:rx</tt>.  See below for the layout of this
+  namespace.
 </p>
 
 <p>
-  While users can define their own custom types, quite a lot of data validation
-  rules can be expressed using the <em>core types</em> that come with a basic
-  implementation of Rx.  These types use the empty string as their authority,
-  which means that they look like this: <tt>//subname</tt>
+  Shorthand prefixes may also be set up to allow for compact notation.  For
+  example, given this prefix table:
+</p>
+
+<table>
+  <tr><td>rubric</td><td>tag:codesimply.com,2008:rubric</td></tr>
+  <tr><td>x</td>     <td>http://example.com/x-ample</td></tr>
+</table>
+
+<p>
+  ...then type names may be supplied as <tt>:rubric:tag</tt> or <tt>:x:int</tt>
+  instead of <tt>tag:codesimply.com,2008:rubric/tag</tt> or
+  <tt>http://example.com/x-ample/tag</tt> respectively.
+</p>
+
+<p>
+  Types located under <tt>tag:codesimply.com,2008:rx//</tt> are the <em>core
+  types</em> and must be implemented by all Rx implementations.  These are
+  detailed below.  While users can define their own custom types, quite a lot
+  of data validation rules can be expressed using the core types.
 </p>
 
 <p>
