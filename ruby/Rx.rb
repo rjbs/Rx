@@ -1,32 +1,43 @@
 
 class Rx
   def initialize(opt={})
-    @registry = { }
+    @type_registry = {}
+    @prefix = {
+      ''      => 'tag:codesimply.com,2008:rx/core/',
+      '.meta' => 'tag:codesimply.com,2008:rx/meta/',
+    }
 
     if opt[:load_core] then
       Rx::Type::Core.core_types.each { |t| learn_type(t) }
     end
   end
 
+
   def learn_type(type)
-    authority = type.authority
-    subname   = type.subname
+    uri = type.uri
 
-    @registry[ authority ] ||= {}
-
-    if @registry[ authority ].has_key?(subname) then
+    if @type_registry.has_key?(uri) then
       raise Rx::Exception.new(
-        "attempted to register known type #{type.type_name}"
+        "attempted to register already-known type #{uri}"
       )
     end
 
-    @registry[ authority ][ subname ] = type
+    @type_registry[ uri ] = type
   end
 
-  def parse_name(schema_name)
-    match = schema_name.match(/\A\/([-._a-z0-9]*)\/([-._a-z0-9]+)\z/)
-    raise Rx::Exception.new('invalid schema name') unless match
-    return { :authority => match[1], :subname => match[2] }
+  def expand_uri(name)
+    if name.match(/\A\w+:/) then; return name; end;
+
+    match = name.match(/\A\/(.*?)\/(.+)\z/)
+    if ! match then
+      raise Rx::Exception.new("couldn't understand Rx type name: #{name}")
+    end
+
+    if ! @prefix.has_key?(match[1]) then
+      raise Rx::Exception.new("unknown prefix '#{match[1]}' in name 'name'")
+    end
+
+    return @prefix[ match[1] ] + match[2]
   end
 
   def make_schema(schema)
@@ -36,13 +47,13 @@ class Rx
       raise Rx::Exception.new('invalid type')
     end
 
-    sn = parse_name(schema['type'])
+    uri = expand_uri(schema['type'])
 
-    authority = @registry[ sn[:authority] ]
-    raise Rx::Exception.new('unknown authority') unless authority
+    if ! @type_registry.has_key?(uri) then
+      raise Rx::Exception.new('unknown type')
+    end
 
-    type_class = authority[ sn[:subname] ]
-    raise Rx::Exception.new('unknown subname') unless type_class
+    type_class = @type_registry[uri]
 
     return type_class.new(schema, self)
   end
@@ -76,27 +87,12 @@ class Rx::Type
     assert_valid_params(param)
   end
 
-  class << self
-    def authority
-      raise Rx::Exception.new("Rx::Type subclass didn't provide authority")
-    end
-
-    def subname
-      raise Rx::Exception.new("Rx::Type subclass didn't provide subname")
-    end
-  end
-
-  def authority; self.class.authority; end
-  def subname  ; self.class.subname  ; end
-
-  def type_name
-    return sprintf('/%s/%s', authority, subname)
-  end
+  def uri; self.class.uri; end
 
   def assert_valid_params(param)
     param.each_key { |k|
       unless self.allowed_param?(k) then
-        raise Rx::Exception.new("unknown parameter #{k} for #{type_name}")
+        raise Rx::Exception.new("unknown parameter #{k} for #{uri}")
       end
     }
   end
@@ -116,7 +112,9 @@ end
 
 class Rx::Type::Core < Rx::Type
   class << self
-    def authority; ''; end
+    def uri
+      return 'tag:codesimply.com,2008:rx/core/' + subname
+    end
   end
 
   class All < Rx::Type::Core
@@ -127,11 +125,11 @@ class Rx::Type::Core < Rx::Type
       super
 
       if ! param.has_key?('of') then
-        raise Rx::Exception.new("no 'of' parameter provided for #{type_name}")
+        raise Rx::Exception.new("no 'of' parameter provided for #{uri}")
       end
 
       if param['of'].length == 0 then
-        raise Rx::Exception.new("no schemata provided for 'of' in #{type_name}")
+        raise Rx::Exception.new("no schemata provided for 'of' in #{uri}")
       end
 
       @alts = [ ]
@@ -156,7 +154,7 @@ class Rx::Type::Core < Rx::Type
       if param['of'] then
         if param['of'].length == 0 then
           raise Rx::Exception.new(
-            "no alternatives provided for 'of' in #{type_name}"
+            "no alternatives provided for 'of' in #{uri}"
           )
         end
 
@@ -186,7 +184,7 @@ class Rx::Type::Core < Rx::Type
       super
 
       unless param['contents'] then
-        raise Rx::Exception.new("no contents schema given for #{type_name}")
+        raise Rx::Exception.new("no contents schema given for #{uri}")
       end
 
       @contents_schema = rx.make_schema( param['contents'] )
@@ -275,7 +273,7 @@ class Rx::Type::Core < Rx::Type
 
       if param.has_key?('value') then
         if ! param['value'].kind_of?(Numeric) then
-          raise Rx::Exception.new("invalid value parameter for #{type_name}")
+          raise Rx::Exception.new("invalid value parameter for #{uri}")
         end
 
         @value = param['value']
@@ -301,7 +299,7 @@ class Rx::Type::Core < Rx::Type
       super
 
       if @value and @value % 1 != 0 then
-        raise Rx::Exception.new("invalid value parameter for #{type_name}")
+        raise Rx::Exception.new("invalid value parameter for #{uri}")
       end
     end
 
@@ -396,7 +394,7 @@ class Rx::Type::Core < Rx::Type
       super
 
       unless param['contents'] and param['contents'].kind_of?(Array) then
-        raise Rx::Exception.new("missing or invalid contents for #{type_name}")
+        raise Rx::Exception.new("missing or invalid contents for #{uri}")
       end
 
       @content_schemata = param['contents'].map { |s| rx.make_schema(s) }
@@ -435,7 +433,7 @@ class Rx::Type::Core < Rx::Type
 
       if param.has_key?('value') then
         if ! param['value'].instance_of?(String) then
-          raise Rx::Exception.new("invalid value parameter for #{type_name}")
+          raise Rx::Exception.new("invalid value parameter for #{uri}")
         end
 
         @value = param['value']
