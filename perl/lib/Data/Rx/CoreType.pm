@@ -8,8 +8,8 @@ sub new {
   bless { rx => $rx } => $class;
 }
 
-sub type_name {
-  sprintf '/%s/%s', $_[0]->authority, $_[0]->subname
+sub type_uri {
+  sprintf 'tag:codesimply.com,2008:rx/core/%s', $_[0]->subname
 }
 
 1;

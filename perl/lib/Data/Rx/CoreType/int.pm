@@ -3,7 +3,6 @@ use warnings;
 package Data::Rx::CoreType::int;
 use base 'Data::Rx::CoreType::num';
 
-sub authority { '' }
 sub subname   { 'int' }
 
 sub check {

@@ -39,7 +39,6 @@ sub check {
   return 1;
 }
 
-sub authority { '' }
 sub subname   { 'str' }
 
 1;

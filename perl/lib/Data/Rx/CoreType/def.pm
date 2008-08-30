@@ -9,7 +9,6 @@ sub check {
   return defined $value;
 }
 
-sub authority { '' }
 sub subname   { 'def' }
 
 1;

@@ -32,7 +32,6 @@ sub check {
   return 1;
 }
 
-sub authority { '' }
 sub subname   { 'all' }
 
 1;

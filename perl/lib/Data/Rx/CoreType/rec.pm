@@ -5,7 +5,6 @@ use base 'Data::Rx::CoreType';
 
 use Scalar::Util ();
 
-sub authority { '' }
 sub subname   { 'rec' }
 
 sub new {
