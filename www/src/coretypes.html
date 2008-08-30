@@ -21,35 +21,51 @@ $(function() {
 <p>
   A Rx type is identified by a unique URL, generally in the <a
   href='http://taguri.org/'><tt>tag:</tt></a> schema.  When writing these in
-  schema definitions, there are two forms of shorthand available.  Type URIs
-  may be given as relative URIs, in which case they are assumed to be relative
-  to the processor's root, which in almost all normal cases will be
-  <tt>tag:codesimply.com,2008:rx</tt>.  See below for the layout of this
-  namespace.
+  schema definitions, there is a form of shorthand available.  If the string
+  begins with a slash, it is assumed to be in the format:
+  <tt>/<em>id</em>/<em>rest</em></tt>, where <em>id</em> is in a list of known
+  identifiers that expand to base URLs.
 </p>
 
 <p>
-  Shorthand prefixes may also be set up to allow for compact notation.  For
-  example, given this prefix table:
+  For example, given this prefix table:
 </p>
 
 <table>
-  <tr><td>rubric</td><td>tag:codesimply.com,2008:rubric</td></tr>
-  <tr><td>x</td>     <td>http://example.com/x-ample</td></tr>
+  <tr><td>rubric</td><td>tag:codesimply.com,2008:rubric/</td></tr>
+  <tr><td>x</td>     <td>http://example.com/x-ample/</td></tr>
 </table>
 
 <p>
-  ...then type names may be supplied as <tt>:rubric:tag</tt> or <tt>:x:int</tt>
+  ...then type names may be supplied as <tt>/rubric/tag</tt> or <tt>/x/int</tt>
   instead of <tt>tag:codesimply.com,2008:rubric/tag</tt> or
   <tt>http://example.com/x-ample/tag</tt> respectively.
 </p>
 
 <p>
-  Types located under <tt>tag:codesimply.com,2008:rx//</tt> are the <em>core
-  types</em> and must be implemented by all Rx implementations.  These are
-  detailed below.  While users can define their own custom types, quite a lot
-  of data validation rules can be expressed using the core types.
+  The empty prefix is always reserved for the core type tag prefix:
 </p>
+
+<table>
+  <tr><td>(empty)</td><td>tag:codesimply.com,2008:rx/core/</td></tr>
+</table>
+
+<p>
+  Types located under <tt>tag:codesimply.com,2008:rx/core/</tt> are the
+  <em>core types</em> and must be implemented by all Rx implementations.  These
+  are detailed below.  While users can define their own custom types, quite a
+  lot of data validation rules can be expressed using the core types.
+</p>
+
+<p>
+  Prefixes starting with a period are reserved for use by Rx.  The following
+  are defined:
+</p>
+
+<table>
+  <tr><td>.rx</td>  <td>tag:codesimply.com,2008:rx/</td></tr>
+  <tr><td>.meta</td><td>tag:codesimply.com,2008:rx/meta/</td></tr>
+</table>
 
 <p>
   This page gives a brief overview of the core types, which will be defined
