@@ -30,13 +30,27 @@ for my $file (File::Find::Rule->file->in('www/src')) {
   if ($leaf =~ /\.html/) {
     open my $fh, '>', "www/out/$path/$leaf";
     my $content = `cat $file`;
-    my $html = $template->fill_in(HASH => {
-      content   => \$content,
+    my %stash = (
       depth     => \(scalar @parts),
       root      => '../' x @parts,
       coretypes => \@coretypes,
       ct_page   => \(scalar $path =~ /coretype$/),
-    });
+    );
+
+    my $filled_content = Text::Template->fill_this_in(
+      $content,
+      DELIMITERS => [ '{{', '}}' ],
+      HASH       => \%stash
+    );
+    die "template error: $Text::Template::ERROR" unless $filled_content;
+
+    my $html = $template->fill_in(
+      DELIMITERS => [ '{{', '}}' ],
+      HASH       => {
+        content   => \$filled_content,
+        %stash
+      }
+    );
     die "template error: $Text::Template::ERROR" unless $html;
 
     print $fh $html;
