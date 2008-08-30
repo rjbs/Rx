@@ -124,11 +124,11 @@ span.paren { font-weight: normal; color: rgb( 45, 100,  76) }
 .cons { color: rgb( 60,  79, 133); }
 .cdr  { color: rgb( 45, 134,  76); font-style: italic; }
 
-table.types {
+table {
   padding:0 40px;
 }
 
-th {
+th, td.prefix {
   text-align: left;
   vertical-align: top;
   width: 4em;
