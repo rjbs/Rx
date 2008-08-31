@@ -6,6 +6,36 @@ package Data::Rx;
 use Data::Rx::Util;
 use Module::Pluggable::Object;
 
+=head1 SYNOPSIS
+
+  my $rx = Data::Rx->new;
+
+  my $success = {
+    type     => '//rec',
+    required => {
+      location => '//str',
+      status   => { type => '//int', value => 201 },
+    },
+    optional => {
+      comments => {
+        type     => '//arr',
+        contents => '//str',
+      },
+    },
+  };
+
+  my $schema = $rx->make_schema($success);
+
+  my $reply = $json->decode( $agent->get($http_request) );
+
+  die "invalid reply" unless $schema->check($reply);
+
+=head1 SEE ALSO
+
+L<http://rjbs.manxome.org/rx>
+
+=cut
+
 sub __built_in_prefixes {
   return (
     ''      => 'tag:codesimply.com,2008:rx/core/',
@@ -30,16 +60,32 @@ sub _expand_uri {
   Carp::croak "couldn't understand Rx type name '$str'";
 }
 
+=method new
+
+  my $rx = Data::Rx->new(\%arg);
+
+This returns a new Data::Rx object.
+
+Valid arguments are:
+
+  prefix - optional; a hashref of prefix strings and values for type shorthand
+
+=cut
+
 sub new {
   my ($class, $arg) = @_;
   $arg ||= {};
+  $arg->{prefix} ||= {};
 
   my $mpo = Module::Pluggable::Object->new(
     search_path => 'Data::Rx::CoreType',
   );
 
   my $self = {
-    prefix  => { $class->__built_in_prefixes },
+    prefix  => {
+      $class->__built_in_prefixes,
+      %{ $arg->{prefix} },
+    },
     handler => {},
   };
 
@@ -54,9 +100,17 @@ sub new {
   return $self;
 }
 
+=method make_schema
+
+  my $schema = $rx->make_schema($schema);
+
+This returns a new schema checker (something with a C<check> method) for the
+given Rx input.
+
+=cut
+
 sub make_schema {
-  my ($self, $schema, $arg) = @_;
-  $arg ||= {};
+  my ($self, $schema) = @_;
 
   $schema = { type => "$schema" } unless ref $schema;
 
