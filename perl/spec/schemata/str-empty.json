@@ -1,0 +1,17 @@
+{
+  "schema": { "type": "//str", "value": "" },
+  "pass": {
+    "str": [ "empty" ]
+  },
+  "fail": {
+    "arr" : "*",
+    "bool": "*",
+    "null": "*",
+    "num" : "*",
+    "obj" : "*",
+    "str" : [
+      "0", "5", "05", "5.0", "5.1", "5.",
+      "true", "false", "null", "x"
+    ]
+  }
+}

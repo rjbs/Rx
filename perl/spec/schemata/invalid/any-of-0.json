@@ -1,0 +1,8 @@
+{
+  "schema": {
+    "type": "//any",
+    "of": [ ]
+  },
+
+  "invalid": true
+}

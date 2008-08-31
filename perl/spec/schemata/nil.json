@@ -1,0 +1,13 @@
+{
+  "schema": { "type": "//nil" },
+
+  "pass": { "null": [ "null" ] },
+
+  "fail": {
+    "arr" : "*",
+    "bool": "*",
+    "num" : "*",
+    "obj" : "*",
+    "str" : "*"
+  }
+}

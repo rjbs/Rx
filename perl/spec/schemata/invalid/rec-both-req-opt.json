@@ -1,0 +1,12 @@
+{
+  "invalid": true,
+  "schema" : {
+    "type": "//rec",
+    "required": {
+      "key": { "type": "//int" }
+    },
+    "optional": {
+      "key": { "type": "//bool" }
+    }
+  }
+}

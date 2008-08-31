@@ -1,0 +1,23 @@
+{
+  "schema": {
+    "type": "//seq",
+    "contents": [ { "type": "//int" }, { "type": "//int" } ]
+  },
+
+  "pass": {
+    "arr": [ "0-1" ]
+  },
+
+  "fail": {
+    "arr"  : [
+      "0",
+      "0-str-3",    "0-str-3-T",     "0-str-3-T-F",
+      "0-str-3-18", "0-str-3-T-str", "0-str-3-T-F-T"
+    ],
+    "bool" : "*",
+    "null" : "*",
+    "num"  : "*",
+    "obj"  : "*",
+    "str"  : "*"
+  }
+}

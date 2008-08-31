@@ -1,0 +1,15 @@
+{
+  "schema": { "type": "//def" },
+
+  "pass": {
+    "arr" : "*",
+    "bool": "*",
+    "num" : "*",
+    "obj" : "*",
+    "str" : "*"
+  },
+
+  "fail": {
+    "null": [ "null" ]
+  }
+}
