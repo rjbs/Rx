@@ -1,9 +1,0 @@
-{
-  "invalid": true,
-
-  "schema" : {
-    "type"    : "//seq",
-    "contents": [ ],
-    "unknown" : "this will cause things to explode"
-  }
-}

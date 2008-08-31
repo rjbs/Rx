@@ -1,8 +1,0 @@
-{
-  "schema" : {
-    "type"    : "//arr",
-    "contents": { "type": "//int" },
-    "unknown" : "this will cause an explosion"
-  },
-  "invalid": true
-}

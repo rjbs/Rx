@@ -1,7 +1,0 @@
-{
-  "schema" : {
-    "type"    : "//arr",
-    "contents": { }
-  },
-  "invalid": true
-}

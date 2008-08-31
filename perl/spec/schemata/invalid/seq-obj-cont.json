@@ -1,8 +1,0 @@
-{
-  "invalid": true,
-
-  "schema" : {
-    "type"    : "//seq",
-    "contents": { }
-  }
-}
