@@ -25,18 +25,15 @@ $(function() {
     function () { $('pre.yaml').show(); $('pre.json').hide(); }
   );
 
-  console.log('chuggin');
   $('h2').each(function () {
     if ({{ $ct_page ? 'true' : 'false' }}) return;
     var $this = $(this);
     addSidebarLink('#' + $this.attr('id'), $this.text(), '');
   });
 
-  console.log('chuggin');
   if ({{ $ct_page ? 'true' : 'false' }}) {
     var types = {{ JSON::XS->new->encode(\@coretypes) }};
     for (i in types) {
-      console.log(types[i]);
       addSidebarLink(
         '{{$root}}coretype/' + types[i] + '.html',
         '//' + types[i],
