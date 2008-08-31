@@ -11,9 +11,9 @@
 
 <script src='http://rjbs.manxome.org/js/jquery.js'></script>
 <script lang='text/javascript'>
-function addSidebarLink(href, text, class) {
+function addSidebarLink(uri, txt, cls) {
   $('#sidebar').append(
-    '<p class="' + class + '"><a href="' + href + '">' + text + '</a></p>'
+    '<p class="' + cls + '"><a href="' + uri + '">' + txt + '</a></p>'
   );
 }
 
