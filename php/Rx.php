@@ -1,49 +1,62 @@
 <?php
 
 class Rx {
-  var $registry;
+  var $type_registry;
+  var $prefix_registry;
 
   function Rx() {
-    $this->registry = new stdClass();
+    $this->type_registry = new stdClass();
+    $this->prefix_registry = array(
+      ''      => 'tag:codesimply.com,2008:rx/core/',
+      '.meta' => 'tag:codesimply.com,2008:rx/meta/',
+    );
 
     $core_types = Rx::core_types();
 
-    foreach ($core_types as $str => $class_name) {
-      # $auth = $class_name->authority;
-      # $name = $class_name->subname;
-
-      # if (! $this->registry->$auth)
-      #   $this->registry->$auth = new stdClass();
-
-      # $this->registry->$auth->$name = $class_name;
-      $this->registry->$str = $class_name;
+    foreach ($core_types as $class_name) {
+      $uri = eval("return $class_name::uri;");
+      $this->type_registry->$uri = $class_name;
     }
   }
 
+  function expand_uri($name) {
+    if (preg_match('/^\w+:/', $name)) return $name;
+
+    if (preg_match('/^\\/(.*?)\\/(.+)$/', $name, $matches)) {
+      if (! array_key_exists($matches[1], $this->prefix_registry)) {
+        throw new Exception("unknown type prefix '$matches[1]' in '$name'");
+      }
+
+      $uri = $this->prefix_registry[ $matches[1] ] . $matches[2];
+      return $uri;
+    }
+
+    throw new Exception("couldn't understand type name $name");
+  }
+
   function core_types () {
-    static $core_types = array();
+    static $core_types = array();;
 
     if (count($core_types)) return $core_types;
 
-    Rx::_initialize_core_types(&$core_types);
-    return $core_types;
-  }
+    $core_types = array(
+      'RxCoretypeAll',
+      'RxCoretypeAny',
+      'RxCoretypeArr',
+      'RxCoretypeBool',
+      'RxCoretypeDef',
+      'RxCoretypeFail',
+      'RxCoretypeInt',
+      'RxCoretypeMap',
+      'RxCoretypeNil',
+      'RxCoretypeNum',
+      'RxCoretypeOne',
+      'RxCoretypeRec',
+      'RxCoretypeSeq',
+      'RxCoretypeStr',
+    );
 
-  function _initialize_core_types ($ct) {
-    $ct['//all']  = 'RxCoretypeAll';
-    $ct['//any']  = 'RxCoretypeAny';
-    $ct['//arr']  = 'RxCoretypeArr';
-    $ct['//bool'] = 'RxCoretypeBool';
-    $ct['//def']  = 'RxCoretypeDef';
-    $ct['//fail'] = 'RxCoretypeFail';
-    $ct['//int']  = 'RxCoretypeInt';
-    $ct['//map']  = 'RxCoretypeMap';
-    $ct['//nil']  = 'RxCoretypeNil';
-    $ct['//num']  = 'RxCoretypeNum';
-    $ct['//one']  = 'RxCoretypeOne';
-    $ct['//rec']  = 'RxCoretypeRec';
-    $ct['//seq']  = 'RxCoretypeSeq';
-    $ct['//str']  = 'RxCoretypeStr';
+    return $core_types;
   }
 
   function make_schema($schema) {
@@ -57,8 +70,10 @@ class Rx {
 
     if (! $type) throw new Exception("can't make a schema with no type");
 
-    $type_class = $this->registry->$type;
+    $uri = $this->expand_uri($type);
 
+    $type_class = $this->type_registry->$uri;
+  
     if ($type_class)
       return new $type_class($schema, $this);
 
@@ -67,8 +82,7 @@ class Rx {
 }
 
 class RxCoretypeAll {
-  var $authority = '';
-  var $subname   = 'all';
+  const uri = 'tag:codesimply.com,2008:rx/core/all';
 
   var $alts;
 
@@ -88,8 +102,7 @@ class RxCoretypeAll {
 }
 
 class RxCoretypeAny {
-  var $authority = '';
-  var $subname   = 'any';
+  const uri = 'tag:codesimply.com,2008:rx/core/any';
 
   var $alts;
 
@@ -112,14 +125,12 @@ class RxCoretypeAny {
 }
 
 class RxCoretypeBool {
-  var $authority = '';
-  var $subname   = 'bool';
+  const uri = 'tag:codesimply.com,2008:rx/core/bool';
   function check($value) { return is_bool($value); }
 }
 
 class RxCoreTypeArr {
-  var $authority = '';
-  var $subname   = 'arr';
+  const uri = 'tag:codesimply.com,2008:rx/core/arr';
 
   var $content_schema;
   var $length_checker;
@@ -158,8 +169,7 @@ class RxCoreTypeArr {
 }
 
 class RxCoreTypeNum {
-  var $authority = '';
-  var $subname   = 'num';
+  const uri = 'tag:codesimply.com,2008:rx/core/num';
 
   var $range_checker;
   var $fixed_value;
@@ -201,8 +211,7 @@ class RxCoreTypeNum {
 }
 
 class RxCoreTypeInt {
-  var $authority = '';
-  var $subname   = 'int';
+  const uri = 'tag:codesimply.com,2008:rx/core/int';
 
   var $range_checker;
   var $fixed_value;
@@ -242,32 +251,27 @@ class RxCoreTypeInt {
 }
 
 class RxCoretypeDef {
-  var $authority = '';
-  var $subname   = 'def';
+  const uri = 'tag:codesimply.com,2008:rx/core/def';
   function check($value) { return ! is_null($value); }
 }
 
 class RxCoretypeFail {
-  var $authority = '';
-  var $subname   = 'fail';
+  const uri = 'tag:codesimply.com,2008:rx/core/fail';
   function check($value) { return false; }
 }
 
 class RxCoretypeNil {
-  var $authority = '';
-  var $subname   = 'nil';
+  const uri = 'tag:codesimply.com,2008:rx/core/nil';
   function check($value) { return is_null($value); }
 }
 
 class RxCoretypeOne {
-  var $authority = '';
-  var $subname   = 'one';
+  const uri = 'tag:codesimply.com,2008:rx/core/one';
   function check($value) { return is_scalar($value); }
 }
 
 class RxCoretypeStr {
-  var $authority = '';
-  var $subname   = 'str';
+  const uri = 'tag:codesimply.com,2008:rx/core/str';
   var $fixed_value;
 
   function check($value) {
@@ -288,8 +292,7 @@ class RxCoretypeStr {
 }
 
 class RxCoretypeSeq {
-  var $authority = '';
-  var $subname   = 'seq';
+  const uri = 'tag:codesimply.com,2008:rx/core/seq';
 
   var $content_schemata;
   var $tail_schema;
@@ -335,8 +338,7 @@ class RxCoretypeSeq {
 }
 
 class RxCoretypeMap {
-  var $authority = '';
-  var $subname   = 'map';
+  const uri = 'tag:codesimply.com,2008:rx/core/map';
   
   var $values_schema;
 
@@ -367,8 +369,7 @@ class RxCoretypeMap {
 }
 
 class RxCoretypeRec {
-  var $authority = '';
-  var $subname   = 'rec';
+  const uri = 'tag:codesimply.com,2008:rx/core/rec';
 
   var $required;
   var $optional;
