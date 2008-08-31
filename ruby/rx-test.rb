@@ -3,7 +3,6 @@ require 'find'
 require 'pathname'
 require 'rubygems'
 require 'json'
-
 require './ruby/Rx.rb'
 
 test_data   = { }
@@ -25,8 +24,7 @@ Dir.open('spec/data').each { |file|
   end
 
   test_data[file].each_pair { |k,v|
-    boxed = JSON.parse("[ #{ v } ]")
-    test_data[file][k] = boxed[0]
+    test_data[file][k] = JSON.parse("[ #{v} ]")[0]
   }
 }
 
@@ -34,8 +32,7 @@ class TAP_Emitter
   attr_reader :i
 
   def ok(bool, desc)
-    @i = 0 if @i === nil
-    @i += 1
+    @i === nil ? @i = 1 : @i += 1
     printf("%s %s - %s\n", bool ? 'ok' : 'not ok', @i, desc);
   end
 end
@@ -44,8 +41,7 @@ Find.find('spec/schemata') { |path|
   next unless File.file?(path)
 
   leaf = Pathname.new(path).
-         relative_path_from( Pathname.new('spec/schemata') ).
-         to_s
+         relative_path_from( Pathname.new('spec/schemata') ).to_s
 
   leaf.sub!(/\.json$/, '')
 
@@ -93,9 +89,7 @@ test_schema.keys.sort.each { |schema_name|
         ok = (pf == 'pass' and result) || (pf == 'fail' and !result)
 
         desc = sprintf "%s: %s/%s against %s",
-          (pf == 'pass' ? 'VALID  ' : 'INVALID'),
-          source, entry,
-          schema_name
+          (pf == 'pass' ? 'VALID  ' : 'INVALID'), source, entry, schema_name
 
         tap.ok(ok, desc)
       }
@@ -104,6 +98,3 @@ test_schema.keys.sort.each { |schema_name|
 }
 
 puts "1..#{tap.i}"
-
-# puts test_data.inspect
-# puts test_schema.inspect
