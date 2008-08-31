@@ -1,35 +1,39 @@
 function Rx (opt) {
-  this.authority = { };
-}
-
-Rx.parseTypeName = function (name) {
-  var matches = name.match(/^\/(\w*)\/(\w+)$/);
-
-  if (! matches) throw 'invalid type name: ' + name;
-
-  return {
-    authorityName: matches[1],
-    subName      : matches[2]
+  this.type_registry   = { };
+  this.prefix_registry = {
+    '':      'tag:codesimply.com,2008:rx/core/',
+    '.meta': 'tag:codesimply.com,2008:rx/meta/'
   };
 }
 
-Rx.prototype.registerType = function (type, opt) {
-  var sn = type.typeName;
-  var auth = this.authority[ sn.authorityName ];
+Rx.prototype.expand_uri = function (name) {
+  if (name.match(/^\w+:/)) return name;
 
-  if (! auth) auth = this.authority[ sn.authorityName ] = {};
-  if (auth[ sn.subName ]) throw 'registration already present';
-  auth[ sn.subName ] = type;
+  var matches = name.match(/^\/(\w*)\/(\w+)$/);
+
+  if (! matches)
+    throw "couldn't understand type name '" + name + "'";
+
+  if (! this.prefix_registry[ matches[1] ])
+    throw "unknown prefix '" + matches[1] + "' in type name '" + name + "'";
+
+  return this.prefix_registry[ matches[1] ] + matches[2];
+}
+
+Rx.prototype.registerType = function (type, opt) {
+  var uri = type.uri;
+
+  if (this.type_registry[ uri ])
+    throw "tried to register type for already-registered uri " + uri;
+
+  this.type_registry[ uri ] = type;
 };
 
 Rx.prototype.typeFor = function (typeName) {
-  var sn = Rx.parseTypeName(typeName);
+  var uri = this.expand_uri(typeName);
 
-  var auth = this.authority[sn.authorityName];
-  if (!auth) throw 'unknown authority in: ' + typeName;
-
-  var typeChecker = auth[sn.subName];
-  if (! typeChecker) throw 'unknown datatype in: ' + typeName;
+  var typeChecker = this.type_registry[ uri ];
+  if (! typeChecker) throw 'unknown type: ' + uri;
 
   return typeChecker;
 };

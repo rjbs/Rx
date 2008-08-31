@@ -14,7 +14,7 @@ Rx.CoreType.allType = function (opt, rx) {
   for (i in opt.of) this.alts.push( rx.makeSchema(opt.of[i]) )
 };
 
-Rx.CoreType.allType.typeName = Rx.parseTypeName('//all');
+Rx.CoreType.allType.uri = 'tag:codesimply.com,2008:rx/core/all';
 Rx.CoreType.allType.prototype.check  = function (v) {
   for (i in this.alts) if (! this.alts[i].check(v)) return false;
   return true;
@@ -31,7 +31,7 @@ Rx.CoreType.anyType = function (opt, rx) {
   }
 };
 
-Rx.CoreType.anyType.typeName = Rx.parseTypeName('//any');
+Rx.CoreType.anyType.uri = 'tag:codesimply.com,2008:rx/core/any';
 Rx.CoreType.anyType.prototype.check  = function (v) {
   if (! this.alts) return true;
   for (i in this.alts) if (this.alts[i].check(v)) return true;
@@ -39,17 +39,17 @@ Rx.CoreType.anyType.prototype.check  = function (v) {
 };
 
 Rx.CoreType.boolType = function (opt) {};
-Rx.CoreType.boolType.typeName = Rx.parseTypeName('//bool');
+Rx.CoreType.boolType.uri = 'tag:codesimply.com,2008:rx/core/bool';
 Rx.CoreType.boolType.prototype.check = function (v) {
   return((typeof(v) == 'boolean') || (v instanceof Boolean));
 };
 
 Rx.CoreType.defType  = function (opt) {};
-Rx.CoreType.defType.typeName = Rx.parseTypeName('//def');
+Rx.CoreType.defType.uri = 'tag:codesimply.com,2008:rx/core/def';
 Rx.CoreType.defType.prototype.check  = function (v) { return v != null; };
 
 Rx.CoreType.failType  = function (opt) {};
-Rx.CoreType.failType.typeName = Rx.parseTypeName('//fail');
+Rx.CoreType.failType.uri = 'tag:codesimply.com,2008:rx/core/fail';
 Rx.CoreType.failType.prototype.check  = function (v) { false; };
 
 Rx.CoreType.intType  = function (opt) {
@@ -65,7 +65,7 @@ Rx.CoreType.intType  = function (opt) {
     this.range_check = new Rx.Util.RangeChecker( opt.range );
   }
 };
-Rx.CoreType.intType.typeName = Rx.parseTypeName('//int');
+Rx.CoreType.intType.uri = 'tag:codesimply.com,2008:rx/core/int';
 Rx.CoreType.intType.prototype.check  = function (v) {
   if (v == null) return false;
   if (v.constructor != Number) return false;
@@ -78,7 +78,7 @@ Rx.CoreType.intType.prototype.check  = function (v) {
 };
 
 Rx.CoreType.nilType  = function (opt) {};
-Rx.CoreType.nilType.typeName = Rx.parseTypeName('//nil');
+Rx.CoreType.nilType.uri = 'tag:codesimply.com,2008:rx/core/nil';
 Rx.CoreType.nilType.prototype.check  = function (v) { return v === null };
 
 Rx.CoreType.numType  = function (opt) {
@@ -95,7 +95,7 @@ Rx.CoreType.numType  = function (opt) {
   }
 };
 
-Rx.CoreType.numType.typeName = Rx.parseTypeName('//num');
+Rx.CoreType.numType.uri = 'tag:codesimply.com,2008:rx/core/num';
 Rx.CoreType.numType.prototype.check  = function (v) {
   if (v == null) return false;
   if (v.constructor != Number) return false;
@@ -112,7 +112,7 @@ Rx.CoreType.strType  = function (opt) {
       throw new Rx.Error('invalid value parameter for str type');
     this.value = opt.value;
 };
-Rx.CoreType.strType.typeName = Rx.parseTypeName('//str');
+Rx.CoreType.strType.uri = 'tag:codesimply.com,2008:rx/core/str';
 Rx.CoreType.strType.prototype.check  = function (v) {
   if (! ((typeof(v) == 'string') || (v instanceof String))) return false;
   if (this.value != null && v != this.value) return false;
@@ -120,7 +120,7 @@ Rx.CoreType.strType.prototype.check  = function (v) {
 };
 
 Rx.CoreType.oneType  = function (opt) {};
-Rx.CoreType.oneType.typeName = Rx.parseTypeName('//one');
+Rx.CoreType.oneType.uri = 'tag:codesimply.com,2008:rx/core/one';
 Rx.CoreType.oneType.prototype.check = function (v) {
   // for some reason this was false: (false instanceof Boolean)
   if (v == null) return false;
@@ -145,7 +145,7 @@ Rx.CoreType.arrType  = function (opt, rx) {
     this.length_check = new Rx.Util.RangeChecker( opt.length );
   }
 };
-Rx.CoreType.arrType.typeName = Rx.parseTypeName('//arr');
+Rx.CoreType.arrType.uri = 'tag:codesimply.com,2008:rx/core/arr';
 Rx.CoreType.arrType.prototype.check  = function (v) {
   if (! (v instanceof Array)) return false;
 
@@ -184,13 +184,13 @@ Rx.CoreType.recType = function (opt, rx) {
 
   if (opt.rest) this.restSchema = rx.makeSchema(opt.rest);
 };
+Rx.CoreType.recType.uri = 'tag:codesimply.com,2008:rx/core/rec';
 Rx.CoreType.recType._valid_options = {
   type: true,
   rest: true,
   required: true,
   optional: true
 };
-Rx.CoreType.recType.typeName = Rx.parseTypeName('//rec');
 Rx.CoreType.recType.prototype.check  = function (v) {
   if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
     return false;
@@ -225,7 +225,7 @@ Rx.CoreType.mapType = function (opt, rx) {
 
   this.valueSchema = rx.makeSchema(opt.values);
 };
-Rx.CoreType.mapType.typeName = Rx.parseTypeName('//map');
+Rx.CoreType.mapType.uri = 'tag:codesimply.com,2008:rx/core/map';
 Rx.CoreType.mapType.prototype.check  = function (v) {
   if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
     return false;
@@ -250,7 +250,7 @@ Rx.CoreType.seqType  = function (opt, rx) {
     this.tail_check = rx.makeSchema(opt.tail);
   }
 };
-Rx.CoreType.seqType.typeName = Rx.parseTypeName('//seq');
+Rx.CoreType.seqType.uri = 'tag:codesimply.com,2008:rx/core/seq';
 Rx.CoreType.seqType.prototype.check  = function (v) {
   if (!(v instanceof Array)) return false;
 

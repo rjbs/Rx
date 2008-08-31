@@ -9,15 +9,6 @@ class Error(Exception):
 
 class Util(object):
   @staticmethod
-  def parse_type_name(type_name):
-    m = re.match('^/([-._a-z0-9]*)/([-._a-z0-9]+)$', type_name)
-
-    return {
-      "authority": m.group(1),
-      "subname"  : m.group(2),
-    }
-
-  @staticmethod
   def make_range_check(opt):
     range = { }
     for entry in opt.keys():
@@ -37,20 +28,37 @@ class Util(object):
 
 class Factory(object):
   def __init__(self, opt={}):
-    self.registry = {}
+    self.prefix_registry = {
+      '':      'tag:codesimply.com,2008:rx/core/',
+      '.meta': 'tag:codesimply.com,2008:rx/meta/',
+    }
+
+    self.type_registry = {}
     if opt.get("register_core_types", False):
       for t in core_types: self.register_type(t)
 
+  @staticmethod
+  def _default_prefixes(): pass
+
+  def expand_uri(self, type_name):
+    if re.match('^\w+:', type_name): return type_name
+
+    m = re.match('^/([-._a-z0-9]*)/([-._a-z0-9]+)$', type_name)
+
+    if not m: raise "couldn't understand type name '%s'" % type_name
+
+    if not self.prefix_registry.get(m.group(1)):
+      raise "unknown prefix '%s' in type name '%s'" % (m.group(1), type_name)
+
+    return '%s%s' % (self.prefix_registry[ m.group(1) ], m.group(2))
+
   def register_type(self, t):
-    t_authority = t.authority()
-    t_subname   = t.subname()
+    t_uri = t.uri()
 
-    self.registry.setdefault(t_authority, {})
+    if self.type_registry.get(t_uri, None):
+      raise "type already registered for %s" % t_uri
 
-    if self.registry[t_authority].get(t_subname, None):
-      raise "type already registered for /%s/%s" % (t_authority, t_subname)
-
-    self.registry[t_authority][t_subname] = t
+    self.type_registry[t_uri] = t
 
   def make_schema(self, schema):
     if type(schema) in (str, unicode):
@@ -59,21 +67,18 @@ class Factory(object):
     if not type(schema) is dict:
       raise Error('invalid schema argument to make_schema')
   
-    sn = Util.parse_type_name(schema["type"])
+    uri = self.expand_uri(schema["type"])
 
-    if not self.registry.has_key(sn["authority"]):
-      raise "unknown authority in type %s" % schema["type"]
+    if not self.type_registry.get(uri): raise "unknown type %s" % uri
 
-    if not self.registry[ sn["authority"] ].has_key(sn["subname"]):
-      raise "unknown subname in type %s" % schema["type"]
-
-    type_class = self.registry[ sn["authority"] ][ sn["subname"] ]
+    type_class = self.type_registry[ uri ]
 
     return type_class(schema, self)
 
 class _CoreType(object):
-  @staticmethod
-  def authority(): return ''
+  @classmethod
+  def uri(self):
+    return 'tag:codesimply.com,2008:rx/core/' + self.subname()
 
   def __init__(self, schema, rx): pass
 
