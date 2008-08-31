@@ -2,6 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::str;
 use base 'Data::Rx::CoreType';
+# ABSTRACT: Rx '//str' type
 
 use Data::Rx::Util;
 

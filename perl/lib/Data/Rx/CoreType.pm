@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType;
+# ABSTRACT: base class for core Rx types
 
 sub new {
   my ($class, $arg, $rx) = @_;

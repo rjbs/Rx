@@ -2,6 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::map;
 use base 'Data::Rx::CoreType';
+# ABSTRACT: Rx '//map' type
 
 use Scalar::Util ();
 

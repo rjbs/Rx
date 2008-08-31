@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package Data::Rx;
+# ABSTRACT: perl implementation of Rx schema system
 
 use Data::Rx::Util;
 use Module::Pluggable::Object;

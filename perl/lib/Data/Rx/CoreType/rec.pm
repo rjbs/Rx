@@ -2,6 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::rec;
 use base 'Data::Rx::CoreType';
+# ABSTRACT: Rx '//rec' type
 
 use Scalar::Util ();
 

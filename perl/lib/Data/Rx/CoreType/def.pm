@@ -2,6 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::def;
 use base 'Data::Rx::CoreType';
+# ABSTRACT: Rx '//def' type
 
 sub check {
   my ($self, $value) = @_;

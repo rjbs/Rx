@@ -2,6 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::num;
 use base 'Data::Rx::CoreType';
+# ABSTRACT: Rx '//num' type
 
 sub _int_re { qr{(?:0|[1-9]\d*)} }
 sub _dec_re { qr{(?:\.\d+)?}     }

@@ -4,6 +4,7 @@ package Data::Rx::Util;
 use Carp ();
 use List::Util ();
 use Number::Tolerant ();
+# ABSTRACT: helper routines for Data::Rx
 
 sub _x_subset_keys_y {
   my ($self, $x, $y) = @_;
