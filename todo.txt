@@ -9,8 +9,11 @@ TYPE:
 
 errors that indicate source of first problem
 instruction to learn composite schema
-Rx Capsule - a data structure that declares the promised schema of contents
 Rx for API
 parameterized composite types
 Rx-assisted emitter
 
+Rx Capsule - a data structure that declares the promised schema of contents
+  * assert what types / versions are available
+  * version can be a type, so you can range it or use any[ranges]
+  * { capsule-version, schema-of-payload, payload, type-avail-assertions }
