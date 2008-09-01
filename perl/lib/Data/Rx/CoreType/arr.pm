@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::arr;
 use base 'Data::Rx::CoreType';
-# ABSTRACT: Rx '//arr' type
+# ABSTRACT: the Rx //arr type
 
 use Scalar::Util ();
 

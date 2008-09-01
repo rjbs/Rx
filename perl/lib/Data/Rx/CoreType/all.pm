@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::all;
 use base 'Data::Rx::CoreType';
-# ABSTRACT: Rx '//all' type
+# ABSTRACT: the Rx //all type
 
 use Scalar::Util ();
 

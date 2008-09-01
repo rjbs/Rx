@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::bool;
 use base 'Data::Rx::CoreType';
-# ABSTRACT: Rx '//bool' type
+# ABSTRACT: the Rx //bool type
 
 sub check {
   my ($self, $value) = @_;

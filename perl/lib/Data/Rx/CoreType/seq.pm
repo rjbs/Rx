@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::seq;
 use base 'Data::Rx::CoreType';
-# ABSTRACT: Rx '//seq' type
+# ABSTRACT: the Rx //seq type
 
 use Scalar::Util ();
 

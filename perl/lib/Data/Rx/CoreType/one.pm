@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CoreType::one;
 use base 'Data::Rx::CoreType';
-# ABSTRACT: Rx '//one' type
+# ABSTRACT: the Rx //one type
 
 sub check {
   my ($self, $value) = @_;
