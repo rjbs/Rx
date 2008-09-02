@@ -1,0 +1,3 @@
+
+0.002     X
+          require Module::Pluggable 3.7 to avoid SUPER:: bug
