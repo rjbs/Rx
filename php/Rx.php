@@ -4,7 +4,7 @@ class Rx {
   var $type_registry;
   var $prefix_registry;
 
-  function Rx() {
+  function __construct() {
     $this->type_registry = new stdClass();
     $this->prefix_registry = array(
       ''      => 'tag:codesimply.com,2008:rx/core/',
@@ -91,7 +91,7 @@ class RxCoretypeAll {
     return true;
   }
 
-  function RxCoretypeAll($schema, $rx) {
+  function __construct($schema, $rx) {
     if (! $schema->of)
       throw new Exception("no alternatives given for //all of");
 
@@ -112,7 +112,7 @@ class RxCoretypeAny {
     return false;
   }
 
-  function RxCoretypeAny($schema, $rx) {
+  function __construct($schema, $rx) {
     if ($schema->of !== null) {
       if (count($schema->of) == 0)
         throw new Exception("no alternatives given for //any of");
@@ -141,7 +141,7 @@ class RxCoreTypeArr {
         throw new Exception("unknown parameter $key for //arr schema");
   }
 
-  function RxCoretypeArr($schema, $rx) {
+  function __construct($schema, $rx) {
     RxCoretypeArr::_check_schema($schema);
 
     if (! $schema->contents)
@@ -194,7 +194,7 @@ class RxCoreTypeNum {
         throw new Exception("unknown parameter $key for $type schema");
   }
 
-  function RxCoretypeNum ($schema) {
+  function __construct ($schema) {
     RxCoretypeNum::_check_schema($schema, '//num');
 
     if ($schema->value !== null) {
@@ -231,7 +231,7 @@ class RxCoreTypeInt {
     return true;
   }
 
-  function RxCoretypeInt ($schema) {
+  function __construct ($schema) {
     RxCoretypeNum::_check_schema($schema, '//int');
 
     if ($schema->value !== null) {
@@ -281,7 +281,7 @@ class RxCoretypeStr {
     return true;
   }
 
-  function RxCoretypeStr($schema, $rx) {
+  function __construct($schema, $rx) {
     if ($schema->value !== null) {
       if (! is_string($schema->value))
         throw new Exception('invalid value for //str schema');
@@ -320,7 +320,7 @@ class RxCoretypeSeq {
     return true;
   }
 
-  function RxCoretypeSeq($schema, $rx) {
+  function __construct($schema, $rx) {
     if (! $schema->contents)
       throw new Exception('no contents entry for //seq schema');
   
@@ -360,7 +360,7 @@ class RxCoretypeMap {
         throw new Exception("unknown parameter $key for //map schema");
   }
 
-  function RxCoretypeMap($schema, $rx) {
+  function __construct($schema, $rx) {
     RxCoretypeMap::_check_schema($schema);
 
     if ($schema->values)
@@ -412,7 +412,7 @@ class RxCoretypeRec {
         throw new Exception("unknown parameter $key for //rec schema");
   }
 
-  function RxCoretypeRec($schema, $rx) {
+  function __construct($schema, $rx) {
     RxCoretypeRec::_check_schema($schema);
 
     $this->known  = new stdClass();
@@ -457,7 +457,7 @@ class RxRangeChecker {
   var $max_ex;
   var $max;
 
-  function RxRangeChecker ($arg) {
+  function __construct ($arg) {
     $valid_names = array('min', 'max', 'min-ex', 'max-ex');
 
     foreach ($valid_names as $name) {
