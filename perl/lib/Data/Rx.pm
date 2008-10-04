@@ -69,6 +69,7 @@ This returns a new Data::Rx object.
 Valid arguments are:
 
   prefix - optional; a hashref of prefix strings and values for type shorthand
+  type_plugins - optional; an arrayref of type plugins
 
 The prefix hashref should look something like this:
 
@@ -98,8 +99,8 @@ sub new {
 
   $self->register_type_plugin($_) for @plugins;
 
-  if ($arg->{plugins}) {
-    $self->register_type_plugin($_) for @{ $arg->{plugins} };
+  if ($arg->{type_plugins}) {
+    $self->register_type_plugin($_) for @{ $arg->{type_plugins} };
   }
 
   return $self;
