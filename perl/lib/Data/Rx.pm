@@ -98,6 +98,10 @@ sub new {
 
   $self->register_type_plugin($_) for @plugins;
 
+  if ($arg->{plugins}) {
+    $self->register_type_plugin($_) for @{ $arg->{plugins} };
+  }
+
   return $self;
 }
 
