@@ -70,6 +70,13 @@ Valid arguments are:
 
   prefix - optional; a hashref of prefix strings and values for type shorthand
 
+The prefix hashref should look something like this:
+
+  {
+    'pobox'  => 'tag:pobox.com,1995:rx/core/',
+    'skynet' => 'tag:skynet.mil,1997-08-29:types/rx/',
+  }
+
 =cut
 
 sub new {

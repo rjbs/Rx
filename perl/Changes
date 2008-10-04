@@ -1,4 +1,7 @@
 Revision history for Data-Rx
 
+0.003     2008-10-04
+          document (and facilitate) plugging in extra type libraries
+
 0.002     2008-09-03
           require Module::Pluggable 3.7 to avoid SUPER:: bug
