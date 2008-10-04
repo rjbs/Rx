@@ -77,10 +77,6 @@ sub new {
   $arg ||= {};
   $arg->{prefix} ||= {};
 
-  my $mpo = Module::Pluggable::Object->new(
-    search_path => 'Data::Rx::CoreType',
-  );
-
   my $self = {
     prefix  => {
       $class->__built_in_prefixes,
@@ -91,11 +87,9 @@ sub new {
 
   bless $self => $class;
 
-  my @plugins = $mpo->plugins;
-  for my $plugin (@plugins) {
-    eval "require $plugin; 1" or die;
-    $self->{handler}{ $plugin->type_uri } = $plugin;
-  }
+  my @plugins = $self->core_type_plugins;
+
+  $self->register_type_plugin($_) for @plugins;
 
   return $self;
 }
@@ -123,9 +117,41 @@ sub make_schema {
 
   my $schema_arg = {%$schema};
   delete $schema_arg->{type};
-  my $checker = $handler->new($schema_arg, $self);
+  my $checker = $handler->new_checker($schema_arg, $self);
 
   return $checker;
+}
+
+=method register_type_plugin
+
+  $rx->register_type_plugin($plugin);
+
+Given a type plugin, this registers the plugin with the Data::Rx object.
+Plugins must have a C<type_uri> method and a C<new_checker> method.
+
+=cut
+
+sub register_type_plugin {
+  my ($self, $plugin) = @_;
+
+  $self->{handler}{ $plugin->type_uri } = $plugin;
+}
+
+=method core_type_plugins {
+
+This method returns a list of the plugins for the core Rx types.
+
+=cut
+
+sub core_type_plugins { 
+  my ($self) = @_;
+
+  my $mpo = Module::Pluggable::Object->new(
+    search_path => 'Data::Rx::CoreType',
+    require     => 1,
+  );
+
+  my @plugins = $mpo->plugins;
 }
 
 1;

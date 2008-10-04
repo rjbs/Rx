@@ -3,7 +3,7 @@ use warnings;
 package Data::Rx::CoreType;
 # ABSTRACT: base class for core Rx types
 
-sub new {
+sub new_checker {
   my ($class, $arg, $rx) = @_;
   Carp::croak "$class does not take check arguments" if %$arg;
   bless { rx => $rx } => $class;

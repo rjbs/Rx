@@ -8,9 +8,9 @@ use Scalar::Util ();
 
 sub subname   { 'arr' }
 
-sub new {
+sub new_checker {
   my ($class, $arg, $rx) = @_;
-  my $self = $class->SUPER::new({}, $rx);
+  my $self = $class->SUPER::new_checker({}, $rx);
 
   Carp::croak("no contents schema given")
     unless $arg->{contents} and (ref $arg->{contents} || 'HASH' eq 'HASH');

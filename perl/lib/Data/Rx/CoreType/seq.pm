@@ -8,9 +8,9 @@ use Scalar::Util ();
 
 sub subname   { 'seq' }
 
-sub new {
+sub new_checker {
   my ($class, $arg, $rx) = @_;
-  my $self = $class->SUPER::new({}, $rx);
+  my $self = $class->SUPER::new_checker({}, $rx);
 
   Carp::croak("no contents array given")
     unless $arg->{contents} and (ref $arg->{contents} eq 'ARRAY');

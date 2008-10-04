@@ -6,7 +6,7 @@ use base 'Data::Rx::CoreType';
 
 use Scalar::Util ();
 
-sub new {
+sub new_checker {
   my ($class, $arg, $rx) = @_;
 
   Carp::croak("unknown arguments to new")

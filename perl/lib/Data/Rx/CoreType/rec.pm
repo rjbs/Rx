@@ -8,9 +8,9 @@ use Scalar::Util ();
 
 sub subname   { 'rec' }
 
-sub new {
+sub new_checker {
   my ($class, $arg, $rx) = @_;
-  my $self = $class->SUPER::new({}, $rx);
+  my $self = $class->SUPER::new_checker({}, $rx);
 
   Carp::croak("unknown arguments to new") unless
   Data::Rx::Util->_x_subset_keys_y($arg, {

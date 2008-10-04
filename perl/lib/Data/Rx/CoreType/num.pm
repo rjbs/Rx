@@ -17,7 +17,7 @@ sub _val_re {
        . '\z';
 }
 
-sub new {
+sub new_checker {
   my ($class, $arg, $rx) = @_;
   my $self = {};
 
