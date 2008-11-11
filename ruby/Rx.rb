@@ -477,7 +477,7 @@ class Rx
 
           if rest.length > 0 then
             unless @rest_schema
-              raise ValidationError.new("Hash didn't have rest", "/rec")
+              raise ValidationError.new("Hash had extra keys: #{rest.inspect}", "/rec")
             end
             rest_hash = { }
             rest.each { |field| rest_hash[field] = value[field] }
