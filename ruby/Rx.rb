@@ -324,7 +324,7 @@ class Rx
         end
 
         def check!(value)
-          unless value.instance_of?(Hash)
+          unless value.instance_of?(Hash) or value.class.to_s == "HashWithIndifferentAccess"
             raise ValidationError.new("expected map got #{value.inspect}", "/map")
           end
 
@@ -449,7 +449,7 @@ class Rx
         end
 
         def check!(value)
-          unless value.instance_of?(Hash)
+          unless value.instance_of?(Hash) or value.class.to_s == "HashWithIndifferentAccess"
             raise ValidationError.new("expected Hash got #{value.class}", "/rec")
           end
 
