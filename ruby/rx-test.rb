@@ -33,7 +33,9 @@ class TAP_Emitter
 
   def ok(bool, desc)
     @i === nil ? @i = 1 : @i += 1
-    printf("%s %s - %s\n", bool ? 'ok' : 'not ok', @i, desc);
+    unless bool
+      printf("%s %s - %s\n", bool ? 'ok' : 'not ok', @i, desc);
+    end
   end
 end
 
@@ -86,6 +88,21 @@ test_schema.keys.sort.each { |schema_name|
 
       entries.each { |entry|
         result = schema.check(test_data[source][entry])
+        ok = (pf == 'pass' and result) || (pf == 'fail' and !result)
+
+        desc = sprintf "%s: %s/%s against %s",
+          (pf == 'pass' ? 'VALID  ' : 'INVALID'), source, entry, schema_name
+
+        tap.ok(ok, desc)
+      }
+
+      entries.each { |entry|
+        result = begin 
+                   schema.check!(test_data[source][entry])
+                   true
+                 rescue Rx::ValidationError => e
+                   false
+                 end
         ok = (pf == 'pass' and result) || (pf == 'fail' and !result)
 
         desc = sprintf "%s: %s/%s against %s",
