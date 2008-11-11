@@ -33,9 +33,7 @@ class TAP_Emitter
 
   def ok(bool, desc)
     @i === nil ? @i = 1 : @i += 1
-    unless bool
-      printf("%s %s - %s\n", bool ? 'ok' : 'not ok', @i, desc);
-    end
+    printf("%s %s - %s\n", bool ? 'ok' : 'not ok', @i, desc);
   end
 end
 
