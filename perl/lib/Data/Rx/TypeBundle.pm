@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Data::Rx::TypeBundle;
-# ABSTACT: base class for type bundles
+# ABSTRACT: base class for type bundles
 
 sub prefix_pairs {
   return if ref $_[0] and $_[0]->{no_prefix};
