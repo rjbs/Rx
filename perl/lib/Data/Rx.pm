@@ -180,12 +180,7 @@ sub core_type_plugins {
 
   Carp::cluck("core_type_plugins deprecated; use Data::Rx::TypeBundle::Core");
 
-  my $mpo = Module::Pluggable::Object->new(
-    search_path => 'Data::Rx::CoreType',
-    require     => 1,
-  );
-
-  my @plugins = $mpo->plugins;
+  Data::Rx::TypeBundle::Core->type_plugins;
 }
 
 1;

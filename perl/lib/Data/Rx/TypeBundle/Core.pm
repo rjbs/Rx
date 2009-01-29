@@ -6,7 +6,7 @@ use base 'Data::Rx::TypeBundle';
 
 use Module::Pluggable::Object;
 
-sub prefix_pairs {
+sub _prefix_pairs {
   return (
     ''      => 'tag:codesimply.com,2008:rx/core/',
     '.meta' => 'tag:codesimply.com,2008:rx/meta/',

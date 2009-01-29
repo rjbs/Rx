@@ -1,5 +1,8 @@
 Revision history for Data-Rx
 
+0.005     2009-01-29
+          introduce TypeBundles
+
 0.004     2008-10-04
           fix packaging issue
 
