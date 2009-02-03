@@ -1,5 +1,8 @@
 Revision history for Data-Rx
 
+0.006     2009-02-01
+          unbreak the "prefix" arument to new
+
 0.005     2009-01-29
           introduce TypeBundles
 

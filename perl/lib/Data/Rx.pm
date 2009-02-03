@@ -101,6 +101,8 @@ sub new {
     $self->register_type_plugin($plugin);
   }
 
+  $self->add_prefix($_ => $arg->{prefix}{ $_ }) for keys %{ $arg->{prefix} };
+
   return $self;
 }
 
