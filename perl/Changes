@@ -1,5 +1,8 @@
 Revision history for Data-Rx
 
+0.007     2009-03-06
+          register_type_plugin can now accept bundles
+
 0.006     2009-02-01
           unbreak the "prefix" arument to new
 
