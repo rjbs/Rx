@@ -89,17 +89,7 @@ sub new {
 
   bless $self => $class;
 
-  PLUGIN: while (my $plugin = shift @plugins) {
-    if ($plugin->isa('Data::Rx::TypeBundle')) {
-      my %pairs = $plugin->prefix_pairs;
-      $self->add_prefix($_ => $pairs{ $_ }) for keys %pairs;
-
-      unshift @plugins, $plugin->type_plugins;
-      next PLUGIN;
-    }
-
-    $self->register_type_plugin($plugin);
-  }
+  $self->register_type_plugin($_) for @plugins;
 
   $self->add_prefix($_ => $arg->{prefix}{ $_ }) for keys %{ $arg->{prefix} };
 
@@ -136,22 +126,33 @@ sub make_schema {
 
 =method register_type_plugin
 
-  $rx->register_type_plugin($plugin);
+  $rx->register_type_plugin($type_or_bundle);
 
 Given a type plugin, this registers the plugin with the Data::Rx object.
-Plugins must have a C<type_uri> method and a C<new_checker> method.
+Bundles are expanded recursively and all their plugins are registered.
+Type plugins must have a C<type_uri> method and a C<new_checker> method.
 
 =cut
 
 sub register_type_plugin {
-  my ($self, $plugin) = @_;
+  my ($self, $starting_plugin) = @_;
 
-  my $uri = $plugin->type_uri;
+  my @plugins = ($starting_plugin);
+  PLUGIN: while (my $plugin = shift @plugins) {
+    if ($plugin->isa('Data::Rx::TypeBundle')) {
+      my %pairs = $plugin->prefix_pairs;
+      $self->add_prefix($_ => $pairs{ $_ }) for keys %pairs;
 
-  Carp::confess("a type plugin is already registered for $uri")
-    if $self->{handler}{ $uri };
-    
-  $self->{handler}{ $uri } = $plugin;
+      unshift @plugins, $plugin->type_plugins;
+    } else {
+      my $uri = $plugin->type_uri;
+
+      Carp::confess("a type plugin is already registered for $uri")
+        if $self->{handler}{ $uri };
+        
+      $self->{handler}{ $uri } = $plugin;
+    }
+  }
 }
 
 =method add_prefix
