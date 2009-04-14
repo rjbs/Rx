@@ -97,12 +97,16 @@ sub test_spec {
 
   for my $pf (keys %pf) {
     for my $source (keys %{ $schema_test->{$pf} }) {
-      my $entries = $schema_test->{$pf}{ $source };
-      my @entries = ref $entries    ? @$entries
-                  : $entries eq '*' ? keys %{ data->{$source} }
-                  : Carp::croak("invalid test specification: $entries");
+      my $spec = $schema_test->{$pf}{ $source };
 
-      for my $entry (@entries) {
+      my %entries
+        = ref $spec eq 'HASH'  ? %$spec
+        : ref $spec eq 'ARRAY' ? (map {; $_ => undef } @$spec)
+        : ref $spec            ? die("invalid test spec: $spec")
+        : $spec eq '*'         ? (map {; $_ => undef } keys %{data->{$source}})
+        : Carp::croak("invalid test spec: $spec");
+
+      for my $entry (keys %entries) {
         my $json  = data->{ $source }->{ $entry };
 
         my $input = decode_json("[ $json ]")->[0];

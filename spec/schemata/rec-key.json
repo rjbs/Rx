@@ -11,13 +11,17 @@
   },
 
   "fail": {
-    "arr": "*",
+    "arr" : "*",
     "bool": "*",
     "null": "*",
     "num" : "*",
-    "obj" : [
-      "empty", "key-pants", "key-1-unknown", "key-0-opt-1", "key-0-opt-T"
-    ],
+    "obj" : {
+      "empty"        : null,
+      "key-pants"    : null,
+      "key-1-unknown": null,
+      "key-0-opt-1"  : null,
+      "key-0-opt-T"  : null
+    },
     "str" : "*"
   }
 }
