@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 use 5.010;
 use strict;
 use warnings;
@@ -31,8 +31,7 @@ my $harness = TAP::Harness->new({
 });
 
 # You may only choose one of 'exec', 'stream', 'tap' or 'source' at - line 12
-
-$harness->runtests(qw(
+my @testfiles = qw(
   js/rx/test/runner.js
   perl/t/spec.t
   perl/t/util-range.t
@@ -40,4 +39,10 @@ $harness->runtests(qw(
   php/util-test.php
   python/rx-test.py
   ruby/rx-test.rb
-));
+);
+
+if (@ARGV) {
+  @testfiles = grep { my ($lang) = m{^(\w+)/}; $lang ~~ @ARGV } @testfiles;
+}
+
+$harness->runtests(@testfiles);
