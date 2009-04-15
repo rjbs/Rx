@@ -4,10 +4,11 @@ package Data::Rx::CoreType::nil;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //nil type
 
-sub check {
+sub validate {
   my ($self, $value) = @_;
 
-  return ! defined $value;
+  die if defined $value;
+  return 1;
 }
 
 sub subname   { 'nil' }

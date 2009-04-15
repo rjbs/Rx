@@ -4,10 +4,10 @@ package Data::Rx::CoreType::bool;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //bool type
 
-sub check {
+sub validate {
   my ($self, $value) = @_;
 
-  return(
+  die unless(
     defined($value)
     and ref($value)
     and (
@@ -18,6 +18,8 @@ sub check {
       eval { $value->isa('boolean') }
     )
   );
+
+  return 1;
 }
 
 sub subname   { 'bool' }

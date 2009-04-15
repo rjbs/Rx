@@ -4,10 +4,11 @@ package Data::Rx::CoreType::def;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //def type
 
-sub check {
+sub validate {
   my ($self, $value) = @_;
 
-  return defined $value;
+  die unless defined $value;
+  return 1;
 }
 
 sub subname   { 'def' }

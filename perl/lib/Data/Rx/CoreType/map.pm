@@ -24,14 +24,14 @@ sub new_checker {
   return $self;
 }
 
-sub check {
+sub validate {
   my ($self, $value) = @_;
 
-  return unless
+  die unless
     ! Scalar::Util::blessed($value) and ref $value eq 'HASH';
 
   for my $entry_value (values %$value) {
-    return unless $self->{value_constraint}->check($entry_value);
+    die unless $self->{value_constraint}->check($entry_value);
   }
 
   return 1;

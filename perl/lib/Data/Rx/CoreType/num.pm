@@ -43,19 +43,19 @@ sub new_checker {
   bless $self => $class;
 }
 
-sub check {
+sub validate {
   my ($self, $value) = @_;
 
-  return unless defined $value and length $value;
+  die unless defined $value and length $value;
 
   # XXX: This is insufficiently precise.  It's here to keep us from believing
   # that JSON::XS::Boolean objects, which end up looking like 0 or 1, are
   # integers. -- rjbs, 2008-07-24
-  return if ref $value;
+  die if ref $value;
 
-  return unless $value =~ $self->_val_re;
-  return if $self->{range_check} && ! $self->{range_check}->($value);
-  return if defined($self->{value}) && $value != $self->{value};
+  die unless $value =~ $self->_val_re;
+  die if $self->{range_check} && ! $self->{range_check}->($value);
+  die if defined($self->{value}) && $value != $self->{value};
   return 1;
 }
 

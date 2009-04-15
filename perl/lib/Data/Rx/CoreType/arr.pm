@@ -28,16 +28,16 @@ sub new_checker {
   bless $self => $class;
 }
 
-sub check {
+sub validate {
   my ($self, $value) = @_;
 
-  return unless
+  die unless
     ! Scalar::Util::blessed($value) and ref $value eq 'ARRAY';
 
-  return if $self->{length_check} and ! $self->{length_check}->(0+@$value);
+  die if $self->{length_check} and ! $self->{length_check}->(0+@$value);
   
   for my $item (@$value) {
-    return unless $self->{content_check}->check($item);
+    die unless $self->{content_check}->check($item);
   }
 
   return 1;

@@ -9,6 +9,13 @@ sub new_checker {
   bless { rx => $rx } => $class;
 }
 
+sub check {
+  my ($self, $value) = @_;
+  local $@;
+
+  my $ok = eval { $self->validate($value); };
+}
+
 sub type_uri {
   sprintf 'tag:codesimply.com,2008:rx/core/%s', $_[0]->subname
 }

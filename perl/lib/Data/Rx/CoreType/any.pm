@@ -24,13 +24,13 @@ sub new_checker {
   return $self;
 }
 
-sub check {
+sub validate {
   return 1 unless $_[0]->{of};
 
   my ($self, $value) = @_;
   
   $_->check($value) && return 1 for @{ $self->{of} };
-  return;
+  die;
 }
 
 sub subname   { 'any' }

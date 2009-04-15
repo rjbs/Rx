@@ -6,10 +6,10 @@ use base 'Data::Rx::CoreType::num';
 
 sub subname   { 'int' }
 
-sub check {
+sub validate {
   my ($self, $value) = @_;
-  return unless $self->SUPER::check($value);
-  return unless $value == int $value;
+  $self->SUPER::validate($value);
+  die unless $value == int $value;
   return 1;
 }
 

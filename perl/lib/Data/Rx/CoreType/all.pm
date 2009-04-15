@@ -26,10 +26,10 @@ sub new_checker {
   return $self;
 }
 
-sub check {
+sub validate {
   my ($self, $value) = @_;
   
-  $_->check($value) || return for @{ $self->{of} };
+  $_->check($value) || die for @{ $self->{of} };
   return 1;
 }
 

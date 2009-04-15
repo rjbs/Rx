@@ -41,26 +41,26 @@ sub new_checker {
   return $self;
 }
 
-sub check {
+sub validate {
   my ($self, $value) = @_;
 
-  return unless
+  die unless
     ! Scalar::Util::blessed($value) and ref $value eq 'HASH';
 
   my $c_schema = $self->{content_schema};
 
   my @rest_keys = grep { ! exists $c_schema->{$_} } keys %$value;
-  return if @rest_keys and not $self->{rest_schema};
+  die if @rest_keys and not $self->{rest_schema};
 
   for my $key (keys %$c_schema) {
     my $check = $c_schema->{$key};
-    return if not $check->{optional} and not exists $value->{$key};
-    return if exists $value->{$key} and ! $check->{schema}->check($value->{$key});
+    die if not $check->{optional} and not exists $value->{$key};
+    die if exists $value->{$key} and ! $check->{schema}->check($value->{$key});
   }
 
   if (@rest_keys) {
     my %rest = map { $_ => $value->{$_} } @rest_keys;
-    return unless $self->{rest_schema}->check(\%rest);
+    die unless $self->{rest_schema}->check(\%rest);
   }
 
   return 1;
