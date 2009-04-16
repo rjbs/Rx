@@ -29,7 +29,15 @@ sub new_checker {
 sub validate {
   my ($self, $value) = @_;
   
-  $_->check($value) || die for @{ $self->{of} };
+  for my $i (0 .. $#{ $self->{of} }) {
+    my $checker = $self->{of}[$i];
+
+    $self->_subcheck(
+      { entry => $i },
+      sub { $checker->validate($value) },
+    );
+  }
+
   return 1;
 }
 

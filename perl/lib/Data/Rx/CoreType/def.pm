@@ -7,8 +7,12 @@ use base 'Data::Rx::CoreType';
 sub validate {
   my ($self, $value) = @_;
 
-  die unless defined $value;
-  return 1;
+  return 1 if defined $value;
+
+  $self->fail({
+    error   => [ qw(fail) ],
+    message => "found value is undef",
+  });
 }
 
 sub subname   { 'def' }

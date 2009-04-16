@@ -22,17 +22,32 @@ sub new_checker {
   bless $self => $class;
 }
 
-sub check {
+sub validate {
   my ($self, $value) = @_;
 
-  return unless defined $value;
+  unless (defined $value) {
+    $self->fail({
+      type    => [ qw(type) ],
+      message => "found value is undef",
+    });
+  }
 
   # XXX: This is insufficiently precise.  It's here to keep us from believing
   # that JSON::XS::Boolean objects, which end up looking like 0 or 1, are
   # integers. -- rjbs, 2008-07-24
-  return if ref $value;
+  if (ref $value) {
+    $self->fail({
+      type    => [ qw(type) ],
+      message => "found value is a reference",
+    });
+  }
 
-  return if defined $self->{value} and $self->{value} ne $value;
+  if (defined $self->{value} and $self->{value} ne $value) {
+    $self->fail({
+      type    => [ ], # ??? -- rjbs, 2009-04-15
+      message => "found value is not the required value",
+    });
+  }
 
   # XXX: Really, we need a way to know whether (say) the JSON was one of the
   # following:  { "foo": 1 } or { "foo": "1" }

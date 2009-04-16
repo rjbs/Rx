@@ -31,13 +31,25 @@ sub new_checker {
 sub validate {
   my ($self, $value) = @_;
 
-  die unless
-    ! Scalar::Util::blessed($value) and ref $value eq 'ARRAY';
+  unless (! Scalar::Util::blessed($value) and ref $value eq 'ARRAY') {
+    $self->fail({
+      type    => [ qw(type) ],
+      message => "found value is defined",
+    });
+  }
 
-  die if $self->{length_check} and ! $self->{length_check}->(0+@$value);
+  if ($self->{length_check} and ! $self->{length_check}->(0+@$value)) {
+    $self->fail({
+      type    => [ qw(size) ],
+      message => "number of entries is outside permitted range",
+    });
+  }
   
-  for my $item (@$value) {
-    die unless $self->{content_check}->check($item);
+  for my $i (0 .. $#$value) {
+    $self->_subcheck(
+      { entry => $i },
+      sub { $self->{content_check}->validate($value->[ $i ]) },
+    );
   }
 
   return 1;

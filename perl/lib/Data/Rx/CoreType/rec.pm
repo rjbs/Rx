@@ -44,23 +44,50 @@ sub new_checker {
 sub validate {
   my ($self, $value) = @_;
 
-  die unless
-    ! Scalar::Util::blessed($value) and ref $value eq 'HASH';
+  unless (! Scalar::Util::blessed($value) and ref $value eq 'HASH') {
+    $self->fail({
+      error   => [ qw(type) ],
+      message => "value was not a hashref",
+    });
+  }
 
   my $c_schema = $self->{content_schema};
 
   my @rest_keys = grep { ! exists $c_schema->{$_} } keys %$value;
-  die if @rest_keys and not $self->{rest_schema};
+  if (@rest_keys and not $self->{rest_schema}) {
+    $self->fail({
+      error   => [ qw(unknown) ],
+      entry   => \@rest_keys,
+      message => "found unexpected entries: @rest_keys",
+    });
+  }
 
   for my $key (keys %$c_schema) {
     my $check = $c_schema->{$key};
-    die if not $check->{optional} and not exists $value->{$key};
-    die if exists $value->{$key} and ! $check->{schema}->check($value->{$key});
+
+    if (not $check->{optional} and not exists $value->{$key}) {
+      $self->fail({
+        error   => [ qw(missing) ],
+        entry   => $key,
+        message => "no value given for required entry $key",
+      });
+    }
+
+    if (exists $value->{$key}) {
+      $self->_subcheck(
+        { entry => $key },
+        sub { $check->{schema}->validate($value->{$key}) }
+      );
+    }
   }
 
   if (@rest_keys) {
     my %rest = map { $_ => $value->{$_} } @rest_keys;
-    die unless $self->{rest_schema}->check(\%rest);
+
+    $self->_subcheck(
+      { entry => undef },
+      sub { $self->{rest_schema}->validate(\%rest) },
+    );
   }
 
   return 1;

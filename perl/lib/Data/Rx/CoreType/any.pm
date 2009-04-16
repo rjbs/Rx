@@ -30,7 +30,11 @@ sub validate {
   my ($self, $value) = @_;
   
   $_->check($value) && return 1 for @{ $self->{of} };
-  die;
+
+  $self->fail({
+    error   => [ ], # ??? -- rjbs, 2009-04-15
+    message => "matched none of the available alternatives",
+  });
 }
 
 sub subname   { 'any' }

@@ -7,15 +7,25 @@ use base 'Data::Rx::CoreType';
 sub validate {
   my ($self, $value) = @_;
 
-  die if ! defined $value;
-  die if ref $value and ! (
+  if (! defined $value) {
+    $self->fail({
+      error   => [ qw(type) ],
+      message => "found value is undef",
+    });
+  }
+
+  return 1 unless ref $value and ! (
     eval { $value->isa('JSON::XS::Boolean') }
     or
     eval { $value->isa('JSON::PP::Boolean') }
     or
     eval { $value->isa('boolean') }
   );
-  return 1;
+
+  $self->fail({
+    error   => [ qw(type) ],
+    message => "found value is a reference/container type",
+  });
 }
 
 sub subname   { 'one' }

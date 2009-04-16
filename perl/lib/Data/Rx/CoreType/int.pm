@@ -9,8 +9,13 @@ sub subname   { 'int' }
 sub validate {
   my ($self, $value) = @_;
   $self->SUPER::validate($value);
-  die unless $value == int $value;
-  return 1;
+
+  return 1 if $value == int $value;
+
+  $self->fail({
+    error   => [ qw(type) ],
+    message => "found value is not an integer",
+  });
 }
 
 1;

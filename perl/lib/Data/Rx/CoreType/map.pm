@@ -27,11 +27,18 @@ sub new_checker {
 sub validate {
   my ($self, $value) = @_;
 
-  die unless
-    ! Scalar::Util::blessed($value) and ref $value eq 'HASH';
+  unless (! Scalar::Util::blessed($value) and ref $value eq 'HASH') {
+    $self->fail({
+      error   => [ qw(type) ],
+      message => "found value is not a hashref",
+    });
+  }
 
-  for my $entry_value (values %$value) {
-    die unless $self->{value_constraint}->check($entry_value);
+  for my $key (keys %$value) {
+    $self->_subcheck(
+      { entry => $key },
+      sub { $self->{value_constraint}->validate($value->{ $key }) },
+    );
   }
 
   return 1;

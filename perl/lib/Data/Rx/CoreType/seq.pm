@@ -32,19 +32,38 @@ sub new_checker {
 sub validate {
   my ($self, $value) = @_;
 
-  die unless
-    ! Scalar::Util::blessed($value) and ref $value eq 'ARRAY';
+  unless (! Scalar::Util::blessed($value) and ref $value eq 'ARRAY') {
+    $self->fail({
+      error   => [ qw(type) ],
+      message => "found value is not an arrayref",
+    });
+  }
 
   my $content_schemata = $self->{content_schemata};
-  die if @$value < @$content_schemata;
+  if (@$value < @$content_schemata) {
+    $self->fail({
+      type    => [ qw(size) ],
+      message => sprintf(
+        "too few entries found; found %s, need at least %s",
+        0 + @$value,
+        0 + @$content_schemata,
+      ),
+    });
+  }
   
   for my $i (0 .. $#$content_schemata) {
-    die unless $content_schemata->[ $i ]->check( $value->[ $i ] );
+    $self->_subcheck(
+      { entry => $i },
+      sub { $content_schemata->[ $i ]->validate( $value->[ $i ] ) },
+    );
   }
 
   if ($self->{tail_check} and @$value > @$content_schemata) {
     my $tail = [ @$value[ @$content_schemata..$#$value ] ];
-    die unless $self->{tail_check}->check($tail);
+    $self->_subcheck(
+      { entry => undef }, # ??? -- rjbs, 2009-04-15
+      sub { $self->{tail_check}->validate($tail) },
+    );
   }
 
   return 1;

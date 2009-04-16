@@ -43,19 +43,40 @@ sub new_checker {
   bless $self => $class;
 }
 
+sub __type_fail {
+  my ($self) = @_;
+  $self->fail({
+    error   => [ qw(type) ],
+    message => "value is not a number",
+  });
+}
+
 sub validate {
   my ($self, $value) = @_;
 
-  die unless defined $value and length $value;
+  $self->__type_fail unless defined $value and length $value;
 
   # XXX: This is insufficiently precise.  It's here to keep us from believing
   # that JSON::XS::Boolean objects, which end up looking like 0 or 1, are
   # integers. -- rjbs, 2008-07-24
-  die if ref $value;
+  $self->__type_fail if ref $value;
 
-  die unless $value =~ $self->_val_re;
-  die if $self->{range_check} && ! $self->{range_check}->($value);
-  die if defined($self->{value}) && $value != $self->{value};
+  $self->__type_fail unless $value =~ $self->_val_re;
+
+  if ($self->{range_check} && ! $self->{range_check}->($value)) {
+    $self->fail({
+      error   => [ qw(range) ],
+      message => "value is outside allowed range",
+    });
+  }
+
+  if (defined($self->{value}) && $value != $self->{value}) {
+    $self->fail({
+      error   => [ ], # ??? -- rjbs, 2009-04-15
+      message => "found value is not the required value",
+    });
+  }
+
   return 1;
 }
 

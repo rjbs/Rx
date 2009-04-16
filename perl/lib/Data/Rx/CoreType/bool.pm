@@ -7,7 +7,7 @@ use base 'Data::Rx::CoreType';
 sub validate {
   my ($self, $value) = @_;
 
-  die unless(
+  return 1 if (
     defined($value)
     and ref($value)
     and (
@@ -19,7 +19,10 @@ sub validate {
     )
   );
 
-  return 1;
+  $self->fail({
+    error   => [ qw(type) ],
+    message => "found value was not a bool",
+  });
 }
 
 sub subname   { 'bool' }
