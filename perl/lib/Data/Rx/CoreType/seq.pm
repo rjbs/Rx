@@ -55,7 +55,7 @@ sub validate {
     $self->_subcheck(
       $value->[ $i ],
       $content_schemata->[ $i ],
-      { entry => $i },
+      { subcheck => $i },
     );
   }
 
@@ -64,7 +64,7 @@ sub validate {
     $self->_subcheck(
       $tail,
       $self->{tail_check},
-      { entry => undef }, # ??? -- rjbs, 2009-04-15
+      { subcheck => undef }, # ??? -- rjbs, 2009-04-15
     );
   }
 

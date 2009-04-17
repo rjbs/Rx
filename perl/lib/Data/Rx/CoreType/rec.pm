@@ -56,9 +56,9 @@ sub validate {
   my @rest_keys = grep { ! exists $c_schema->{$_} } keys %$value;
   if (@rest_keys and not $self->{rest_schema}) {
     $self->fail({
-      error   => [ qw(unknown) ],
-      entry   => \@rest_keys,
-      message => "found unexpected entries: @rest_keys",
+      error    => [ qw(unknown) ],
+      subcheck => \@rest_keys,
+      message  => "found unexpected entries: @rest_keys",
     });
   }
 
@@ -67,9 +67,9 @@ sub validate {
 
     if (not $check->{optional} and not exists $value->{$key}) {
       $self->fail({
-        error   => [ qw(missing) ],
-        entry   => $key,
-        message => "no value given for required entry $key",
+        error    => [ qw(missing) ],
+        subcheck => $key,
+        message  => "no value given for required entry $key",
       });
     }
 
@@ -77,7 +77,7 @@ sub validate {
       $self->_subcheck(
         $value->{$key},
         $check->{schema},
-        { entry => $key },
+        { subcheck => $key },
       );
     }
   }
@@ -88,7 +88,7 @@ sub validate {
     $self->_subcheck(
       \%rest,
       $self->{rest_schema},
-      { entry => undef },
+      { subcheck => undef },
     );
   }
 

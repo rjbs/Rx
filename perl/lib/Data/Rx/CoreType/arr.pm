@@ -49,7 +49,7 @@ sub validate {
     $self->_subcheck(
       $value->[ $i ],
       $self->{content_check},
-      { entry => $i },
+      { subcheck => $i },
     );
   }
 
