@@ -23,4 +23,27 @@ sub contextualize {
   return $self;
 }
 
+sub path_to_check {
+  my ($self) = @_;
+  my @path;
+  for my $frame (reverse @{ $self->{struct} }) {
+    next unless exists $frame->{subcheck};
+    push @path, $frame->{subcheck};
+  }
+
+  return \@path;
+}
+
+sub path_to_value {
+  my ($self) = @_;
+
+  my @path;
+  for my $frame (reverse @{ $self->{struct} }) {
+    next unless exists $frame->{entry};
+    push @path, $frame->{entry};
+  }
+
+  return \@path;
+}
+
 1;

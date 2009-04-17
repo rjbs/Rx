@@ -4,29 +4,32 @@ use warnings;
 
 use lib 'perl/lib';
 use Data::Rx;
+use YAML::XS;
 
 my $rx = Data::Rx->new;
 
-my $schema_def = {
-  type      => '//seq',
-  contents  => [
-    '//int', 
-    '//nil',
-    {
-      type     => '//rec',
-      required => {
-        foo => '//int',
-        bar => '//int',
-      },
-      optional => {
-        baz => {
-          type     => '//arr',
-          contents => '//int',
-        },
-      },
-    },
-  ],
-};
+my $schema_yaml = <<'END_YAML';
+---
+type: //all
+of:
+  - //def
+  - type: //seq
+    contents:
+    - //int 
+    - //nil
+    - type: //rec
+      required:
+        foo: //int
+        bar: //int
+      optional:
+        baz:
+          type: //arr
+          contents:
+            type: //all
+            of  : [ //def, //num, //int ]
+END_YAML
+
+my ($schema_def) = YAML::XS::Load($schema_yaml);
 
 my $schema = $rx->make_schema($schema_def);
 
@@ -43,19 +46,7 @@ my $input = [
 eval { $schema->validate($input); };
 my $fail = $@;
 
-use YAML::XS;
 print Dump($fail->struct);
 
-__END__
----
-- error:
-  - type
-  message: found value is not an integer
-  type: tag:codesimply.com,2008:rx/core/int
-- entry: 3
-  type: tag:codesimply.com,2008:rx/core/arr
-- entry: baz
-  type: tag:codesimply.com,2008:rx/core/rec
-- entry: 2
-  type: tag:codesimply.com,2008:rx/core/seq
-
+print "PATH TO VALUE: @{ $fail->path_to_value }\n";
+print "PATH TO CHECK: @{ $fail->path_to_check }\n";
