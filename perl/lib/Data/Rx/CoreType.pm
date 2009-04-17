@@ -46,7 +46,6 @@ sub _subcheck {
   Carp::confess($failure) unless eval { $failure->isa('Data::Rx::Failure') };
   $failure->contextualize({
     type  => $self->type_uri,
-    value => $value,
     %$context,
   });
 
