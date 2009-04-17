@@ -10,8 +10,9 @@ sub validate {
   return 1 if defined $value;
 
   $self->fail({
-    error   => [ qw(fail) ],
+    error   => [ qw(type) ],
     message => "found value is undef",
+    value   => $value, # silly, but let's be consistent -- rjbs, 2009-04-17
   });
 }
 

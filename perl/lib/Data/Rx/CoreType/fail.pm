@@ -8,6 +8,7 @@ sub validate {
   $_[0]->fail({
     error   => [ qw(alwaysfail) ],
     message => "matching reached an always-fail check",
+    value   => $_[1],
   });
 }
 

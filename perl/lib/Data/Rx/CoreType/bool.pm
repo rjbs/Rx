@@ -22,6 +22,7 @@ sub validate {
   $self->fail({
     error   => [ qw(type) ],
     message => "found value was not a bool",
+    value   => $value,
   });
 }
 

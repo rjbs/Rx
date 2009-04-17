@@ -36,6 +36,7 @@ sub validate {
     $self->fail({
       error   => [ qw(type) ],
       message => "found value is not an arrayref",
+      value   => $value,
     });
   }
 
@@ -43,6 +44,7 @@ sub validate {
   if (@$value < @$content_schemata) {
     $self->fail({
       type    => [ qw(size) ],
+      value   => $value,
       message => sprintf(
         "too few entries found; found %s, need at least %s",
         0 + @$value,
@@ -55,7 +57,10 @@ sub validate {
     $self->_subcheck(
       $value->[ $i ],
       $content_schemata->[ $i ],
-      { subcheck => $i },
+      {
+        entry    => $i,
+        subcheck => $i,
+      },
     );
   }
 

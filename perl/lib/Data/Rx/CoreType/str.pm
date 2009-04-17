@@ -29,6 +29,7 @@ sub validate {
     $self->fail({
       type    => [ qw(type) ],
       message => "found value is undef",
+      value   => $value,
     });
   }
 
@@ -39,6 +40,7 @@ sub validate {
     $self->fail({
       type    => [ qw(type) ],
       message => "found value is a reference",
+      value   => $value,
     });
   }
 
@@ -46,6 +48,7 @@ sub validate {
     $self->fail({
       type    => [ ], # ??? -- rjbs, 2009-04-15
       message => "found value is not the required value",
+      value   => $value,
     });
   }
 

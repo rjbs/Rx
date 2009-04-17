@@ -48,6 +48,7 @@ sub validate {
     $self->fail({
       error   => [ qw(type) ],
       message => "value was not a hashref",
+      value   => $value,
     });
   }
 
@@ -57,19 +58,20 @@ sub validate {
   if (@rest_keys and not $self->{rest_schema}) {
     $self->fail({
       error    => [ qw(unknown) ],
-      subcheck => \@rest_keys,
       message  => "found unexpected entries: @rest_keys",
+      value    => $value,
     });
   }
 
   for my $key (keys %$c_schema) {
     my $check = $c_schema->{$key};
 
-    if (not $check->{optional} and not exists $value->{$key}) {
+    if (not $check->{optional} and not exists $value->{ $key }) {
       $self->fail({
         error    => [ qw(missing) ],
         subcheck => $key,
         message  => "no value given for required entry $key",
+        value    => $value,
       });
     }
 
@@ -77,7 +79,10 @@ sub validate {
       $self->_subcheck(
         $value->{$key},
         $check->{schema},
-        { subcheck => $key },
+        {
+          entry    => $key,
+          subcheck => $key,
+        },
       );
     }
   }

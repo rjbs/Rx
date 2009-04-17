@@ -34,6 +34,7 @@ sub validate {
   $self->fail({
     error   => [ ], # ??? -- rjbs, 2009-04-15
     message => "matched none of the available alternatives",
+    value   => $value,
   });
 }
 

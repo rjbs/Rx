@@ -31,6 +31,7 @@ sub validate {
     $self->fail({
       error   => [ qw(type) ],
       message => "found value is not a hashref",
+      value   => $value,
     });
   }
 
@@ -38,7 +39,10 @@ sub validate {
     $self->_subcheck(
       $value->{ $key },
       $self->{value_constraint},
-      { subcheck => $key },
+      {
+        entry    => $key,
+        subcheck => $key,
+      },
     );
   }
 

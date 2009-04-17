@@ -11,6 +11,7 @@ sub validate {
     $self->fail({
       error   => [ qw(type) ],
       message => "found value is undef",
+      value   => $value,
     });
   }
 
@@ -25,6 +26,7 @@ sub validate {
   $self->fail({
     error   => [ qw(type) ],
     message => "found value is a reference/container type",
+    value   => $value,
   });
 }
 

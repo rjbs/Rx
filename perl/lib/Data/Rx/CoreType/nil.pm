@@ -12,6 +12,7 @@ sub validate {
   $self->fail({
     type    => [ qw(type) ],
     message => "found value is defined",
+    value   => $value,
   });
 }
 

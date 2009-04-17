@@ -34,7 +34,8 @@ sub validate {
   unless (! Scalar::Util::blessed($value) and ref $value eq 'ARRAY') {
     $self->fail({
       type    => [ qw(type) ],
-      message => "found value is defined",
+      message => "found value is not an arrayref",
+      value   => $value,
     });
   }
 
@@ -42,6 +43,7 @@ sub validate {
     $self->fail({
       type    => [ qw(size) ],
       message => "number of entries is outside permitted range",
+      value   => $value,
     });
   }
   
@@ -49,7 +51,10 @@ sub validate {
     $self->_subcheck(
       $value->[ $i ],
       $self->{content_check},
-      { subcheck => $i },
+      {
+        entry    => $i,
+        subcheck => $i,
+      },
     );
   }
 
