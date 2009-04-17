@@ -38,9 +38,9 @@ sub fail {
 }
 
 sub _subcheck {
-  my ($self, $context, $sub) = @_;
+  my ($self, $value, $checker, $context) = @_;
 
-  return if eval { $sub->() };
+  return if eval { $checker->validate($value) };
 
   my $failure = $@;
   Carp::confess($failure) unless eval { $failure->isa('Data::Rx::Failure') };

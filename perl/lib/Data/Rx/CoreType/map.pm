@@ -36,8 +36,9 @@ sub validate {
 
   for my $key (keys %$value) {
     $self->_subcheck(
+      $value->{ $key },
+      $self->{value_constraint},
       { entry => $key },
-      sub { $self->{value_constraint}->validate($value->{ $key }) },
     );
   }
 

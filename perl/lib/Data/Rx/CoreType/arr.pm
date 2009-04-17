@@ -47,8 +47,9 @@ sub validate {
   
   for my $i (0 .. $#$value) {
     $self->_subcheck(
+      $value->[ $i ],
+      $self->{content_check},
       { entry => $i },
-      sub { $self->{content_check}->validate($value->[ $i ]) },
     );
   }
 

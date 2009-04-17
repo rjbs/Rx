@@ -33,8 +33,9 @@ sub validate {
     my $checker = $self->{of}[$i];
 
     $self->_subcheck(
+      $value,
+      $self->{of}[$i],
       { entry => $i },
-      sub { $checker->validate($value) },
     );
   }
 

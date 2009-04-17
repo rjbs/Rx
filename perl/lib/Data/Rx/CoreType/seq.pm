@@ -53,16 +53,18 @@ sub validate {
   
   for my $i (0 .. $#$content_schemata) {
     $self->_subcheck(
+      $value->[ $i ],
+      $content_schemata->[ $i ],
       { entry => $i },
-      sub { $content_schemata->[ $i ]->validate( $value->[ $i ] ) },
     );
   }
 
   if ($self->{tail_check} and @$value > @$content_schemata) {
     my $tail = [ @$value[ @$content_schemata..$#$value ] ];
     $self->_subcheck(
+      $tail,
+      $self->{tail_check},
       { entry => undef }, # ??? -- rjbs, 2009-04-15
-      sub { $self->{tail_check}->validate($tail) },
     );
   }
 

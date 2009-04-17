@@ -75,8 +75,9 @@ sub validate {
 
     if (exists $value->{$key}) {
       $self->_subcheck(
+        $value->{$key},
+        $check->{schema},
         { entry => $key },
-        sub { $check->{schema}->validate($value->{$key}) }
       );
     }
   }
@@ -85,8 +86,9 @@ sub validate {
     my %rest = map { $_ => $value->{$_} } @rest_keys;
 
     $self->_subcheck(
+      \%rest,
+      $self->{rest_schema},
       { entry => undef },
-      sub { $self->{rest_schema}->validate(\%rest) },
     );
   }
 
