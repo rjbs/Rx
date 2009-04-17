@@ -17,7 +17,7 @@ sub new_checker {
   if (my $of = $arg->{of}) {
     Carp::croak("invalid 'of' argument to //any") unless
       Scalar::Util::reftype $of eq 'ARRAY' and @$of;
-    
+
     $self->{of} = [ map {; $rx->make_schema($_) } @$of ];
   }
 
@@ -28,13 +28,26 @@ sub validate {
   return 1 unless $_[0]->{of};
 
   my ($self, $value) = @_;
-  
-  $_->check($value) && return 1 for @{ $self->{of} };
+
+  my @failures;
+  for my $i (0 .. $#{ $self->{of} }) {
+    my $check = $self->{of}[ $i ];
+    return 1 if eval { $check->validate($value) };
+
+    my $failure = $@;
+    $failure->contextualize({
+      type     => $self->type_uri,
+      subcheck => $i,
+    });
+
+    push @failures, $failure->{struct};
+  }
 
   $self->fail({
-    error   => [ ], # ??? -- rjbs, 2009-04-15
-    message => "matched none of the available alternatives",
-    value   => $value,
+    error    => [ ], # ??? -- rjbs, 2009-04-15
+    message  => "matched none of the available alternatives",
+    value    => $value,
+    failures => \@failures,
   });
 }
 
