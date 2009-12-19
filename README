@@ -1,0 +1,18 @@
+What is Rx?
+
+When adding an API to your web service, you have to choose how to encode the
+data you send across the line. XML is one common choice for this, but it can
+grow arcane and cumbersome pretty quickly. Lots of webservice authors want to
+avoid thinking about XML, and instead choose formats that provide a few simple
+data types that correspond to common data structures in modern programming
+languages. In other words, JSON and YAML.
+
+Unfortunately, while these formats make it easy to pass around complex data
+structures, they lack a system for validation. XML has XML Schemas and RELAX
+NG, but these are complicated and sometimes confusing standards. They're not
+very portable to the kind of data structure provided by JSON, and if you wanted
+to avoid XML as a data encoding, writing more XML to validate the first XML is
+probably even less appealing.
+
+Rx is meant to provide a system for data validation that matches up with
+JSON-style data structures and is as easy to work with as JSON itself.
