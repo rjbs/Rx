@@ -3,9 +3,9 @@ use strict;
 use warnings;
 
 use File::Find::Rule;
-use JSON::XS;
+use JSON 2;
 
 my @files = File::Find::Rule->file->in('spec');
-my $json = JSON::XS->new->encode(\@files);
+my $json = JSON->new->encode(\@files);
 
 print "$json\n";

@@ -32,7 +32,7 @@ $(function() {
   });
 
   if ({{ $ct_page ? 'true' : 'false' }}) {
-    var types = {{ JSON::XS->new->encode(\@coretypes) }};
+    var types = {{ JSON->new->encode(\@coretypes) }};
     for (i in types) {
       addSidebarLink(
         '{{$root}}coretype/' + types[i] + '.html',

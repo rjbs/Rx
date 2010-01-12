@@ -4,7 +4,7 @@ use warnings;
 use autodie;
 use File::Find::Rule;
 use File::Path;
-use JSON::XS;
+use JSON 2;
 use Text::Template;
 
 my $template = Text::Template->new(
