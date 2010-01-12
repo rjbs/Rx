@@ -1,6 +1,8 @@
 Revision history for Data-Rx
 
 {{$NEXT}}
+
+0.100110  2010-01-11 22:42:19 America/New_York
           do not require JSON::XS
 
 0.007     2009-03-06
