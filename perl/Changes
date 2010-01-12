@@ -1,5 +1,8 @@
 Revision history for Data-Rx
 
+{{$NEXT}}
+          do not require JSON::XS
+
 0.007     2009-03-06
           register_type_plugin can now accept bundles
 

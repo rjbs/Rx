@@ -5,10 +5,10 @@ package Test::RxSpec;
 use autodie;
 use Data::Rx;
 use File::Find::Rule;
-use JSON::XS ();
+use JSON 2 ();
 use Test::More;
 
-my $JSON = JSON::XS->new;
+my $JSON = JSON->new;
 sub decode_json { $JSON->decode($_[0]) }
 
 sub slurp_json {

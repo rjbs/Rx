@@ -13,6 +13,8 @@ sub check {
     and (
       eval { $value->isa('JSON::XS::Boolean') }
       or
+      eval { $value->isa('JSON::PP::Boolean') }
+      or
       eval { $value->isa('boolean') }
     )
   );
