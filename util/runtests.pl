@@ -1,16 +1,32 @@
-#!/usr/bin/perl
+#!/usr/local/bin/perl
+use 5.010;
 use strict;
 use warnings;
 use TAP::Harness;
 
+my %interp;
+
+$interp{perl} = $ENV{PERL} || $^X;
+$interp{$_}   = $ENV{ uc $_ } || $_ for qw(java ruby python php);
+
+my %ext = (
+  t   => [ 'perl', -I => 'perl/lib', -I => 'perl/t/lib' ],
+  js  => [ 'java', -jar => 'js.jar' ], # yeah yeah yeah, bad naming
+  rb  => [ 'ruby', -I => 'ruby' ],
+  py  => [ 'python', ],
+  php => [ 'php', ],
+);
+
 my $harness = TAP::Harness->new({
   exec => sub {
     my ($self, $filename) = @_;
-    return [ $^X, -I => 'perl/lib', -I => 'perl/t/lib', $filename ] if $filename =~ /\.t$/;
-    return [ 'java', -jar => 'js.jar', $filename ] if $filename =~ /\.js$/;
-    return [ 'ruby', -I => 'ruby', $filename ] if $filename =~ /\.rb$/;
-    return [ 'python', $filename ] if $filename =~ /\.py$/;
-    return [ 'php', $filename ] if $filename =~ /\.php$/;
+
+    for my $ext (keys %ext) {
+      next unless $filename =~ /\.\Q$ext\E$/;
+      my @entry = (@{ $ext{$ext} }, $filename);
+      $entry[0] = $interp{ $entry[0] };
+      return \@entry;
+    }
   },
 });
 
