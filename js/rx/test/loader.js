@@ -70,6 +70,10 @@ var loadRxTests = (function (specRoot) {
 
         if (entries instanceof Array) {
           // keep as is
+        } else if (entries instanceof Object) {
+          copy = entries;
+          schema[pf][source] = entries = [];
+          for (entry in copy) entries.push(entry);
         } else if (entries == '*') {
           schema[pf][source] = entries = [];
           for (entry in testData[source]) entries.push(entry);
