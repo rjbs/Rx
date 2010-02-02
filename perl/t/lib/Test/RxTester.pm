@@ -69,8 +69,13 @@ sub _load_schema_files {
           = $ref eq 'HASH'  ? %$spec
           : $ref eq 'ARRAY' ? (map {; $_ => undef } @$spec)
           : $ref            ? die("invalid test spec: $spec")
-          : $spec eq '*'    ? (map {; $_ => undef } keys %{$self->test_data($source)})
+          : $spec eq '*'    ? ('*' => undef)
           : Carp::croak("invalid test spec: $spec");
+
+        if (keys %entries == 1 and exists $entries{'*'}) {
+          my $value = $entries{'*'};
+          %entries = map {; $_ => $value } keys %{ $self->test_data($source) };
+        }
 
         $self->{spec}{$name}{expect}{$source}{$pf} = \%entries;
       }
@@ -133,13 +138,19 @@ sub fudge_reason {
 }
 
 sub assert_pass {
-  my ($self, $schema, $input, $schema_name, $input_name) = @_;
-  ok($schema->check($input),   "VALID  : $input_name against $schema_name");
+  my ($self, $arg) = @_;
+  my ($schema, $schema_desc, $input, $input_desc, $want)
+    = @$arg{ qw(schema schema_desc input input_desc want) };
+
+  ok($schema->check($input),   "VALID  : $input_desc against $schema_desc");
 }
 
 sub assert_fail {
-  my ($self, $schema, $input, $schema_name, $input_name) = @_;
-  ok(! $schema->check($input), "INVALID: $input_name against $schema_name");
+  my ($self, $arg) = @_;
+  my ($schema, $schema_desc, $input, $input_desc, $want)
+    = @$arg{ qw(schema schema_desc input input_desc want) };
+
+  ok(! $schema->check($input), "INVALID: $input_desc against $schema_desc");
 }
 
 sub run_tests {
@@ -176,7 +187,13 @@ sub run_tests {
           TODO: {
             my $reason = fudge_reason($spec_name, $source, $entry);
             local $TODO = $reason if $reason;
-            $self->$method($schema, $input, $spec_name, "$source/$entry");
+            $self->$method({
+              schema      => $schema,
+              schema_desc => $spec_name,
+              input       => $input,
+              input_desc  => "$source/$entry",
+              want        => $entries->{ $entry },
+            });
           }
         }
       }
