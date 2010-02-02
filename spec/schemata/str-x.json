@@ -6,7 +6,13 @@
   "fail": {
     "arr" : "*",
     "bool": "*",
-    "null": "*",
+    "null": {
+      "*": {
+        "type": [ "type" ],
+        "check": [ ],
+        "value": [ ]
+      }
+    },
     "num" : "*",
     "obj" : "*",
     "str" : [

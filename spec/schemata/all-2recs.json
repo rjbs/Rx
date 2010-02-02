@@ -22,13 +22,27 @@
     "bool": "*",
     "null": "*",
     "num" : "*",
-    "obj" : [
-      "key-0", "key-1", "opt-T",
+    "obj" : {
+      "key-0": {
+        "value": [ ],
+        "check": [ 1, "opt" ]
+      },
 
-      "key-pants",
-      "key-1-unknown",
-      "alpha-num"
-    ],
+      "key-1": null,
+
+      "opt-T": {
+        "value": [ ],
+        "check": [ 0, "key" ]
+      },
+
+      "key-pants": {
+        "value": [ "key" ],
+        "check": [ 0, "key" ]
+      },
+
+      "key-1-unknown": null,
+      "alpha-num": null
+    },
     "str" : "*"
   }
 }

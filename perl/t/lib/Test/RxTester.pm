@@ -7,6 +7,7 @@ use Data::Rx;
 use File::Find::Rule;
 use JSON::XS ();
 use Test::More;
+use Try::Tiny;
 
 sub new {
   my ($class, $arg) = @_;
@@ -142,7 +143,13 @@ sub assert_pass {
   my ($schema, $schema_desc, $input, $input_desc, $want)
     = @$arg{ qw(schema schema_desc input input_desc want) };
 
-  ok($schema->check($input),   "VALID  : $input_desc against $schema_desc");
+  try {
+    $schema->validate($input);
+    pass("VALID  : $input_desc against $schema_desc");
+  } catch {
+    fail("VALID  : $input_desc against $schema_desc");
+    # should diag the failure paths here
+  }
 }
 
 sub assert_fail {
@@ -150,7 +157,28 @@ sub assert_fail {
   my ($schema, $schema_desc, $input, $input_desc, $want)
     = @$arg{ qw(schema schema_desc input input_desc want) };
 
-  ok(! $schema->check($input), "INVALID: $input_desc against $schema_desc");
+  try {
+    $schema->validate($input);
+    fail("INVALID: $input_desc against $schema_desc");
+  } catch {
+    my $fail = $_;
+    pass("INVALID: $input_desc against $schema_desc");
+    isa_ok($fail, 'Data::Rx::Failure');
+
+    $want ||= {};
+    if ($want->{value}) {
+      is_deeply($fail->path_to_value, $want->{value}, "...path to value");
+    }
+
+    if ($want->{check}) {
+      is_deeply($fail->path_to_check, $want->{check}, "...path to check");
+    }
+
+    # XXX: needs to be codified in the Failure protocol -- rjbs, 2010-02-02
+    # if ($want->{type}) {
+    #   is_deeply($fail->struct->[0]->{type}, $want->{type}, "...failure type(s)");
+    # }
+  }
 }
 
 sub run_tests {
