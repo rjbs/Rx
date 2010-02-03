@@ -7,6 +7,8 @@ use Test::More;
 use lib 't/lib';
 use Test::RxTester;
 
+Test::Builder->new->failure_output(\*STDOUT);
+
 plan 'no_plan';
 
 my @schema_files = File::Find::Rule->file->in('spec/schemata');

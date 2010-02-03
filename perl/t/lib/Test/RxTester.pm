@@ -163,21 +163,26 @@ sub assert_fail {
   } catch {
     my $fail = $_;
     pass("INVALID: $input_desc against $schema_desc");
-    isa_ok($fail, 'Data::Rx::Failure');
+    isa_ok($fail, 'Data::Rx::Failure', '...exception');
 
     $want ||= {};
     if ($want->{value}) {
-      is_deeply($fail->path_to_value, $want->{value}, "...path to value");
+      my $path = @{ $want->{value} } ? "[ @{ $want->{value} } ]" : '(empty)';
+      is_deeply([ $fail->path_to_value ], $want->{value}, "...value: $path");
     }
 
     if ($want->{check}) {
-      is_deeply($fail->path_to_check, $want->{check}, "...path to check");
+      my $path = @{ $want->{check} } ? "[ @{ $want->{check} } ]" : '(empty)';
+      is_deeply([ $fail->path_to_check ], $want->{check}, "...check: $path");
     }
 
-    # XXX: needs to be codified in the Failure protocol -- rjbs, 2010-02-02
-    # if ($want->{type}) {
-    #   is_deeply($fail->struct->[0]->{type}, $want->{type}, "...failure type(s)");
-    # }
+    if ($want->{error}) {
+      is_deeply(
+        [ sort $fail->failure_types ],
+        $want->{error},
+        "...failure type(s): @{ $want->{error} }",
+      );
+    }
   }
 }
 
