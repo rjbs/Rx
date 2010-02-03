@@ -6,6 +6,8 @@ use autodie;
 use Data::Rx;
 use File::Find::Rule;
 use JSON::XS ();
+use Scalar::Util qw(blessed);
+use Test::Deep::NoTest;
 use Test::More;
 use Try::Tiny;
 
@@ -162,27 +164,47 @@ sub assert_fail {
     fail("INVALID: $input_desc against $schema_desc");
   } catch {
     my $fail = $_;
-    pass("INVALID: $input_desc against $schema_desc");
-    isa_ok($fail, 'Data::Rx::Failure', '...exception');
+    my $desc = "INVALID: $input_desc against $schema_desc";
+    my $ok   = 1;
+    my @diag;
 
-    $want ||= {};
-    if ($want->{value}) {
-      my $path = @{ $want->{value} } ? "[ @{ $want->{value} } ]" : '(empty)';
-      is_deeply([ $fail->path_to_value ], $want->{value}, "...value: $path");
+    if (try { $fail->isa('Data::Rx::Failure') }) {
+      $want ||= {};
+      if ($want->{value} && ! eq_deeply([$fail->path_to_value],$want->{value})){
+        $ok = 0;
+        my $want = @{ $want->{value} } ? "[ @{ $want->{value} } ]" : '(empty)';
+        my $have = $fail->path_to_value ? "[ @{[$fail->path_to_value]} ]" : '(empty)';
+        push @diag, "want path to value: $want",
+                    "have path to value: $have";
+      }
+
+      if ($want->{check} && ! eq_deeply([$fail->path_to_check],$want->{check})){
+        $ok = 0;
+        my $want = @{ $want->{check} } ? "[ @{ $want->{check} } ]" : '(empty)';
+        my $have = $fail->path_to_check ? "[ @{[$fail->path_to_check]} ]" : '(empty)';
+        push @diag, "want path to check: $want",
+                    "have path to check: $have";
+      }
+
+      if ($want->{error} && ! eq_deeply([sort $fail->failure_types],$want->{error})) {
+        $ok = 0;
+        my $want = @{ $want->{error} } ? "[ @{ $want->{error} } ]" : '(empty)';
+        my $have = $fail->failure_types ? "[ @{[$fail->failure_types]} ]" : '(empty)';
+        push @diag, "want error types: $want",
+                    "have error types: $have";
+      }
+    } else {
+      $ok = 0;
+      my $fail_desc = blessed($fail) ? blessed($fail)
+                    : ref($fail)     ? "unblessed " . ref($fail)
+                    :                  "non-ref: $fail";
+
+      push @diag, 'want $@: Data::Rx::Failure',
+                  'have $@: ' . $fail_desc;
     }
 
-    if ($want->{check}) {
-      my $path = @{ $want->{check} } ? "[ @{ $want->{check} } ]" : '(empty)';
-      is_deeply([ $fail->path_to_check ], $want->{check}, "...check: $path");
-    }
-
-    if ($want->{error}) {
-      is_deeply(
-        [ sort $fail->failure_types ],
-        $want->{error},
-        "...failure type(s): @{ $want->{error} }",
-      );
-    }
+    ok($ok, $desc);
+    diag "    $_" for @diag;
   }
 }
 
