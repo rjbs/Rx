@@ -23,6 +23,11 @@ sub contextualize {
   return $self;
 }
 
+sub failure_types {
+  my ($self) = @_;
+  return @{ $self->{struct}[0]{error} };
+}
+
 sub path_to_check {
   my ($self) = @_;
   my @path;
@@ -31,7 +36,7 @@ sub path_to_check {
     push @path, $frame->{subcheck};
   }
 
-  return \@path;
+  return @path;
 }
 
 sub path_to_value {
@@ -43,7 +48,7 @@ sub path_to_value {
     push @path, $frame->{entry};
   }
 
-  return \@path;
+  return @path;
 }
 
 1;

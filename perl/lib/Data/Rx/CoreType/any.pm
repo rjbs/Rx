@@ -44,7 +44,7 @@ sub validate {
   }
 
   $self->fail({
-    error    => [ ], # ??? -- rjbs, 2009-04-15
+    error    => [ qw(none) ],
     message  => "matched none of the available alternatives",
     value    => $value,
     failures => \@failures,

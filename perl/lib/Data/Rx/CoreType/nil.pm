@@ -10,7 +10,7 @@ sub validate {
   return 1 if ! defined $value;
 
   $self->fail({
-    type    => [ qw(type) ],
+    error   => [ qw(type) ],
     message => "found value is defined",
     value   => $value,
   });

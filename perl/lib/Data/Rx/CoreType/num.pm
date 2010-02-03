@@ -74,7 +74,7 @@ sub validate {
 
   if (defined($self->{value}) && $value != $self->{value}) {
     $self->fail({
-      error   => [ ], # ??? -- rjbs, 2009-04-15
+      error   => [ qw(value) ],
       message => "found value is not the required value",
       value   => $value,
     });

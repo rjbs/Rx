@@ -57,7 +57,7 @@ sub validate {
   my @rest_keys = grep { ! exists $c_schema->{$_} } keys %$value;
   if (@rest_keys and not $self->{rest_schema}) {
     $self->fail({
-      error    => [ qw(unknown) ],
+      error    => [ qw(unexpected) ],
       message  => "found unexpected entries: @rest_keys",
       value    => $value,
     });

@@ -27,7 +27,7 @@ sub validate {
 
   unless (defined $value) {
     $self->fail({
-      type    => [ qw(type) ],
+      error   => [ qw(type) ],
       message => "found value is undef",
       value   => $value,
     });
@@ -38,7 +38,7 @@ sub validate {
   # integers. -- rjbs, 2008-07-24
   if (ref $value) {
     $self->fail({
-      type    => [ qw(type) ],
+      error   => [ qw(type) ],
       message => "found value is a reference",
       value   => $value,
     });
@@ -46,7 +46,7 @@ sub validate {
 
   if (defined $self->{value} and $self->{value} ne $value) {
     $self->fail({
-      type    => [ ], # ??? -- rjbs, 2009-04-15
+      error   => [ qw(value) ],
       message => "found value is not the required value",
       value   => $value,
     });
