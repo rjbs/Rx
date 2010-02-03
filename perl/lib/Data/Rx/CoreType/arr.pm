@@ -53,7 +53,6 @@ sub validate {
       $self->{content_check},
       {
         entry    => $i,
-        subcheck => $i,
       },
     );
   }
