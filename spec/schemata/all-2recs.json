@@ -18,31 +18,19 @@
   "pass": { "obj": [ "key-0-opt-T", "key-0-opt-T-rest-F" ] },
 
   "fail": {
-    "arr": "*",
-    "bool": "*",
-    "null": "*",
-    "num" : "*",
+    "arr" : { "*": { "value": [ ], "check": [ 0 ] } },
+    "bool": { "*": { "value": [ ], "check": [ 0 ] } },
+    "null": { "*": { "value": [ ], "check": [ 0 ] } },
+    "num" : { "*": { "value": [ ], "check": [ 0 ] } },
     "obj" : {
-      "key-0": {
-        "value": [ ],
-        "check": [ 1, "opt" ]
-      },
+      "key-0": { "value": [ ], "check": [ 1, "opt" ] },
+      "key-1": { "value": [ ], "check": [ 1, "opt" ] },
+      "opt-T": { "value": [ ], "check": [ 0, "key" ] },
 
-      "key-1": null,
-
-      "opt-T": {
-        "value": [ ],
-        "check": [ 0, "key" ]
-      },
-
-      "key-pants": {
-        "value": [ "key" ],
-        "check": [ 0, "key" ]
-      },
-
-      "key-1-unknown": null,
-      "alpha-num": null
+      "key-pants"    : { "value": [ "key" ], "check": [ 0, "key" ] },
+      "key-1-unknown": { "value": [ ],       "check": [ 1, "opt" ] },
+      "alpha-num"    : { "value": [ ],       "check": [ 0, "key" ] }
     },
-    "str" : "*"
+    "str" : { "*": { "value": [ ], "check": [ 0 ] } }
   }
 }

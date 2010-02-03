@@ -10,9 +10,9 @@
   },
 
   "fail": {
-    "arr" : "*",
-    "num" : "*",
-    "obj" : "*",
-    "str" : "*"
+    "arr" : { "*": { "error": [ "none" ], "value": [ ], "check": [ ] } },
+    "num" : { "*": { "error": [ "none" ], "value": [ ], "check": [ ] } },
+    "obj" : { "*": { "error": [ "none" ], "value": [ ], "check": [ ] } },
+    "str" : { "*": { "error": [ "none" ], "value": [ ], "check": [ ] } }
   }
 }
