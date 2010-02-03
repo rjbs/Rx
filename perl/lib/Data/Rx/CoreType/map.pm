@@ -41,7 +41,6 @@ sub validate {
       $self->{value_constraint},
       {
         entry    => $key,
-        subcheck => $key,
       },
     );
   }
