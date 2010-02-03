@@ -20,7 +20,11 @@
   },
 
   "fail": {
-    "arr"  : [ "0-str-3-18", "0-str-3-T-str", "0-str-3-T-F-T" ],
+    "arr"  : {
+      "0-str-3-18"   : { "error": [ "type" ] },
+      "0-str-3-T-str": { "error": [ "type" ] },
+      "0-str-3-T-F-T": { "error": [ "size" ] }
+    },
     "bool" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "null" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "num"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },

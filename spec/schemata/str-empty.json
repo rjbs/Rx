@@ -9,9 +9,17 @@
     "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "str" : [
-      "0", "5", "05", "5.0", "5.1", "5.",
-      "true", "false", "null", "x"
-    ]
+    "str" : {
+      "x"  : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "0"  : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5"  : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "05" : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5.0": { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5.1": { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5." : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "true" : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "false": { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "null" : { "value": [ ], "check": [ ], "error": [ "value" ] }
+    }
   }
 }

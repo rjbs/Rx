@@ -8,16 +8,24 @@
     "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "null": {
       "*": {
-        "type": [ "type" ],
+        "error": [ "type" ],
         "check": [ ],
         "value": [ ]
       }
     },
     "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "str" : [
-      "0", "5", "05", "5.0", "5.1", "5.",
-      "true", "false", "null", "empty"
-    ]
+    "str" : {
+      "0"  : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5"  : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "05" : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5.0": { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5.1": { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5." : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "true" : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "false": { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "null" : { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "empty": { "value": [ ], "check": [ ], "error": [ "value" ] }
+    }
   }
 }
