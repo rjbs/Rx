@@ -6,17 +6,11 @@ use base 'Data::Rx::CoreType::num';
 
 sub subname   { 'int' }
 
-sub validate {
+sub _value_is_of_type {
   my ($self, $value) = @_;
-  $self->SUPER::validate($value);
 
-  return 1 if $value == int $value;
-
-  $self->fail({
-    error   => [ qw(type) ],
-    message => "found value is not an integer",
-    value   => $value,
-  });
+  return unless $self->SUPER::_value_is_of_type($value);
+  return ($value == int $value);
 }
 
 1;

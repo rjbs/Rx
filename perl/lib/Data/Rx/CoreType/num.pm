@@ -4,19 +4,6 @@ package Data::Rx::CoreType::num;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //num type
 
-sub _int_re { qr{(?:0|[1-9]\d*)} }
-sub _dec_re { qr{(?:\.\d+)?}     }
-sub _exp_re { my $int_re = $_[0]->_int_re; qr{(?:e$int_re)?}i }
-
-sub _val_re {
-  my ($self) = @_;
-
-  return '\A'
-       . qr{[-+]?}
-       . join(q{}, map {; $self->$_ } qw(_int_re _dec_re _exp_re))
-       . '\z';
-}
-
 sub new_checker {
   my ($class, $arg, $rx) = @_;
   my $self = {};
@@ -27,15 +14,15 @@ sub new_checker {
   $self->{range_check} = Data::Rx::Util->_make_range_check($arg->{range})
     if $arg->{range};
 
-  if (
-    exists $arg->{value}
-    and (
-      (! defined $arg->{value})
-      or ref $arg->{value}
-      or ($arg->{value} !~ $class->_val_re)
-    )
-  ) {
-    Carp::croak(sprintf 'invalid value for %s', $class->type_name)
+  if (exists $arg->{value}) {
+    my $val = $arg->{value};
+    if (
+      (! defined $val)
+      or ref $val
+      or ! $class->_value_is_of_type($val)
+    ) {
+      Carp::croak(sprintf 'invalid value (%s) for %s', $val, $class->type_uri);
+    }
   }
 
   $self->{value} = $arg->{value} if defined $arg->{value};
@@ -52,6 +39,26 @@ sub __type_fail {
   });
 }
 
+my $_NUM_RE;
+BEGIN {
+  $_NUM_RE = qr/
+    \A
+      [-+]?
+      (?:0|[1-9]\d*)
+      (?:\.\d+)?
+      (?:e
+        (?:0|[1-9]\d*)
+      )?
+    \z
+  /ix;
+}
+
+sub _value_is_of_type {
+  my ($self, $value) = @_;
+
+  return $value =~ $_NUM_RE;
+}
+
 sub validate {
   my ($self, $value) = @_;
 
@@ -62,7 +69,7 @@ sub validate {
   # integers. -- rjbs, 2008-07-24
   $self->__type_fail($value) if ref $value;
 
-  $self->__type_fail($value) unless $value =~ $self->_val_re;
+  $self->__type_fail($value) unless $self->_value_is_of_type($value);
 
   if ($self->{range_check} && ! $self->{range_check}->($value)) {
     $self->fail({
