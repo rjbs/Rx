@@ -9,11 +9,16 @@
   },
 
   "fail": {
-    "arr"  : [
-      "0",
-      "0-str-3",    "0-str-3-T",     "0-str-3-T-F",
-      "0-str-3-18", "0-str-3-T-str", "0-str-3-T-F-T"
-    ],
+    "arr"  : {
+      "0": { "value": [ ], "check": [ ], "error": [ "size" ] },
+      "0-str-3": { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] },
+      "0-1-1-2": { "value": [   ], "check": [   ], "error": [ "size" ] },
+      "0-str-3-T"    : { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] },
+      "0-str-3-T-F"  : { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] },
+      "0-str-3-18"   : { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] },
+      "0-str-3-T-str": { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] },
+      "0-str-3-T-F-T": { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] }
+    },
     "bool" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "null" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "num"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
