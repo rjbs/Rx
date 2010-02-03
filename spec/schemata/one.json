@@ -8,8 +8,8 @@
   },
 
   "fail": {
-    "arr": "*",
-    "null": "*",
-    "obj": "*"
+    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

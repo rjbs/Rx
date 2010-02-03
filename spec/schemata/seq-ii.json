@@ -14,10 +14,10 @@
       "0-str-3",    "0-str-3-T",     "0-str-3-T-F",
       "0-str-3-18", "0-str-3-T-str", "0-str-3-T-F-T"
     ],
-    "bool" : "*",
-    "null" : "*",
-    "num"  : "*",
-    "obj"  : "*",
-    "str"  : "*"
+    "bool" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "null" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "num"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "str"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

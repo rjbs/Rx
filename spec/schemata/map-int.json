@@ -14,11 +14,14 @@
   },
 
   "fail": {
-    "arr": "*",
-    "bool": "*",
-    "null": "*",
-    "num" : "*",
-    "obj" : [ "key-pants", "key-0-opt-T" ],
-    "str" : "*"
+    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj" : {
+      "key-pants"  : { "value": [ "key" ], "check": [ ], "error": [ "type" ] },
+      "key-0-opt-T": { "value": [ "opt" ], "check": [ ], "error": [ "type" ] }
+    },
+    "str" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

@@ -4,8 +4,8 @@
     "str": [ "x" ]
   },
   "fail": {
-    "arr" : "*",
-    "bool": "*",
+    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "null": {
       "*": {
         "type": [ "type" ],
@@ -13,8 +13,8 @@
         "value": [ ]
       }
     },
-    "num" : "*",
-    "obj" : "*",
+    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "str" : [
       "0", "5", "05", "5.0", "5.1", "5.",
       "true", "false", "null", "empty"

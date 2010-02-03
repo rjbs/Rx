@@ -11,10 +11,10 @@
   },
 
   "fail": {
-    "arr" : "*",
-    "bool": "*",
-    "null": "*",
-    "num" : "*",
+    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "obj" : {
       "empty"        : null,
       "key-pants"    : null,
@@ -22,6 +22,6 @@
       "key-0-opt-1"  : null,
       "key-0-opt-T"  : null
     },
-    "str" : "*"
+    "str" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

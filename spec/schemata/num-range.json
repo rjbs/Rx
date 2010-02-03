@@ -11,21 +11,21 @@
     ]
   },
   "fail": {
-    "arr" : "*",
-    "bool": "*",
-    "null": "*",
-    "num" : [
-      "5",
-      "5.0",
-      "0",
-      "0e0",
-      "-0",
-      "5E10",
-      "-5",
-      "-5.0",
-      "-5.1"
-    ],
-    "obj" : "*",
-    "str" : "*"
+    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : {
+      "5"   : { "value": [ ], "check": [ ], "error": [ "range" ] },
+      "5.0" : { "value": [ ], "check": [ ], "error": [ "range" ] },
+      "0"   : { "value": [ ], "check": [ ], "error": [ "range" ] },
+      "0e0" : { "value": [ ], "check": [ ], "error": [ "range" ] },
+      "-0"  : { "value": [ ], "check": [ ], "error": [ "range" ] },
+      "5E10": { "value": [ ], "check": [ ], "error": [ "range" ] },
+      "-5"  : { "value": [ ], "check": [ ], "error": [ "range" ] },
+      "-5.0": { "value": [ ], "check": [ ], "error": [ "range" ] },
+      "-5.1": { "value": [ ], "check": [ ], "error": [ "range" ] }
+    },
+    "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "str" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

@@ -4,10 +4,10 @@
     "str": "*"
   },
   "fail": {
-    "arr" : "*",
-    "bool": "*",
-    "null": "*",
-    "num" : "*",
-    "obj" : "*"
+    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

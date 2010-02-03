@@ -2,20 +2,20 @@
   "schema": { "type": "//num", "value": 0 },
   "pass": { "num": [ "0", "0e0", "-0" ] },
   "fail": {
-    "arr" : "*",
-    "bool": "*",
-    "null": "*",
-    "num" : [
-      "-5",
-      "-5.0",
-      "-5.1",
-      "5",
-      "5.0",
-      "5.1",
-      "5.1e1",
-      "5E10"
-    ],
-    "obj" : "*",
-    "str" : "*"
+    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : {
+      "-5"  :  { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "-5.0":  { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "-5.1":  { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5"   :  { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5.0" :  { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5.1" :  { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5.1e1": { "value": [ ], "check": [ ], "error": [ "value" ] },
+      "5E10" : { "value": [ ], "check": [ ], "error": [ "value" ] }
+    },
+    "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "str" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

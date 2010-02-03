@@ -4,11 +4,11 @@
     "str": [ "empty" ]
   },
   "fail": {
-    "arr" : "*",
-    "bool": "*",
-    "null": "*",
-    "num" : "*",
-    "obj" : "*",
+    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
     "str" : [
       "0", "5", "05", "5.0", "5.1", "5.",
       "true", "false", "null", "x"
