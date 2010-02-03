@@ -6,10 +6,10 @@
   },
 
   "fail": {
-    "arr" : "*",
-    "null": "*",
-    "num" : "*",
-    "obj" : "*",
-    "str" : "*"
+    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "str" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }
