@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-require 'Test.php';
+require 'ext/Test.php';
 require 'Rx.php';
 
 $index_json = file_get_contents('spec/index.json');
