@@ -51,6 +51,7 @@ var loadRxTests = (function (specRoot) {
   var schemaToTest = [];
   for (schema in testSchema) schemaToTest.push(schema);
   schemaToTest = schemaToTest.sort();
+
   for (i in schemaToTest) {
     var schemaName = schemaToTest[i];
     var schema = testSchema[ schemaName ];
@@ -69,19 +70,32 @@ var loadRxTests = (function (specRoot) {
         entries = schema[pf][source];
 
         if (entries instanceof Array) {
-          // keep as is
-        } else if (entries instanceof Object) {
-          copy = entries;
-          schema[pf][source] = entries = [];
-          for (entry in copy) entries.push(entry);
-        } else if (entries == '*') {
-          schema[pf][source] = entries = [];
-          for (entry in testData[source]) entries.push(entry);
-        } else {
-          throw 'invalid entry in ' + pf + ' for schemaName: ' + source;
+          entriesObj = { };
+
+          for (i in entries) entriesObj[ entries[i] ] = null;
+
+          entries = entriesObj;
         }
 
-        totalTests += entries.length;
+        if (entries == '*') entries = { '*': null };
+
+        if (entries instanceof Object) {
+          if (entries.hasOwnProperty('*')) {
+            value = entries['*'];
+            delete entries['*'];
+
+            for (entry in testData[source]) {
+              entries[entry] = value;
+            }
+          }
+
+          for (prop in entries) totalTests++;
+
+          schema[pf][source] = entries;
+          continue;
+        };
+
+        throw 'invalid entry in ' + pf + ' for schemaName: ' + source;
       }
     }
   }
