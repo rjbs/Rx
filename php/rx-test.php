@@ -52,6 +52,35 @@ foreach ($test_data as $k => $v) {
   }
 }
 
+function normalize($entries, $test_data) {
+  if ($entries == '*') {
+    $entries = new stdClass();
+    $key = "*";
+    $entries->$key = null;
+  }
+
+  if (is_array($entries)) {
+    $new_entries = new stdClass();
+    foreach ($entries as $entry) {
+      $new_entries->$entry = $entry;
+    }
+
+    $entries = $new_entries;
+  }
+
+  if (count((array) $entries) == 1 and property_exists($entries, "*")) {
+    $key  = "*";
+    $value = $entries->$key;
+    $new_entries = new stdClass();
+    foreach ($test_data as $name => $entry) {
+      $new_entries->$name = $entry;
+    }
+    $entries = $new_entries;
+  }
+
+  return $entries;
+}
+
 function test_json($x, $y) {
   return false;
 }
@@ -86,15 +115,12 @@ foreach ($test_schemata as $schema_name => $test) {
   foreach (array('pass', 'fail') as $pf) {
     $expect = ($pf == 'pass') ? 'VALID  ' : 'INVALID';
     if ($test->$pf == null) continue;
-    foreach ($test->$pf as $source => $which) {
-      if (is_string(which) and ($which == "*")) {
-        $which = array();
-        foreach ($test_data[$source] as $name => $x)
-          $which[ count($which) ] = $name;
-      }
 
-      foreach ($which as $entry) {
-        $value = $test_data[$source]->$entry;
+    foreach ($test->$pf as $source => $entries) {
+      $entries = normalize($entries, $test_data[$source]);
+
+      foreach ($entries as $name => $want) {
+        $value = $test_data[$source]->$name;
 
         $result = $schema->check($value);
         if ($pf == 'fail') $result = ! $result;
@@ -102,7 +128,7 @@ foreach ($test_schemata as $schema_name => $test) {
         if ("$source/$entry" == "num/0e0")
           todo_start("PHP's json_decode can't handle 0e0 as number");
 
-        ok($result, "$expect: $source/$entry against $schema_name");
+        ok($result, "$expect: $source/$name against $schema_name");
 
         if ("$source/$entry" == "num/0e0")
           todo_end();
