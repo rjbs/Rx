@@ -28,6 +28,26 @@ Dir.open('spec/data').each { |file|
   }
 }
 
+def normalize(entries, test_data)
+  if entries == '*' then
+    entries = { "*" => nil }
+  end
+
+  if entries.kind_of? Array then
+    new_entries = { }
+    entries.each { |n| new_entries[n] = nil }
+    entries = new_entries
+  end
+
+  if entries.count == 1 and entries.has_key? '*' then
+    value = entries["*"]
+    entries = { }
+    test_data.keys.each { |k| entries[k] = value }
+  end
+
+  return entries
+end
+
 class TAP_Emitter
   attr_reader :i
 
@@ -80,11 +100,9 @@ test_schema.keys.sort.each { |schema_name|
     next unless schema_test_desc[pf]
 
     schema_test_desc[pf].each_pair { |source, entries|
-      if entries == '*' then
-        entries = test_data[source].keys
-      end
+      entries = normalize(entries, test_data[source])
 
-      entries.each { |entry|
+      entries.each_pair { |entry, want|
         result = schema.check(test_data[source][entry])
         ok = (pf == 'pass' and result) || (pf == 'fail' and !result)
 
@@ -94,7 +112,7 @@ test_schema.keys.sort.each { |schema_name|
         tap.ok(ok, desc)
       }
 
-      entries.each { |entry|
+      entries.each_pair { |entry, want|
         result = begin 
                    schema.check!(test_data[source][entry])
                    true
@@ -103,7 +121,7 @@ test_schema.keys.sort.each { |schema_name|
                  end
         ok = (pf == 'pass' and result) || (pf == 'fail' and !result)
 
-        desc = sprintf "%s: %s/%s against %s",
+        desc = sprintf "%s: %s-%s against %s",
           (pf == 'pass' ? 'VALID  ' : 'INVALID'), source, entry, schema_name
 
         tap.ok(ok, desc)
