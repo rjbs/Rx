@@ -377,7 +377,7 @@ class RxCoretypeRec {
   var $rest_schema;
 
   function check($value) {
-    if (get_class($value) != 'stdClass') return false;
+    if (! is_object($value) or get_class($value) != 'stdClass') return false;
 
     $rest = new stdClass();
     $have_rest = false;
