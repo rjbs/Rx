@@ -14,6 +14,22 @@ index = json.loads(file('spec/index.json').read())
 test_data     = {}
 test_schemata = {}
 
+def normalize(entries, test_data):
+  if entries == '*':
+    entries = { "*": None }
+
+  if type(entries) is type([]):
+    new_entries = { }
+    for n in entries: new_entries[n] = None
+    entries = new_entries
+
+  if len(entries) == 1 and entries.has_key('*'):
+    value = entries["*"]
+    entries = { }
+    for k in test_data.keys(): entries[k] = value
+
+  return entries
+
 for filename in index:
   if filename == 'spec/index.json': continue
   payload = json.loads(file(filename).read())
@@ -67,7 +83,8 @@ for schema_name in schema_names:
     for source in schema_test_spec.get(pf, []):
       to_test = schema_test_spec[pf][ source ]
 
-      if to_test == '*': to_test = test_data[ source ].keys()
+      to_test = normalize(to_test, test_data[ source ])
+      # if to_test == '*': to_test = test_data[ source ].keys()
 
       for entry in to_test:
         result = schema.check( test_data[source][entry] )
