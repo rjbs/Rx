@@ -5,8 +5,8 @@ package Test::RxTester;
 use autodie;
 use Data::Rx;
 use File::Find::Rule;
-use JSON::XS ();
-use Scalar::Util qw(blessed);
+use JSON ();
+use Scalar::Util;
 use Test::Deep::NoTest;
 use Test::More;
 use Try::Tiny;
@@ -95,7 +95,7 @@ sub test_data {
 
 sub _decode_json {
   my ($self, $json_str) = @_;
-  $self->{__json} ||= JSON::XS->new;
+  $self->{__json} ||= JSON->new;
   $self->{__json}->decode($json_str);
 }
 
