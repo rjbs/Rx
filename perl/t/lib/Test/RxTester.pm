@@ -195,12 +195,12 @@ sub assert_fail {
       }
     } else {
       $ok = 0;
-      my $fail_desc = blessed($fail) ? blessed($fail)
-                    : ref($fail)     ? "unblessed " . ref($fail)
-                    :                  "non-ref: $fail";
+      my $desc = Scalar::Util::blessed($fail) ? Scalar::Util::blessed($fail)
+               : ref($fail)     ? "unblessed " . ref($fail)
+               :                  "non-ref: $fail";
 
       push @diag, 'want $@: Data::Rx::Failure',
-                  'have $@: ' . $fail_desc;
+                  'have $@: ' . $desc;
     }
 
     ok($ok, $desc);
