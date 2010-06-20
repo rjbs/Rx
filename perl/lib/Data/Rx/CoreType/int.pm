@@ -6,6 +6,15 @@ use base 'Data::Rx::CoreType::num';
 
 sub subname   { 'int' }
 
+sub __type_fail {
+  my ($self, $value) = @_;
+  $self->fail({
+    error   => [ qw(type) ],
+    message => "value is not an integer",
+    value   => $value,
+  });
+}
+
 sub _value_is_of_type {
   my ($self, $value) = @_;
 
