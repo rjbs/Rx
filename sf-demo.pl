@@ -48,5 +48,5 @@ my $fail = $@;
 
 print Dump($fail->struct);
 
-print "PATH TO VALUE: @{ $fail->path_to_value }\n";
-print "PATH TO CHECK: @{ $fail->path_to_check }\n";
+print "PATH TO VALUE: " . join(q{ }, $fail->path_to_value) . "\n";
+print "PATH TO CHECK: " . join(q{ }, $fail->path_to_check) . "\n";
