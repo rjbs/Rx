@@ -66,24 +66,37 @@ sub _load_schema_files {
     for my $pf (qw(pass fail)) {
       for my $source (keys %{ $data->{$pf} }) {
         my $spec = $data->{$pf}{ $source };
-        my $ref  = ref $spec;
+        my $entries = $self->normalize($spec, $self->test_data($source));
 
-        my %entries
-          = $ref eq 'HASH'  ? %$spec
-          : $ref eq 'ARRAY' ? (map {; $_ => undef } @$spec)
-          : $ref            ? die("invalid test spec: $spec")
-          : $spec eq '*'    ? ('*' => undef)
-          : Carp::croak("invalid test spec: $spec");
-
-        if (keys %entries == 1 and exists $entries{'*'}) {
-          my $value = $entries{'*'};
-          %entries = map {; $_ => $value } keys %{ $self->test_data($source) };
-        }
-
-        $self->{spec}{$name}{expect}{$source}{$pf} = \%entries;
+        $self->{spec}{$name}{expect}{$source}{$pf} = $entries;
       }
     }
   }
+}
+
+sub normalize {
+  my ($self, $spec, $test_data) = @_;
+  my $ref  = ref $spec;
+
+  my %entries
+    = $ref eq 'HASH'  ? %$spec
+    : $ref eq 'ARRAY' ? (map {; $_ => undef } @$spec)
+    : $ref            ? die("invalid test spec: $spec")
+    : $spec eq '*'    ? ('*' => undef)
+    : Carp::croak("invalid test spec: $spec");
+
+  if (keys %entries == 1 and exists $entries{'*'}) {
+    my $value = $entries{'*'};
+    %entries = map {; $_ => $value } keys %$test_data;
+  }
+
+  for my $key (keys %entries) {
+    my $eref = ref $entries{ $key };
+    $entries{ $key } = [ $entries{ $key } ]
+      if defined $eref and $eref eq 'HASH';
+  }
+
+  return \%entries;
 }
 
 sub test_data {
@@ -168,8 +181,9 @@ sub assert_fail {
     my $ok   = 1;
     my @diag;
 
+    $want = $want ? $want->[0] : {};
+
     if (try { $fail->isa('Data::Rx::Failure') }) {
-      $want ||= {};
       if ($want->{value} && ! eq_deeply([$fail->path_to_value],$want->{value})){
         $ok = 0;
         my $want = @{ $want->{value} } ? "[ @{ $want->{value} } ]" : '(empty)';
