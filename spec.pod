@@ -119,3 +119,12 @@ The C<error> above will be a JSON object in the form:
 Actual errors thrown by a validator must be subsets of the errors descibed
 here.  They need not all appear, but any that do must match the errors
 described.
+
+There are a number of more compact forms that can be used to represent
+failures.
+
+If the value for the C<entry-name> property is null, it is only required that
+I<an error> be found, with no specification as to the kind of error.
+
+If the C<entry-name> itself is C<*>, the given value applies to all entries in
+the named data file.
