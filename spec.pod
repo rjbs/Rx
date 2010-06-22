@@ -1,0 +1,121 @@
+
+=head1 The Structure of the Spec Directory
+
+The spec directory is laid out like this:
+
+  spec/
+    index.json
+    data/*.json
+    schemata/.../*.json
+
+F<index.json> contains an array of all the filenames under F<spec>.  It exists
+to allow test implementations to implement a test runner without having to
+think about finding files on disk.
+
+=head2 data files
+
+Files under F<data> have JSON representations of named data that will be used
+as input to test the behavior of Rx schemata.  The files contain JSON objects
+in this form:
+
+  {
+    datum-name: json-string,
+    ...,
+  }
+
+The datum name is just a string that we can use to refer to that datum.
+(Example below.)  The JSON string is a string of JSON stored in JSON.  In other
+words, if we have one datum with the name "foo" that contains an array of
+strings, it would look like this:
+
+  {
+    "foo": "[ \"a\", \"b\" ]",
+  }
+
+Those extra slashes are needed because the string has to be decoded as a
+string, then interpreted as JSON.
+
+Alternately, you can write the file as an array in which the keys are also the
+values.  This is useful only in limited cases (like simple strings) but it's
+convenient for those cases.  For example, the following two documents are
+equivalent:
+
+  [ "foo", "bar" ]
+
+  {
+    "foo": "foo",
+    "bar": "bar"
+  }
+
+=head2 schema files
+
+Files under F<schema> (at any depth) contain the actual tests.  In general,
+they provide a schema definition and either state that (a) the defined schema
+is invalid and should not instantiable or (b) provide a list of data (from the
+data files) that should pass or fail those tests.  Failures should be
+described.
+
+=head3 invalid schemata
+
+Invalid schemata are described like this:
+
+  {
+    "schema": {
+      "type": "//all"
+    },
+
+    "invalid": true
+  }
+
+The C<schema> entry describes the schema to be tested, and conforms to
+C<L<tag:codesimply.com,2008:rx/meta/schema|http://rx.codesimply.com/moretypes.html#meta>>.
+
+The C<true> value for C<invalid> indicates that the schema described is invalid
+and must not be instantiable by the Rx implementation.  In the future, the true
+value may be replaced with a description of the error that should result from
+attempting to instantiate this schema.
+
+=head3 valid schemata
+
+If there is no true C<invalid> property, the C<pass> and C<fail> properties
+will be inspected for instructions on how to test data against the schema.
+
+The canonical form of a C<pass> property is:
+
+  "pass": {
+    data-file-name: [ entry-name, entry-name, ... ]
+  }
+
+For example, to indicate that the entries for "foo" and "bar" in
+F<spec/data/test.json> should both pass, you would write:
+
+  "pass": {
+    "test": [ "foo", "bar" ]
+  }
+
+The canonical form of a C<fail> property is:
+
+  "fail": {
+    data-file-name: {
+      entry-name: [
+        error,
+        error,
+        ...
+      ],
+      ...
+    }
+  }
+
+The C<error> above will be a JSON object in the form:
+
+  {
+    "value": value-encountered,
+    "error": [ type, type, ... ],
+    "type" : type-tag-uri,
+    "valuepath": [ key, key, ... ],
+    "checkpath": [ key, key, ... ]
+  }
+
+Actual errors thrown by a validator must be subsets of the errors descibed
+here.  They need not all appear, but any that do must match the errors
+described.
