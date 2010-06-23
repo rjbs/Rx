@@ -12,64 +12,80 @@ use Test::More;
 use Try::Tiny;
 
 sub new {
-  my ($class, $arg) = @_;
-  $arg ||= {};
-  
+  my ($class) = @_;
+
   my $guts = {
-    schema_files => $arg->{schema_files},
-    data_files   => $arg->{data_files},
+    data      => {},
+    test_sets => [ ],
   };
 
-  my $self = bless $guts => $class;
-
-  $self->_load_data_files;
-  $self->_load_schema_files;
-
-  return $self;
+  return bless $guts => $class;
 }
 
-sub _load_data_files {
-  my ($self) = @_;
-
-  for my $fn (@{ $self->{data_files} }) {
-    my ($name) = File::Basename::fileparse($fn);
-    $name =~ s{\.json}{};
-
-    die "already loaded data called $name" if exists $self->{data}{$name};
-
-    my $data = $self->slurp_json($fn);
-    $data = { map { $_ => $_ } @$data } if ref $data eq 'ARRAY';
-
-    $self->{data}{$name} = $data;
-  }
+sub load_data_files {
+  my ($self, @files) = @_;
+  $self->load_data_file($_) for @files;
 }
 
-sub _load_schema_files {
+sub load_data_file {
+  my ($self, $file) = @_;
+
+  (my $name = $file) =~ s{\.json\z}{};
+
+  die "already loaded data called $name" if exists $self->{data}{$name};
+
+  my $data = $self->slurp_json($file);
+  $data = { map { $_ => $_ } @$data } if ref $data eq 'ARRAY';
+
+  $self->{data}{$name} = $data;
+}
+
+sub dataset_names {
   my ($self) = @_;
+  return keys %{ $self->{data} };
+}
 
-  for my $fn (@{ $self->{schema_files} }) {
-    my ($name) = File::Basename::fileparse($fn);
-    $name =~ s{\.json}{};
+sub dataset {
+  my ($self, $name) = @_;
+  return $self->{data}{ $name };
+}
 
-    die "already loaded schema spec tests for $name"
-      if exists $self->{spec}{$name};
+sub load_test_files {
+  my ($self, @files) = @_;
+  $self->load_test_file($_) for @files;
+}
 
-    my $data = $self->slurp_json($fn);
-    $data = { map { $_ => $_ } @$data } if ref $data eq 'ARRAY';
+{
+  package Test::RxTester::Test;
+}
 
-    $self->{spec}{$name} = {
-      invalid => $data->{invalid},
-      schema  => $data->{schema},
-      expect  => { },
-    };
+{
+  package Test::RxTester::Test::Invalid;
+  BEGIN { our @ISA = 'Test::RxTester::Test' }
+}
 
-    for my $pf (qw(pass fail)) {
-      for my $source (keys %{ $data->{$pf} }) {
-        my $spec = $data->{$pf}{ $source };
-        my $entries = $self->normalize($spec, $self->test_data($source));
+sub load_test_file {
+  my ($self, $file) = @_;
 
-        $self->{spec}{$name}{expect}{$source}{$pf} = $entries;
-      }
+  (my $name = $file) =~ s{\.json}{};
+
+  die "already loaded schema spec tests for $name"
+    if exists $self->{test}{$name};
+
+  my $data = $self->slurp_json($file);
+
+  $self->{spec}{$name} = {
+    invalid => $data->{invalid},
+    schema  => $data->{schema},
+    expect  => { },
+  };
+
+  for my $pf (qw(pass fail)) {
+    for my $source (keys %{ $data->{$pf} }) {
+      my $spec = $data->{$pf}{ $source };
+      my $entries = $self->normalize($spec, $self->test_data($source));
+
+      $self->{spec}{$name}{expect}{$source}{$pf} = $entries;
     }
   }
 }
