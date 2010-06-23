@@ -171,8 +171,10 @@ sub run_tests {
       my $method = @{ $test_spec->{errors} } ? 'assert_fail' : 'assert_pass';
 
       TODO: {
-        # my $reason = fudge_reason($spec_name, $source, $entry);
-        # local $TODO = $reason if $reason;
+        my ($source, $entry) = split m{/}, $test_name, 2;
+        my $reason = fudge_reason($spec_name, $source, $entry);
+
+        local our $TODO = $reason if $reason;
         $self->$method({
           schema      => $schema,
           schema_desc => $spec_name,
