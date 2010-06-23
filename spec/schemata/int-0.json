@@ -15,7 +15,7 @@
       "5.1e1": { "value": [ ], "check": [ ], "error": [ "value" ] },
       "5E10":  { "value": [ ], "check": [ ], "error": [ "value" ] }
     },
-    "obj" : "*",
-    "str" : "*"
+    "obj" : { "*": { "error": [ "type" ] } },
+    "str" : { "*": { "error": [ "type" ] } }
   }
 }
