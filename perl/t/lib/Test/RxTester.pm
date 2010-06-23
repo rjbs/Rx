@@ -8,119 +8,8 @@ use File::Find::Rule;
 use JSON ();
 use Scalar::Util;
 use Test::Deep::NoTest;
-use Test::More;
+use Test::More ();
 use Try::Tiny;
-
-sub new {
-  my ($class) = @_;
-
-  my $guts = {
-    data      => {},
-    test_sets => [ ],
-  };
-
-  return bless $guts => $class;
-}
-
-sub load_data_files {
-  my ($self, @files) = @_;
-  $self->load_data_file($_) for @files;
-}
-
-sub load_data_file {
-  my ($self, $file) = @_;
-
-  (my $name = $file) =~ s{\.json\z}{};
-
-  die "already loaded data called $name" if exists $self->{data}{$name};
-
-  my $data = $self->slurp_json($file);
-  $data = { map { $_ => $_ } @$data } if ref $data eq 'ARRAY';
-
-  $self->{data}{$name} = $data;
-}
-
-sub dataset_names {
-  my ($self) = @_;
-  return keys %{ $self->{data} };
-}
-
-sub dataset {
-  my ($self, $name) = @_;
-  return $self->{data}{ $name };
-}
-
-sub load_test_files {
-  my ($self, @files) = @_;
-  $self->load_test_file($_) for @files;
-}
-
-{
-  package Test::RxTester::Test;
-}
-
-{
-  package Test::RxTester::Test::Invalid;
-  BEGIN { our @ISA = 'Test::RxTester::Test' }
-}
-
-sub load_test_file {
-  my ($self, $file) = @_;
-
-  (my $name = $file) =~ s{\.json}{};
-
-  die "already loaded schema spec tests for $name"
-    if exists $self->{test}{$name};
-
-  my $data = $self->slurp_json($file);
-
-  $self->{spec}{$name} = {
-    invalid => $data->{invalid},
-    schema  => $data->{schema},
-    expect  => { },
-  };
-
-  for my $pf (qw(pass fail)) {
-    for my $source (keys %{ $data->{$pf} }) {
-      my $spec = $data->{$pf}{ $source };
-      my $entries = $self->normalize($spec, $self->test_data($source));
-
-      $self->{spec}{$name}{expect}{$source}{$pf} = $entries;
-    }
-  }
-}
-
-sub normalize {
-  my ($self, $spec, $test_data) = @_;
-  my $ref  = ref $spec;
-
-  my %entries
-    = $ref eq 'HASH'  ? %$spec
-    : $ref eq 'ARRAY' ? (map {; $_ => undef } @$spec)
-    : $ref            ? die("invalid test spec: $spec")
-    : $spec eq '*'    ? ('*' => undef)
-    : Carp::croak("invalid test spec: $spec");
-
-  if (keys %entries == 1 and exists $entries{'*'}) {
-    my $value = $entries{'*'};
-    %entries = map {; $_ => $value } keys %$test_data;
-  }
-
-  for my $key (keys %entries) {
-    my $eref = ref $entries{ $key };
-    $entries{ $key } = [ $entries{ $key } ]
-      if defined $eref and $eref eq 'HASH';
-  }
-
-  return \%entries;
-}
-
-sub test_data {
-  my ($self, $name) = @_;
-
-  die "no such test data: $name" unless exists $self->{data}{$name};
-  return $self->{data}{$name};
-}
 
 sub _decode_json {
   my ($self, $json_str) = @_;
@@ -128,13 +17,29 @@ sub _decode_json {
   $self->{__json}->decode($json_str);
 }
 
-sub slurp_json {
+sub _slurp_json {
   my ($self, $fn) = @_;
 
   my $json = do { local $/; open my $fh, '<', $fn; <$fh> };
-  my $data = eval { $self->_decode_json($json) };
+  my $data = eval { JSON->new->decode($json) };
   die "$@ (in $fn)" unless $data;
   return $data;
+}
+
+sub new {
+  my ($class, $file) = @_;
+
+  my $self = bless {} => $class;
+  my $spec = $self->_slurp_json( $file );
+
+  $self->{spec} = $spec->{tests};
+  $self->{plan} = $spec->{count};
+
+  return $self;
+}
+
+sub plan {
+  $_[0]->{plan};
 }
 
 my $fudge = {
@@ -176,9 +81,9 @@ sub assert_pass {
 
   try {
     $schema->validate($input);
-    pass("VALID  : $input_desc against $schema_desc");
+    Test::More::pass("VALID  : $input_desc against $schema_desc");
   } catch {
-    fail("VALID  : $input_desc against $schema_desc");
+    Test::More::fail("VALID  : $input_desc against $schema_desc");
     # should diag the failure paths here
   }
 }
@@ -233,8 +138,8 @@ sub assert_fail {
                   'have $@: ' . $desc;
     }
 
-    ok($ok, $desc);
-    diag "    $_" for @diag;
+    Test::More::ok($ok, $desc);
+    Test::More::diag "    $_" for @diag;
   }
 }
 
@@ -243,6 +148,7 @@ sub run_tests {
 
   my $spec_data = $self->{spec};
   SPEC: for my $spec_name (sort keys %$spec_data) {
+    Test::More::diag "testing $spec_name";
     my $spec = $spec_data->{ $spec_name };
 
     my $rx     = Data::Rx->new;
@@ -250,37 +156,30 @@ sub run_tests {
     my $error  = $@;
 
     if ($spec->{invalid}) {
-      ok($error && ! $schema, "BAD SCHEMA: $spec_name");
+      Test::More::ok($error && ! $schema, "BAD SCHEMA: $spec_name");
       next SPEC;
     }
 
     Carp::croak("couldn't produce schema for valid input ($spec_name): $error")
       unless $schema;
 
-    for my $pf (qw(pass fail)) {
-      my $method = "assert_$pf";
+    for my $test_name (sort keys %{ $spec->{test} }) {
+      my $test_spec = $spec->{test}{$test_name};
 
-      my @sources = keys %{ $spec->{expect} };
+      my $input  = $self->_decode_json("[ $test_spec->{input} ]")->[0];
 
-      for my $source (@sources) {
-        my $entries = $spec->{expect}{ $source }{ $pf };
-        for my $entry (keys %$entries) {
-          my $json  = $self->test_data($source)->{ $entry };
+      my $method = @{ $test_spec->{errors} } ? 'assert_fail' : 'assert_pass';
 
-          my $input = $self->_decode_json("[ $json ]")->[0];
-
-          TODO: {
-            my $reason = fudge_reason($spec_name, $source, $entry);
-            local $TODO = $reason if $reason;
-            $self->$method({
-              schema      => $schema,
-              schema_desc => $spec_name,
-              input       => $input,
-              input_desc  => "$source/$entry",
-              want        => $entries->{ $entry },
-            });
-          }
-        }
+      TODO: {
+        # my $reason = fudge_reason($spec_name, $source, $entry);
+        # local $TODO = $reason if $reason;
+        $self->$method({
+          schema      => $schema,
+          schema_desc => $spec_name,
+          input       => $input,
+          input_desc  => $test_name,
+          want        => $test_spec->{errors},
+        });
       }
     }
   }

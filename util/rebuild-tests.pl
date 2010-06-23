@@ -31,6 +31,8 @@ for my $file (@data_files) {
 # LOAD THE SCHEMA TEST FILES
 my @schema_files = File::Find::Rule->file->in('spec/schemata');
 
+my $count = 0;
+
 SCHEMA: for my $file (@schema_files) {
   (my $name = $file) =~ s{\.json}{};
   $name =~ s{spec/schemata/}{};
@@ -42,6 +44,7 @@ SCHEMA: for my $file (@schema_files) {
   if ($spec->{invalid}) {
     $set->{invalid} = \1;
     $test_set{ $name } = $set;
+    $count += 1;
     next SCHEMA;
   }
 
@@ -49,7 +52,7 @@ SCHEMA: for my $file (@schema_files) {
     for my $source (keys %{ $spec->{$pf} }) {
       my $expect = normalize($spec->{$pf}{ $source }, $data_set{ $source });
 
-      my $test = $set->{test} = { };
+      my $test = $set->{test} ||= { };
 
       for my $entry (keys %$expect) {
         die "bogus test input $name $source $pf"
@@ -59,6 +62,8 @@ SCHEMA: for my $file (@schema_files) {
           input  => $data_set{ $source }{ $entry },
           errors => $expect->{$entry} || [],
         };
+
+        $count += 1;
       }
 
       $test_set{ $name } = $set;
@@ -67,7 +72,12 @@ SCHEMA: for my $file (@schema_files) {
 }
 
 open my $fh, '>', 'spec.json';
-print {$fh} JSON->new->pretty->canonical->encode(\%test_set);
+
+print {$fh} JSON->new->pretty->canonical->encode({
+  count => $count,
+  tests => \%test_set
+});
+
 close $fh;
 
 sub normalize {
