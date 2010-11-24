@@ -1,0 +1,27 @@
+{
+  "composed-type": {
+    "uri": "tag:www.example.com:types/rx/person",
+    "schema": {
+      "type": "//rec",
+      "required": { "firstname": "//str",
+                    "lastname": "//str" },
+      "optional": { "middlename": "//str" }
+    }
+  },
+
+  "schema": { "type": "tag:www.example.com:types/rx/person" },
+
+  "pass": {
+    "person": [ "first-last", "first-middle-last" ]
+  },
+
+  "fail": {
+    "arr": "*",
+    "bool": "*",
+    "null": "*",
+    "num" : "*",
+    "obj" : "*",
+    "str" : "*",
+    "person": [ "empty", "first", "first-last-unknown", "unknown" ]
+  }
+}

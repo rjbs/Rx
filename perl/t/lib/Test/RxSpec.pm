@@ -79,6 +79,14 @@ sub test_spec {
   my $schema_test = slurp_json("schemata/$schema_fn");
 
   my $rx = Data::Rx->new;
+
+  if ($schema_test->{'composed-type'}) {
+    $rx->learn_type($schema_test->{'composed-type'}{'uri'},
+                    $schema_test->{'composed-type'}{'schema'});
+    $rx->add_prefix(@{$schema_test->{'composed-type'}{'prefix'}})
+      if $schema_test->{'composed-type'}{'prefix'};
+  }
+
   my $schema = eval { $rx->make_schema($schema_test->{schema}) };
   my $error   = $@;
 

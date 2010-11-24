@@ -1,0 +1,8 @@
+{
+  "empty": "{}",
+  "first-last": "{\"firstname\": \"John\", \"lastname\": \"Smith\"}",
+  "first-middle-last": "{\"firstname\": \"John\", \"middlename\": \"Q\", \"lastname\": \"Smith\"}",
+  "first": "{\"firstname\": \"John\"}",
+  "first-last-unknown": "{\"firstname\": \"John\", \"lastname\": \"Smith\", \"unknown\": \"x\"}",
+  "unknown": "{\"unknown\": \"x\"}"
+}
