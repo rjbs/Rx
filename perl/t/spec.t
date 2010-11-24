@@ -10,7 +10,7 @@ use Test::RxSpec;
 plan 'no_plan';
 
 # my @types = qw(num int rat txt bool scalar nil def map arr seq);
-my @files = File::Find::Rule->file->in('spec/schemata');
+my @files = File::Find::Rule->file->name('*.json')->in("spec/schemata");
 
 for my $type (@files) {
   $type =~ s{^spec/schemata/}{};

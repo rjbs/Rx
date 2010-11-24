@@ -28,9 +28,9 @@ sub data {
 
   $DATA = {};
 
-  for (File::Find::Rule->file->in('spec/data')) {
+  for (File::Find::Rule->file->name('*.json')->in('spec/data')) {
     s{spec/}{};
-    s{\.json}{};
+    s{\.json$}{};
     my $data = slurp_json;
     $data = { map { $_ => $_ } @$data } if ref $data eq 'ARRAY';
 
