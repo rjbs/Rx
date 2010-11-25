@@ -193,6 +193,9 @@ sub learn_type {
   Carp::confess("a type handler is already registered for $uri")
     if $self->{handler}{ $uri };
 
+  die "invalid schema for '$uri': $@"
+    unless eval { $self->make_schema($schema) };
+
   $self->{handler}{ $uri } = { schema => $schema };
 }
 

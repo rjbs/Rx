@@ -1,0 +1,12 @@
+{
+  "composed-type": {
+    "uri": "tag:www.example.com:rx/cycle",
+    "schema": {
+      "type": "tag:www.example.com:rx/cycle"
+    },
+
+    "invalid": true
+  },
+
+  "schema": "tag:www.example.com:rx/cycle"
+}
