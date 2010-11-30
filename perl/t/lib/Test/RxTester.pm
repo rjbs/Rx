@@ -95,7 +95,7 @@ sub assert_fail {
 
   try {
     $schema->validate($input);
-    fail("INVALID: $input_desc against $schema_desc");
+    Test::More::fail("INVALID: $input_desc against $schema_desc");
   } catch {
     my $fail = $_;
     my $desc = "INVALID: $input_desc against $schema_desc";
