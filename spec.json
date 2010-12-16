@@ -3034,13 +3034,11 @@
             "null/null" : {
                "errors" : [
                   {
-                     "*" : {
-                        "check" : [],
-                        "error" : [
-                           "type"
-                        ],
-                        "value" : []
-                     }
+                     "check" : [],
+                     "error" : [
+                        "type"
+                     ],
+                     "value" : []
                   }
                ],
                "input" : "null"
