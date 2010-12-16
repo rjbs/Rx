@@ -45,6 +45,7 @@ sub validate {
     $self->fail({
       error   => [ qw(size) ],
       value   => $value,
+      check   => ['contents'],
       message => sprintf(
         "too few entries found; found %s, need at least %s",
         0 + @$value,
@@ -57,9 +58,8 @@ sub validate {
     $self->_subcheck(
       $value->[ $i ],
       $content_schemata->[ $i ],
-      {
-        entry    => $i,
-        subcheck => $i,
+      { data => [$i],
+        check => ['contents', $i],
       },
     );
   }
@@ -70,12 +70,13 @@ sub validate {
       $self->_subcheck(
         $tail,
         $self->{tail_check},
-        { subcheck => undef }, # ??? -- rjbs, 2009-04-15
+        { check => ['tail'] },
       );
     } else {
       $self->fail({
         error   => [ qw(size) ],
         value   => $value,
+        check   => ['contents'],
         message => sprintf(
           "too many entries found; found %s, need no more than %s",
           0 + @$value,

@@ -6,7 +6,7 @@ use base 'Data::Rx::CoreType';
 
 sub validate {
   $_[0]->fail({
-    error   => [ qw(alwaysfail) ],
+    error   => [ qw(fail) ],
     message => "matching reached an always-fail check",
     value   => $_[1],
   });

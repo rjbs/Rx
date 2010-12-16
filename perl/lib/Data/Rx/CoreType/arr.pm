@@ -44,15 +44,16 @@ sub validate {
       error   => [ qw(size) ],
       message => "number of entries is outside permitted range",
       value   => $value,
+      check   => ['length'],
     });
   }
   
   for my $i (0 .. $#$value) {
     $self->_subcheck(
-      $value->[ $i ],
+      $value->[$i],
       $self->{content_check},
-      {
-        entry    => $i,
+      { data => [$i],
+        check => ['contents'],
       },
     );
   }

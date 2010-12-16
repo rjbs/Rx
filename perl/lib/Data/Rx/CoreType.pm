@@ -21,7 +21,10 @@ sub check {
   return 1 if eval { $self->validate($value); };
   my $failure = $@;
 
-  return 0 if eval { $failure->isa('Data::Rx::Failure') };
+  if (eval { $failure->isa('Data::Rx::Failure') }) {
+    $self->failure($failure);
+    return 0;
+  }
 
   die $failure;
 }
@@ -37,6 +40,14 @@ sub fail {
   });
 }
 
+sub failure {
+  my $self = shift;
+
+  $self->{failure} = $_[0] if @_;
+
+  return $self->{failure};
+}
+
 sub _subcheck {
   my ($self, $value, $checker, $context) = @_;
 
@@ -44,6 +55,7 @@ sub _subcheck {
 
   my $failure = $@;
   Carp::confess($failure) unless eval { $failure->isa('Data::Rx::Failure') };
+
   $failure->contextualize({
     type  => $self->type_uri,
     %$context,

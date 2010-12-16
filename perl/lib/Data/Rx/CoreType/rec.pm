@@ -47,7 +47,7 @@ sub validate {
   unless (! Scalar::Util::blessed($value) and ref $value eq 'HASH') {
     $self->fail({
       error   => [ qw(type) ],
-      message => "value was not a hashref",
+      message => "value is not a hashref",
       value   => $value,
     });
   }
@@ -69,8 +69,8 @@ sub validate {
     if (not $check->{optional} and not exists $value->{ $key }) {
       $self->fail({
         error    => [ qw(missing) ],
-        subcheck => $key,
         message  => "no value given for required entry $key",
+        check    => ['required', $key],
         value    => $value,
       });
     }
@@ -79,9 +79,9 @@ sub validate {
       $self->_subcheck(
         $value->{$key},
         $check->{schema},
-        {
-          entry    => $key,
-          subcheck => $key,
+        { data  => [$key],
+          check => [$check->{optional} ? 'optional' : 'required',
+                    $key],
         },
       );
     }
@@ -93,7 +93,7 @@ sub validate {
     $self->_subcheck(
       \%rest,
       $self->{rest_schema},
-      { subcheck => undef },
+      { check => ['rest'] },
     );
   }
 

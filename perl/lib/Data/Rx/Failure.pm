@@ -1,12 +1,15 @@
 use strict;
 use warnings;
 package Data::Rx::Failure;
-# ABSTRACT: a structured failure report from an Rx checker
+# ABSTRACT: class for Rx failures
+
+use overload '""' => \&stringify;
 
 sub new {
   my ($class, $arg) = @_;
+
   my $guts = {
-    rx     => $arg->{rx},
+    rx => $arg->{rx},
     struct => [ $arg->{struct} ],
   };
 
@@ -23,32 +26,60 @@ sub contextualize {
   return $self;
 }
 
-sub failure_types {
+sub value {
   my ($self) = @_;
-  return @{ $self->{struct}[0]{error} };
+
+  return $self->struct->[0]{value};
 }
 
-sub path_to_check {
+sub error_types {
   my ($self) = @_;
-  my @path;
-  for my $frame (reverse @{ $self->{struct} }) {
-    next unless exists $frame->{subcheck};
-    push @path, $frame->{subcheck};
-  }
 
-  return @path;
+  return @{ $self->struct->[0]{error} };
 }
 
-sub path_to_value {
+sub error_string {
   my ($self) = @_;
 
-  my @path;
-  for my $frame (reverse @{ $self->{struct} }) {
-    next unless exists $frame->{entry};
-    push @path, $frame->{entry};
-  }
+  join ', ', $self->error_types;
+}
 
-  return @path;
+sub data_path {
+  my ($self) = @_;
+
+  map @{ $_->{data} || [] }, reverse @{ $self->struct };
+}
+
+sub data_string {
+  my ($self) = @_;
+
+  my @data_path = $self->data_path;
+
+  return '$data' . (@data_path ? '->' . join('', map "{$_}", @data_path) : '');
+}
+
+sub check_path {
+  my ($self) = @_;
+
+  map @{ $_->{check} || [] }, reverse @{ $self->struct };
+}
+
+sub check_string {
+  my ($self) = @_;
+
+  my @check_path = $self->check_path;
+
+  return '$schema' . (@check_path ? '->' . join('', map "{$_}", @check_path) : '');
+}
+
+sub stringify {
+  my ($self) = @_;
+
+  my $struct = $self->struct;
+
+  return "Failed $struct->[0]{type} check " .
+         "(error: " . $self->error_string . ") " .
+         "at " . $self->data_string . "\n";
 }
 
 1;

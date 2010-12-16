@@ -90,8 +90,8 @@ sub assert_pass {
 
 sub assert_fail {
   my ($self, $arg) = @_;
-  my ($schema, $schema_desc, $input, $input_desc, $want)
-    = @$arg{ qw(schema schema_desc input input_desc want) };
+  my ($schema, $schema_desc, $schema_spec, $input, $input_desc, $want)
+    = @$arg{ qw(schema schema_desc schema_spec input input_desc want) };
 
   try {
     $schema->validate($input);
@@ -105,28 +105,57 @@ sub assert_fail {
     $want = $want ? $want->[0] : {};
 
     if (try { $fail->isa('Data::Rx::Failure') }) {
-      if ($want->{value} && ! eq_deeply([$fail->path_to_value],$want->{value})){
-        $ok = 0;
-        my $want = @{ $want->{value} } ? "[ @{ $want->{value} } ]" : '(empty)';
-        my $have = $fail->path_to_value ? "[ @{[$fail->path_to_value]} ]" : '(empty)';
-        push @diag, "want path to value: $want",
-                    "have path to value: $have";
+      if ($want->{data}) {
+        eq_deeply([$fail->data_path],$want->{data})
+          or do {
+            $ok = 0;
+            my $want = @{ $want->{data} } ? "[ @{ $want->{data} } ]" : '(empty)';
+            my $have = $fail->data_path ? "[ @{[$fail->data_path]} ]" : '(empty)';
+            push @diag, "want path to data: $want",
+                        "have path to data: $have";
+          };
+        my $ref_to_value = check_path($input, [$fail->data_path]);
+        if ($ref_to_value) {
+          eq_deeply($$ref_to_value, shallow($fail->value))
+            or do {
+              $ok = 0;
+              push @diag, "value at path to data does not match failure value";
+            };
+        } else {
+          $ok = 0;
+          push @diag, "invalid path to data: " . $fail->data_string;
+        }
       }
 
-      if ($want->{check} && ! eq_deeply([$fail->path_to_check],$want->{check})){
-        $ok = 0;
-        my $want = @{ $want->{check} } ? "[ @{ $want->{check} } ]" : '(empty)';
-        my $have = $fail->path_to_check ? "[ @{[$fail->path_to_check]} ]" : '(empty)';
-        push @diag, "want path to check: $want",
-                    "have path to check: $have";
+      if ($want->{check}) {
+        eq_deeply([$fail->check_path],$want->{check})
+          or do {
+            $ok = 0;
+            my $want = @{ $want->{check} } ? "[ @{ $want->{check} } ]" : '(empty)';
+            my $have = $fail->check_path ? "[ @{[$fail->check_path]} ]" : '(empty)';
+            push @diag, "want path to check: $want",
+                        "have path to check: $have";
+          };
+        check_path($schema_spec, [$fail->check_path])
+          or do {
+            $ok = 0;
+            push @diag, "invalid path to check: " . $fail->check_string;
+          };
       }
 
-      if ($want->{error} && ! eq_deeply([sort $fail->failure_types],$want->{error})) {
-        $ok = 0;
-        my $want = @{ $want->{error} } ? "[ @{ $want->{error} } ]" : '(empty)';
-        my $have = $fail->failure_types ? "[ @{[$fail->failure_types]} ]" : '(empty)';
-        push @diag, "want error types: $want",
-                    "have error types: $have";
+      if ($want->{error}) {
+        eq_deeply([sort $fail->error_types],$want->{error})
+          or do {
+            $ok = 0;
+            my $want = @{ $want->{error} } ? "[ @{ $want->{error} } ]" : '(empty)';
+            my $have = $fail->error_types ? "[ @{[$fail->error_types]} ]" : '(empty)';
+            push @diag, "want error types: $want",
+                        "have error types: $have";
+          };
+      }
+
+      if (!$ok) {
+        unshift @diag, "$fail";
       }
     } else {
       $ok = 0;
@@ -141,6 +170,33 @@ sub assert_fail {
     Test::More::ok($ok, $desc);
     Test::More::diag "    $_" for @diag;
   }
+}
+
+sub check_path {
+  my ($data, $path) = @_;
+
+  my @path = @$path;
+
+  while (@path) {
+    ref $data or return;
+
+    my $key = shift @path;
+
+    if (ref $data eq 'ARRAY') {
+      $key =~ /^\d+\z/ or return;
+      $key <= $#$data
+        or return;
+      $data = $data->[$key];
+    } elsif (ref $data eq 'HASH') {
+      exists $data->{$key}
+        or return;
+      $data = $data->{$key};
+    } else {
+      return;
+    }
+  }
+
+  return \$data;
 }
 
 sub run_tests {
@@ -178,6 +234,7 @@ sub run_tests {
         $self->$method({
           schema      => $schema,
           schema_desc => $spec_name,
+          schema_spec => $spec->{schema},
           input       => $input,
           input_desc  => $test_name,
           want        => $test_spec->{errors},
