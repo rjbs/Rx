@@ -21,9 +21,9 @@
 
   "fail": {
     "arr"  : {
-      "0-str-3-18"   : { "error": [ "type" ] },
-      "0-str-3-T-str": { "error": [ "type" ] },
-      "0-str-3-T-F-T": { "error": [ "size" ] }
+      "0-str-3-18"   : { "data": [ 3 ], "check": [ "tail", "contents" ], "error": [ "type" ] },
+      "0-str-3-T-str": { "data": [ 4 ], "check": [ "tail", "contents" ], "error": [ "type" ] },
+      "0-str-3-T-F-T": { "data": [ ], "check": [ "tail", "length" ], "error": [ "size" ] }
     },
     "bool" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
     "null" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },

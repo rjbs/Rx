@@ -23,7 +23,8 @@ sub new_checker {
 
   $self->{content_schemata} = \@content_schemata;
   $self->{tail_check} = $arg->{tail}
-                      ? $rx->make_schema($arg->{tail})
+                      ? $rx->make_schema({ %{$arg->{tail}},
+                                           skip => 0+@{$arg->{contents}}})
                       : undef;
 
   return $self;
@@ -66,9 +67,8 @@ sub validate {
 
   if (@$value > @$content_schemata) {
     if ($self->{tail_check}) {
-      my $tail = [ @$value[ @$content_schemata..$#$value ] ];
       $self->_subcheck(
-        $tail,
+        $value,
         $self->{tail_check},
         { check => ['tail'] },
       );

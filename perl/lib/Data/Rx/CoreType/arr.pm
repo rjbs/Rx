@@ -16,7 +16,8 @@ sub new_checker {
     unless $arg->{contents} and (ref $arg->{contents} || 'HASH' eq 'HASH');
 
   Carp::croak("unknown arguments to new")
-    unless Data::Rx::Util->_x_subset_keys_y($arg, {length=>1, contents=>1});
+    unless Data::Rx::Util->_x_subset_keys_y($arg, {length=>1, contents=>1,
+                                                   skip=>1});
 
   my $content_check = $rx->make_schema($arg->{contents});
 
@@ -24,6 +25,8 @@ sub new_checker {
 
   $self->{length_check} = Data::Rx::Util->_make_range_check($arg->{length})
     if $arg->{length};
+
+  $self->{skip} = $arg->{skip} || 0;
 
   bless $self => $class;
 }
@@ -39,7 +42,8 @@ sub validate {
     });
   }
 
-  if ($self->{length_check} and ! $self->{length_check}->(0+@$value)) {
+  if ($self->{length_check} and
+      ! $self->{length_check}->(@$value - $self->{skip})) {
     $self->fail({
       error   => [ qw(size) ],
       message => "number of entries is outside permitted range",
@@ -48,7 +52,7 @@ sub validate {
     });
   }
   
-  for my $i (0 .. $#$value) {
+  for my $i ($self->{skip} .. $#$value) {
     $self->_subcheck(
       $value->[$i],
       $self->{content_check},

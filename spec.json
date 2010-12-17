@@ -13668,6 +13668,13 @@
             "arr/0-str-3-18" : {
                "errors" : [
                   {
+                     "check" : [
+                        "tail",
+                        "contents"
+                     ],
+                     "data" : [
+                        3
+                     ],
                      "error" : [
                         "type"
                      ]
@@ -13686,6 +13693,11 @@
             "arr/0-str-3-T-F-T" : {
                "errors" : [
                   {
+                     "check" : [
+                        "tail",
+                        "length"
+                     ],
+                     "data" : [],
                      "error" : [
                         "size"
                      ]
@@ -13696,6 +13708,13 @@
             "arr/0-str-3-T-str" : {
                "errors" : [
                   {
+                     "check" : [
+                        "tail",
+                        "contents"
+                     ],
+                     "data" : [
+                        4
+                     ],
                      "error" : [
                         "type"
                      ]
@@ -14161,6 +14180,13 @@
             "arr/0-str-3-18" : {
                "errors" : [
                   {
+                     "check" : [
+                        "tail",
+                        "contents"
+                     ],
+                     "data" : [
+                        3
+                     ],
                      "error" : [
                         "type"
                      ]
@@ -14179,6 +14205,11 @@
             "arr/0-str-3-T-F-T" : {
                "errors" : [
                   {
+                     "check" : [
+                        "tail",
+                        "length"
+                     ],
+                     "data" : [],
                      "error" : [
                         "size"
                      ]
@@ -14189,6 +14220,13 @@
             "arr/0-str-3-T-str" : {
                "errors" : [
                   {
+                     "check" : [
+                        "tail",
+                        "contents"
+                     ],
+                     "data" : [
+                        4
+                     ],
                      "error" : [
                         "type"
                      ]
