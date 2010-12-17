@@ -6076,6 +6076,8 @@
             "obj/alpha-num" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6086,6 +6088,8 @@
             "obj/empty" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6096,6 +6100,8 @@
             "obj/key-0" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6106,6 +6112,8 @@
             "obj/key-0-opt-1" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6116,6 +6124,8 @@
             "obj/key-0-opt-T" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6126,6 +6136,8 @@
             "obj/key-0-opt-T-rest-F" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6136,6 +6148,8 @@
             "obj/key-1" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6146,6 +6160,8 @@
             "obj/key-1-unknown" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6156,6 +6172,8 @@
             "obj/key-pants" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6166,6 +6184,8 @@
             "obj/opt-T" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6176,6 +6196,8 @@
             "str/0" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6186,6 +6208,8 @@
             "str/05" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6196,6 +6220,8 @@
             "str/5" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6206,6 +6232,8 @@
             "str/5." : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6216,6 +6244,8 @@
             "str/5.0" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6226,6 +6256,8 @@
             "str/5.1" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6236,6 +6268,8 @@
             "str/empty" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6246,6 +6280,8 @@
             "str/false" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6256,6 +6292,8 @@
             "str/null" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6266,6 +6304,8 @@
             "str/true" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]
@@ -6276,6 +6316,8 @@
             "str/x" : {
                "errors" : [
                   {
+                     "check" : [],
+                     "data" : [],
                      "error" : [
                         "type"
                      ]

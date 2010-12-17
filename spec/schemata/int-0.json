@@ -15,7 +15,7 @@
       "5.1e1": { "data": [ ], "check": [ ], "error": [ "value" ] },
       "5E10":  { "data": [ ], "check": [ ], "error": [ "value" ] }
     },
-    "obj" : { "*": { "error": [ "type" ] } },
-    "str" : { "*": { "error": [ "type" ] } }
+    "obj" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "str" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }
