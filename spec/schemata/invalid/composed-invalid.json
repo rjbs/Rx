@@ -1,0 +1,15 @@
+{
+  "composed-type": {
+    "uri": "tag:www.example.com:rx/person",
+    "schema": {
+      "type": "//rec",
+      "unknown": "this will cause an explosion"
+    },
+
+    "invalid": true
+  },
+
+  "schema": {
+    "type"   : "tag:www.example.com:rx/person"
+   }
+}

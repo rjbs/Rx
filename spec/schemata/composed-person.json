@@ -1,0 +1,32 @@
+{
+  "composed-type": {
+    "uri": "tag:www.example.com:types/rx/person",
+    "schema": {
+      "type": "//rec",
+      "required": { "firstname": "//str",
+                    "lastname": "//str" },
+      "optional": { "middlename": "//str" }
+    }
+  },
+
+  "schema": { "type": "tag:www.example.com:types/rx/person" },
+
+  "pass": {
+    "person": [ "first-last", "first-middle-last" ]
+  },
+
+  "fail": {
+    "arr" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "str" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "person": {
+      "empty": { "data": [ ], "error": [ "missing" ] },
+      "first": { "data": [ ], "check": [ "required", "lastname" ], "error": [ "missing" ] },
+      "first-last-unknown": { "data": [ ], "check": [ ], "error": [ "unexpected" ] },
+      "first-last-null": { "data": [ "lastname" ], "check": [ "required", "lastname" ], "error": [ "type" ] },
+      "unknown": { "data": [ ], "check": [ ], "error": [ "unexpected" ] }
+    }
+  }
+}

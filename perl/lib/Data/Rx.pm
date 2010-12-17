@@ -119,7 +119,17 @@ sub make_schema {
 
   my $schema_arg = {%$schema};
   delete $schema_arg->{type};
-  my $checker = $handler->new_checker($schema_arg, $self);
+
+  my $checker;
+
+  if (ref $handler) {
+    if (keys %$schema_arg) {
+      Carp::croak("composed type does not take check arguments");
+    }
+    $checker = $self->make_schema($handler->{'schema'});
+  } else {
+    $checker = $handler->new_checker($schema_arg, $self);
+  }
 
   return $checker;
 }
@@ -153,6 +163,40 @@ sub register_type_plugin {
       $self->{handler}{ $uri } = $plugin;
     }
   }
+}
+
+=method learn_type
+
+  $rx->learn_type($uri, $schema);
+
+This defines a new type as a schema composed of other types.
+
+For example:
+
+  $rx->learn_type('tag:www.example.com:rx/person',
+                  { type     => '//rec',
+                    required => {
+                      firstname => '//str',
+                      lastname  => '//str',
+                    },
+                    optional => {
+                      middlename => '//str',
+                    },
+                  },
+                 );
+
+=cut
+
+sub learn_type {
+  my ($self, $uri, $schema) = @_;
+
+  Carp::confess("a type handler is already registered for $uri")
+    if $self->{handler}{ $uri };
+
+  die "invalid schema for '$uri': $@"
+    unless eval { $self->make_schema($schema) };
+
+  $self->{handler}{ $uri } = { schema => $schema };
 }
 
 =method add_prefix

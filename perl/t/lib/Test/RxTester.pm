@@ -136,11 +136,15 @@ sub assert_fail {
             push @diag, "want path to check: $want",
                         "have path to check: $have";
           };
-        check_path($schema_spec, [$fail->check_path])
-          or do {
-            $ok = 0;
-            push @diag, "invalid path to check: " . $fail->check_string;
-          };
+
+        # path check doesn't work for composed types...  -- rjk, 2010-12-17
+        $schema_desc =~ /composed/
+          or check_path($schema_spec, [$fail->check_path])
+            or do {
+              $DB::single = 1;
+              $ok = 0;
+              push @diag, "invalid path to check: " . $fail->check_string;
+            };
       }
 
       if ($want->{error}) {
@@ -208,6 +212,23 @@ sub run_tests {
     my $spec = $spec_data->{ $spec_name };
 
     my $rx     = Data::Rx->new;
+
+    if ($spec->{'composed-type'}) {
+      my $rc =
+        eval { $rx->learn_type($spec->{'composed-type'}{'uri'},
+                               $spec->{'composed-type'}{'schema'});
+               1 };
+      my $error = $@;
+
+      if ($spec->{'composed-type'}{'invalid'}) {
+        Test::More::ok($error && !$rc, "BAD COMPOSED TYPE: $spec_name");
+        next SPEC;
+      }
+
+      $rx->add_prefix(@{$spec->{'composed-type'}{'prefix'}})
+        if $spec->{'composed-type'}{'prefix'};
+    }
+
     my $schema = eval { $rx->make_schema($spec->{schema}) };
     my $error  = $@;
 

@@ -1,5 +1,5 @@
 {
-   "count" : 1370,
+   "count" : 1467,
    "tests" : {
       "all-2recs" : {
          "schema" : {
@@ -3256,6 +3256,1160 @@
             }
          }
       },
+      "composed-person" : {
+         "composed-type" : {
+            "schema" : {
+               "optional" : {
+                  "middlename" : "//str"
+               },
+               "required" : {
+                  "firstname" : "//str",
+                  "lastname" : "//str"
+               },
+               "type" : "//rec"
+            },
+            "uri" : "tag:www.example.com:types/rx/person"
+         },
+         "schema" : {
+            "type" : "tag:www.example.com:types/rx/person"
+         },
+         "test" : {
+            "arr/0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0 ]"
+            },
+            "arr/0-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, 1 ]"
+            },
+            "arr/0-1-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, 1, 1 ]"
+            },
+            "arr/0-1-1-2" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, 1, 1, 2 ]"
+            },
+            "arr/0-s1-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"1\", 1 ]"
+            },
+            "arr/0-str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\" ]"
+            },
+            "arr/0-str-3" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3 ]"
+            },
+            "arr/0-str-3-18" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, 18 ]"
+            },
+            "arr/0-str-3-T" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true ]"
+            },
+            "arr/0-str-3-T-F" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true, false ]"
+            },
+            "arr/0-str-3-T-F-T" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true, false, true ]"
+            },
+            "arr/0-str-3-T-str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true, \"false\" ]"
+            },
+            "arr/empty" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[]"
+            },
+            "arr/str-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\", 1 ]"
+            },
+            "bool/false" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "false"
+            },
+            "bool/true" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "true"
+            },
+            "null/null" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "null"
+            },
+            "num/-0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-0"
+            },
+            "num/-5" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-5"
+            },
+            "num/-5.0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-5.0"
+            },
+            "num/-5.1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-5.1"
+            },
+            "num/0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "0"
+            },
+            "num/0e0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "0e0"
+            },
+            "num/5" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5"
+            },
+            "num/5.0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5.0"
+            },
+            "num/5.1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5.1"
+            },
+            "num/5.1e1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5.1e1"
+            },
+            "num/5E1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5E1"
+            },
+            "num/5E10" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5E10"
+            },
+            "person/empty" : {
+               "errors" : [
+                  {
+                     "data" : [],
+                     "error" : [
+                        "missing"
+                     ]
+                  }
+               ],
+               "input" : "{}"
+            },
+            "person/first" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "required",
+                        "lastname"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "missing"
+                     ]
+                  }
+               ],
+               "input" : "{\"firstname\": \"John\"}"
+            },
+            "person/first-last" : {
+               "errors" : [],
+               "input" : "{\"firstname\": \"John\", \"lastname\": \"Smith\"}"
+            },
+            "person/first-last-null" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "required",
+                        "lastname"
+                     ],
+                     "data" : [
+                        "lastname"
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"firstname\": \"John\", \"lastname\": null }"
+            },
+            "person/first-last-unknown" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "unexpected"
+                     ]
+                  }
+               ],
+               "input" : "{\"firstname\": \"John\", \"lastname\": \"Smith\", \"unknown\": \"x\"}"
+            },
+            "person/first-middle-last" : {
+               "errors" : [],
+               "input" : "{\"firstname\": \"John\", \"middlename\": \"Q\", \"lastname\": \"Smith\"}"
+            },
+            "person/unknown" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "unexpected"
+                     ]
+                  }
+               ],
+               "input" : "{\"unknown\": \"x\"}"
+            },
+            "str/0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"0\""
+            },
+            "str/05" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"05\""
+            },
+            "str/5" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"5\""
+            },
+            "str/5." : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"5.\""
+            },
+            "str/5.0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"5.0\""
+            },
+            "str/5.1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"5.1\""
+            },
+            "str/empty" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"\""
+            },
+            "str/false" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"false\""
+            },
+            "str/null" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"null\""
+            },
+            "str/true" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"true\""
+            },
+            "str/x" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"x\""
+            }
+         }
+      },
+      "composed-person-prefix" : {
+         "composed-type" : {
+            "prefix" : [
+               "example",
+               "tag:www.example.com:types/rx/"
+            ],
+            "schema" : {
+               "optional" : {
+                  "middlename" : "//str"
+               },
+               "required" : {
+                  "firstname" : "//str",
+                  "lastname" : "//str"
+               },
+               "type" : "//rec"
+            },
+            "uri" : "tag:www.example.com:types/rx/person"
+         },
+         "schema" : {
+            "type" : "/example/person"
+         },
+         "test" : {
+            "arr/0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0 ]"
+            },
+            "arr/0-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, 1 ]"
+            },
+            "arr/0-1-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, 1, 1 ]"
+            },
+            "arr/0-1-1-2" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, 1, 1, 2 ]"
+            },
+            "arr/0-s1-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"1\", 1 ]"
+            },
+            "arr/0-str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\" ]"
+            },
+            "arr/0-str-3" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3 ]"
+            },
+            "arr/0-str-3-18" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, 18 ]"
+            },
+            "arr/0-str-3-T" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true ]"
+            },
+            "arr/0-str-3-T-F" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true, false ]"
+            },
+            "arr/0-str-3-T-F-T" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true, false, true ]"
+            },
+            "arr/0-str-3-T-str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true, \"false\" ]"
+            },
+            "arr/empty" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[]"
+            },
+            "arr/str-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\", 1 ]"
+            },
+            "bool/false" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "false"
+            },
+            "bool/true" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "true"
+            },
+            "null/null" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "null"
+            },
+            "num/-0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-0"
+            },
+            "num/-5" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-5"
+            },
+            "num/-5.0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-5.0"
+            },
+            "num/-5.1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-5.1"
+            },
+            "num/0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "0"
+            },
+            "num/0e0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "0e0"
+            },
+            "num/5" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5"
+            },
+            "num/5.0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5.0"
+            },
+            "num/5.1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5.1"
+            },
+            "num/5.1e1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5.1e1"
+            },
+            "num/5E1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5E1"
+            },
+            "num/5E10" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5E10"
+            },
+            "person/empty" : {
+               "errors" : [
+                  {
+                     "data" : [],
+                     "error" : [
+                        "missing"
+                     ]
+                  }
+               ],
+               "input" : "{}"
+            },
+            "person/first" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "required",
+                        "lastname"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "missing"
+                     ]
+                  }
+               ],
+               "input" : "{\"firstname\": \"John\"}"
+            },
+            "person/first-last" : {
+               "errors" : [],
+               "input" : "{\"firstname\": \"John\", \"lastname\": \"Smith\"}"
+            },
+            "person/first-last-null" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "required",
+                        "lastname"
+                     ],
+                     "data" : [
+                        "lastname"
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"firstname\": \"John\", \"lastname\": null }"
+            },
+            "person/first-last-unknown" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "unexpected"
+                     ]
+                  }
+               ],
+               "input" : "{\"firstname\": \"John\", \"lastname\": \"Smith\", \"unknown\": \"x\"}"
+            },
+            "person/first-middle-last" : {
+               "errors" : [],
+               "input" : "{\"firstname\": \"John\", \"middlename\": \"Q\", \"lastname\": \"Smith\"}"
+            },
+            "person/unknown" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "unexpected"
+                     ]
+                  }
+               ],
+               "input" : "{\"unknown\": \"x\"}"
+            },
+            "str/0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"0\""
+            },
+            "str/05" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"05\""
+            },
+            "str/5" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"5\""
+            },
+            "str/5." : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"5.\""
+            },
+            "str/5.0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"5.0\""
+            },
+            "str/5.1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"5.1\""
+            },
+            "str/empty" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"\""
+            },
+            "str/false" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"false\""
+            },
+            "str/null" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"null\""
+            },
+            "str/true" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"true\""
+            },
+            "str/x" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"x\""
+            }
+         }
+      },
       "def" : {
          "schema" : {
             "type" : "//def"
@@ -6302,6 +7456,36 @@
          "schema" : {
             "contents" : {},
             "type" : "//arr"
+         }
+      },
+      "invalid/composed-cycle" : {
+         "composed-type" : {
+            "invalid" : true,
+            "schema" : {
+               "type" : "tag:www.example.com:rx/cycle"
+            },
+            "uri" : "tag:www.example.com:rx/cycle"
+         },
+         "schema" : "tag:www.example.com:rx/cycle"
+      },
+      "invalid/composed-invalid" : {
+         "composed-type" : {
+            "invalid" : true,
+            "schema" : {
+               "type" : "//rec",
+               "unknown" : "this will cause an explosion"
+            },
+            "uri" : "tag:www.example.com:rx/person"
+         },
+         "schema" : {
+            "type" : "tag:www.example.com:rx/person"
+         }
+      },
+      "invalid/composed-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "tag:www.example.com:rx/person",
+            "unknown" : "this will cause an explosion"
          }
       },
       "invalid/int-unknown-arg" : {

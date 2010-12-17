@@ -48,6 +48,16 @@ SCHEMA: for my $file (@schema_files) {
     next SCHEMA;
   }
 
+  if ($spec->{'composed-type'}) {
+    $set->{'composed-type'} = $spec->{'composed-type'};
+
+    if ($spec->{'composed-type'}{'invalid'}) {
+      $test_set{ $name } = $set;
+      $count += 1;
+      next SCHEMA;
+    }
+  }
+
   for my $pf (qw(pass fail)) {
     for my $source (keys %{ $spec->{$pf} }) {
       my $expect = normalize($spec->{$pf}{ $source }, $data_set{ $source });

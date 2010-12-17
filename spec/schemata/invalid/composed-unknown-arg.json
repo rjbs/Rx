@@ -1,0 +1,18 @@
+{
+  "composed-type": {
+    "uri": "tag:www.example.com:rx/person",
+    "schema": {
+      "type": "//rec",
+      "required": { "firstname": "//str",
+                    "lastname": "//str" },
+      "optional": { "middlename": "//str" }
+    }
+  },
+
+  "schema": {
+    "type"   : "tag:www.example.com:rx/person",
+    "unknown": "this will cause an explosion"
+   },
+
+  "invalid": true
+}
