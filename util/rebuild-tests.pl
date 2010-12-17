@@ -108,7 +108,7 @@ sub normalize {
 my $JSON;
 sub slurp_json {
   my ($fn) = @_;
-  $JSON ||= JSON->new->relaxed;
+  $JSON ||= JSON->new;
 
   my $json = do { local $/; open my $fh, '<', $fn; <$fh> };
   my $data = eval { $JSON->decode($json) };

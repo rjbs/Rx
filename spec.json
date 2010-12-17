@@ -1,5 +1,5 @@
 {
-   "count" : 1366,
+   "count" : 1370,
    "tests" : {
       "all-2recs" : {
          "schema" : {
@@ -11077,9 +11077,41 @@
                ],
                "input" : "5E10"
             },
+            "obj/empty" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "required",
+                        "key"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "missing"
+                     ]
+                  }
+               ],
+               "input" : "{}"
+            },
             "obj/key-0" : {
                "errors" : [],
                "input" : "{\"key\": 0 }"
+            },
+            "obj/key-0-opt-1" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "rest",
+                        "values"
+                     ],
+                     "data" : [
+                        "opt"
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": 0, \"opt\": 1 }"
             },
             "obj/key-0-opt-T" : {
                "errors" : [],
@@ -11092,6 +11124,40 @@
             "obj/key-1" : {
                "errors" : [],
                "input" : "{\"key\": 1 }"
+            },
+            "obj/key-1-unknown" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "rest",
+                        "values"
+                     ],
+                     "data" : [
+                        "unknown"
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": 1, \"unknown\": 2 }"
+            },
+            "obj/key-pants" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "required",
+                        "key"
+                     ],
+                     "data" : [
+                        "key"
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": \"pants\" }"
             },
             "str/0" : {
                "errors" : [

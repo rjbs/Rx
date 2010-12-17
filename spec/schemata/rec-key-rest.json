@@ -19,13 +19,28 @@
     "bool": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
     "null": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
     "num" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
-    # XXX: What should these be? -- rjbs, 2010-06-22
-    # "obj" : {
-    #   "empty": null,
-    #   "key-pants"    : null,
-    #   "key-0-opt-1"  : null,
-    #   "key-1-unknown": null
-    # },
+    "obj" : {
+      "empty": {
+        "data": [ ],
+        "check": [ "required", "key" ],
+        "error": [ "missing" ]
+      },
+      "key-pants": {
+        "data": [ "key" ],
+        "check": [ "required", "key" ],
+        "error": [ "type" ]
+      },
+      "key-0-opt-1"  : {
+        "data": [ "opt" ],
+        "check": [ "rest", "values" ],
+        "error": [ "type" ]
+      },
+      "key-1-unknown": {
+        "data": [ "unknown" ],
+        "check": [ "rest", "values" ],
+        "error": [ "type" ]
+      }
+    },
     "str" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }
