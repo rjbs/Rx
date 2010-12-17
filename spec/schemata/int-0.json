@@ -2,18 +2,18 @@
   "schema": { "type": "//int", "value": 0 },
   "pass": { "num": [ "0", "0e0", "-0" ] },
   "fail": {
-    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "arr" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
     "num" : {
-      "-5"  : { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "-5.0": { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "-5.1": { "value": [ ], "check": [ ], "error": [ "type" ] },
-      "5"   : { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "5.0" : { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "5.1" : { "value": [ ], "check": [ ], "error": [ "type" ] },
-      "5.1e1": { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "5E10":  { "value": [ ], "check": [ ], "error": [ "value" ] }
+      "-5"  : { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "-5.0": { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "-5.1": { "data": [ ], "check": [ ], "error": [ "type" ] },
+      "5"   : { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "5.0" : { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "5.1" : { "data": [ ], "check": [ ], "error": [ "type" ] },
+      "5.1e1": { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "5E10":  { "data": [ ], "check": [ ], "error": [ "value" ] }
     },
     "obj" : { "*": { "error": [ "type" ] } },
     "str" : { "*": { "error": [ "type" ] } }

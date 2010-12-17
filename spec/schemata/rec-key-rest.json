@@ -15,17 +15,17 @@
   },
 
   "fail": {
-    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    // XXX: What should these be? -- rjbs, 2010-06-22
-    // "obj" : {
-    //   "empty": null,
-    //   "key-pants"    : null,
-    //   "key-0-opt-1"  : null,
-    //   "key-1-unknown": null
-    // },
-    "str" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
+    "arr" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    # XXX: What should these be? -- rjbs, 2010-06-22
+    # "obj" : {
+    #   "empty": null,
+    #   "key-pants"    : null,
+    #   "key-0-opt-1"  : null,
+    #   "key-1-unknown": null
+    # },
+    "str" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

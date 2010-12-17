@@ -14,32 +14,32 @@
   },
 
   "fail": {
-    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "arr" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
     "obj" : {
       "empty": {
-        "value": [ ],
-        "check": [ "key" ],
+        "data": [ ],
+        "check": [ "required", "key" ],
         "error": [ "missing" ]
       },
       "key-pants": {
-        "value": [ "key" ],
-        "check": [ "key" ],
+        "data": [ "key" ],
+        "check": [ "required", "key" ],
         "error": [ "type" ]
       },
       "key-0-opt-1"  : {
-        "value": [ "opt" ],
-        "check": [ "opt" ],
+        "data": [ "opt" ],
+        "check": [ "optional", "opt" ],
         "error": [ "type" ]
       },
       "key-1-unknown": {
-        "value": [ ],
+        "data": [ ],
         "check": [ ],
         "error": [ "unexpected" ]
       }
     },
-    "str" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
+    "str" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

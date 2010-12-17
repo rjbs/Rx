@@ -10,9 +10,9 @@
   },
 
   "fail": {
-    "arr" : { "*": { "error": [ "none" ], "value": [ ], "check": [ ] } },
-    "num" : { "*": { "error": [ "none" ], "value": [ ], "check": [ ] } },
-    "obj" : { "*": { "error": [ "none" ], "value": [ ], "check": [ ] } },
-    "str" : { "*": { "error": [ "none" ], "value": [ ], "check": [ ] } }
+    "arr" : { "*": { "error": [ "none" ], "data": [ ], "check": [ "of" ] } },
+    "num" : { "*": { "error": [ "none" ], "data": [ ], "check": [ "of" ] } },
+    "obj" : { "*": { "error": [ "none" ], "data": [ ], "check": [ "of" ] } },
+    "str" : { "*": { "error": [ "none" ], "data": [ ], "check": [ "of" ] } }
   }
 }

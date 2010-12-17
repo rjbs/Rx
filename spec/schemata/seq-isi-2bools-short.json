@@ -23,10 +23,10 @@
       "0-str-3-T-str": { "error": [ "type" ] },
       "0-str-3-T-F-T": { "error": [ "size" ] }
     },
-    "bool" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "null" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "num"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "obj"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "str"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
+    "bool" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "null" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "num"  : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj"  : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "str"  : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

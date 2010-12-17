@@ -18,19 +18,19 @@
   "pass": { "obj": [ "key-0-opt-T", "key-0-opt-T-rest-F" ] },
 
   "fail": {
-    "arr" : { "*": [ { "value": [ ], "check": [ 0 ] } ] },
-    "bool": { "*": [ { "value": [ ], "check": [ 0 ] } ] },
-    "null": { "*": [ { "value": [ ], "check": [ 0 ] } ] },
-    "num" : { "*": [ { "value": [ ], "check": [ 0 ] } ] },
+    "arr" : { "*": [ { "error": [ "type" ], "data": [ ], "check": [ "of", 0 ] } ] },
+    "bool": { "*": [ { "error": [ "type" ], "data": [ ], "check": [ "of", 0 ] } ] },
+    "null": { "*": [ { "error": [ "type" ], "data": [ ], "check": [ "of", 0 ] } ] },
+    "num" : { "*": [ { "error": [ "type" ], "data": [ ], "check": [ "of", 0 ] } ] },
     "obj" : {
-      "key-0": [ { "value": [ ], "check": [ 1, "opt" ] } ],
-      "key-1": [ { "value": [ ], "check": [ 1, "opt" ] } ],
-      "opt-T": [ { "value": [ ], "check": [ 0, "key" ] } ],
+      "key-0": [ { "error": [ "missing" ], "data": [ ], "check": [ "of", 1, "required", "opt" ] } ],
+      "key-1": [ { "error": [ "missing" ], "data": [ ], "check": [ "of", 1, "required", "opt" ] } ],
+      "opt-T": [ { "error": [ "missing" ], "data": [ ], "check": [ "of", 0, "required", "key" ] } ],
 
-      "key-pants"    : [ { "value": [ "key" ], "check": [ 0, "key" ] } ],
-      "key-1-unknown": [ { "value": [ ],       "check": [ 1, "opt" ] } ],
-      "alpha-num"    : [ { "value": [ ],       "check": [ 0, "key" ] } ]
+      "key-pants"    : [ { "error": [ "type" ], "data": [ "key" ], "check": [ "of", 0, "required", "key" ] } ],
+      "key-1-unknown": [ { "error": [ "missing" ], "data": [ ],       "check": [ "of", 1, "required", "opt" ] } ],
+      "alpha-num"    : [ { "error": [ "missing" ], "data": [ ],       "check": [ "of", 0, "required", "key" ] } ]
     },
-    "str" : { "*": [ { "value": [ ], "check": [ 0 ] } ] }
+    "str" : { "*": [ { "error": [ "type" ], "data": [ ], "check": [ "of", 0 ] } ] }
   }
 }

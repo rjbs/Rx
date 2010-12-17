@@ -4,28 +4,28 @@
     "str": [ "x" ]
   },
   "fail": {
-    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "arr" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
     "null": {
       "*": {
         "error": [ "type" ],
         "check": [ ],
-        "value": [ ]
+        "data": [ ]
       }
     },
-    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
     "str" : {
-      "0"  : { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "5"  : { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "05" : { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "5.0": { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "5.1": { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "5." : { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "true" : { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "false": { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "null" : { "value": [ ], "check": [ ], "error": [ "value" ] },
-      "empty": { "value": [ ], "check": [ ], "error": [ "value" ] }
+      "0"  : { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "5"  : { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "05" : { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "5.0": { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "5.1": { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "5." : { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "true" : { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "false": { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "null" : { "data": [ ], "check": [ ], "error": [ "value" ] },
+      "empty": { "data": [ ], "check": [ ], "error": [ "value" ] }
     }
   }
 }

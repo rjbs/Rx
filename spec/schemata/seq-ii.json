@@ -10,19 +10,19 @@
 
   "fail": {
     "arr"  : {
-      "0": { "value": [ ], "check": [ ], "error": [ "size" ] },
-      "0-str-3": { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] },
-      "0-1-1-2": { "value": [   ], "check": [   ], "error": [ "size" ] },
-      "0-str-3-T"    : { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] },
-      "0-str-3-T-F"  : { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] },
-      "0-str-3-18"   : { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] },
-      "0-str-3-T-str": { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] },
-      "0-str-3-T-F-T": { "value": [ 1 ], "check": [ 1 ], "error": [ "type" ] }
+      "0"            : { "data": [   ], "check": [ "contents" ], "error": [ "size" ] },
+      "0-str-3"      : { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
+      "0-1-1-2"      : { "data": [   ], "check": [ "contents"    ], "error": [ "size" ] },
+      "0-str-3-T"    : { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
+      "0-str-3-T-F"  : { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
+      "0-str-3-18"   : { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
+      "0-str-3-T-str": { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
+      "0-str-3-T-F-T": { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] }
     },
-    "bool" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "null" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "num"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "obj"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "str"  : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
+    "bool" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "null" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "num"  : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj"  : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "str"  : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

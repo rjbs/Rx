@@ -6,10 +6,10 @@
   },
 
   "fail": {
-    "arr" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "str" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
+    "arr" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "str" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }

@@ -11,16 +11,16 @@
 
   "fail": {
     "arr" : {
-      "str-1"  : { "value": [ 0 ], "check": [ ], "error": [ "type" ] },
-      "0-s1-1" : { "value": [ 1 ], "check": [ ], "error": [ "type" ] },
-      "0-1-1-2": { "value": [   ], "check": [ ], "error": [ "size" ] },
-      "0-str"  : { "value": [ 1 ], "check": [ ], "error": [ "type" ] },
-      "0-str-3": { "value": [ 1 ], "check": [ ], "error": [ "type" ] }
+      "str-1"  : { "data": [ 0 ], "check": [ "contents" ], "error": [ "type" ] },
+      "0-s1-1" : { "data": [ 1 ], "check": [ "contents" ], "error": [ "type" ] },
+      "0-1-1-2": { "data": [   ], "check": [ "length"   ], "error": [ "size" ] },
+      "0-str"  : { "data": [ 1 ], "check": [ "contents" ], "error": [ "type" ] },
+      "0-str-3": { "data": [ 1 ], "check": [ "contents" ], "error": [ "type" ] }
     },
-    "bool": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "num" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "obj" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } },
-    "str" : { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
+    "bool": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "str" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }
