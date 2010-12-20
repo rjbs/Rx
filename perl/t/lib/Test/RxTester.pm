@@ -141,7 +141,6 @@ sub assert_fail {
         $schema_desc =~ /composed/
           or check_path($schema_spec, [$fail->check_path])
             or do {
-              $DB::single = 1;
               $ok = 0;
               push @diag, "invalid path to check: " . $fail->check_string;
             };
