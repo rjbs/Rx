@@ -104,6 +104,10 @@ sub assert_fail {
 
     $want = $want ? $want->[0] : {};
 
+    if (eval { $fail->isa('Data::Rx::Failures') }) {
+      $fail = $fail->failures->[0];
+    }
+
     if (try { $fail->isa('Data::Rx::Failure') }) {
       if ($want->{data}) {
         eq_deeply([$fail->data_path],$want->{data})

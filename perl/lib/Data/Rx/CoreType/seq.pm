@@ -55,36 +55,43 @@ sub validate {
     });
   }
 
+  my @subchecks;
+
   for my $i (0 .. $#$content_schemata) {
-    $self->_subcheck(
-      $value->[ $i ],
-      $content_schemata->[ $i ],
-      { data => [$i],
-        check => ['contents', $i],
-      },
-    );
+    push @subchecks, [
+                      $value->[ $i ],
+                      $content_schemata->[ $i ],
+                      { data => [$i],
+                        check => ['contents', $i],
+                      },
+                     ];
   }
+
+  my @fails;
 
   if (@$value > @$content_schemata) {
     if ($self->{tail_check}) {
-      $self->_subcheck(
-        $value,
-        $self->{tail_check},
-        { check => ['tail'] },
-      );
+      push @subchecks, [
+                        $value,
+                        $self->{tail_check},
+                        { check => ['tail'] },
+                       ];
     } else {
-      $self->fail({
-        error   => [ qw(size) ],
-        value   => $value,
-        check   => ['contents'],
-        message => sprintf(
-          "too many entries found; found %s, need no more than %s",
-          0 + @$value,
-          0 + @$content_schemata,
-        ),
-      });
+      push @subchecks,
+        $self->new_fail({
+          error   => [ qw(size) ],
+          value   => $value,
+          check   => ['contents'],
+          message => sprintf(
+            "too many entries found; found %s, need no more than %s",
+            0 + @$value,
+            0 + @$content_schemata,
+          ),
+        });
     }
   }   
+
+  $self->_subchecks(\@subchecks);
 
   return 1;
 }

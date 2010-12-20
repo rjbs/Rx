@@ -52,15 +52,18 @@ sub validate {
     });
   }
   
+  my @subchecks;
   for my $i ($self->{skip} .. $#$value) {
-    $self->_subcheck(
-      $value->[$i],
-      $self->{content_check},
-      { data => [$i],
-        check => ['contents'],
-      },
-    );
+    push @subchecks, [
+                      $value->[$i],
+                      $self->{content_check},
+                      { data => [$i],
+                        check => ['contents'],
+                      },
+                     ];
   }
+
+  $self->_subchecks(\@subchecks);
 
   return 1;
 }

@@ -4,7 +4,9 @@ package Data::Rx::CoreType;
 # ABSTRACT: base class for core Rx types
 
 use Carp ();
+use Scalar::Util ();
 use Data::Rx::Failure;
+use Data::Rx::Failures;
 
 sub new_checker {
   my ($class, $arg, $rx) = @_;
@@ -19,25 +21,54 @@ sub check {
   local $@;
 
   return 1 if eval { $self->validate($value); };
-  my $failure = $@;
+  my $failures = $@;
 
-  if (eval { $failure->isa('Data::Rx::Failure') }) {
-    $self->failure($failure);
+  if (eval { $failures->isa('Data::Rx::Failure') }) {
+    $failures = Data::Rx::Failures->new({
+      rx       => $self->rx,
+      failures => [$failures],
+    });
+  }
+
+  if (eval { $failures->isa('Data::Rx::Failures') }) {
+    $self->failure($failures);
     return 0;
   }
 
-  die $failure;
+  die $failures;
+}
+
+sub fails {
+  my ($self, $structs) = @_;
+
+  die Data::Rx::Failures->new({
+    rx       => $self->rx,
+    failures => [map { $_->{type} ||= $self->type_uri;
+                       Data::Rx::Failure->new({
+                         rx     => $self->rx,
+                         struct => $_,
+                       })
+                     }
+                     @$structs
+                ],
+  });
+}
+
+sub new_fail {
+  my ($self, $struct) = @_;
+
+  $struct->{type} ||= $self->type_uri;
+
+  Data::Rx::Failure->new({
+    rx     => $self->rx,
+    struct => $struct,
+  });
 }
 
 sub fail {
   my ($self, $struct) = @_;
 
-  $struct->{type} ||= $self->type_uri;
-
-  die Data::Rx::Failure->new({
-    rx     => $self->rx,
-    struct => $struct,
-  });
+  die $self->new_fail($struct);
 }
 
 sub failure {
@@ -48,20 +79,57 @@ sub failure {
   return $self->{failure};
 }
 
+sub _subchecks {
+  my ($self, $subchecks, $fails) = @_;
+
+  my @fails;
+
+  foreach my $subcheck (@$subchecks) {
+    if (Scalar::Util::blessed($subcheck)) {
+      push @fails, $subcheck;
+      next;
+    }
+
+    my ($value, $checker, $context) = @$subcheck;
+
+    next if eval { $checker->validate($value) };
+
+    my $failures = $@;
+    Carp::confess($failures)
+      unless eval { $failures->isa('Data::Rx::Failures') ||
+                    $failures->isa('Data::Rx::Failure') };
+
+    $failures->contextualize({
+      type  => $self->type_uri,
+      %$context,
+    });
+
+    push @fails, $failures;
+  }
+
+  if (@fails) {
+    die Data::Rx::Failures->new( { failures => \@fails } );
+  }
+
+  return 1;
+}
+
 sub _subcheck {
   my ($self, $value, $checker, $context) = @_;
 
   return if eval { $checker->validate($value) };
 
-  my $failure = $@;
-  Carp::confess($failure) unless eval { $failure->isa('Data::Rx::Failure') };
+  my $failures = $@;
+  Carp::confess($failures)
+      unless eval { $failures->isa('Data::Rx::Failures') ||
+                    $failures->isa('Data::Rx::Failure') };
 
-  $failure->contextualize({
+  $failures->contextualize({
     type  => $self->type_uri,
     %$context,
   });
 
-  die $failure;
+  die $failures;
 }
 
 sub type_uri {

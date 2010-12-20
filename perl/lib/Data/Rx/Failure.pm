@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 package Data::Rx::Failure;
-# ABSTRACT: class for Rx failures
+# ABSTRACT: structured failure report from an Rx checker
+
 
 use overload '""' => \&stringify;
 

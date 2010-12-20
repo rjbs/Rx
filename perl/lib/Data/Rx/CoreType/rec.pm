@@ -54,48 +54,56 @@ sub validate {
 
   my $c_schema = $self->{content_schema};
 
+  my @subchecks;
+
   my @rest_keys = grep { ! exists $c_schema->{$_} } keys %$value;
   if (@rest_keys and not $self->{rest_schema}) {
-    $self->fail({
-      error    => [ qw(unexpected) ],
-      message  => "found unexpected entries: @rest_keys",
-      value    => $value,
-    });
+    push @subchecks,
+      $self->new_fail({
+        error    => [ qw(unexpected) ],
+        message  => "found unexpected entries: @rest_keys",
+        value    => $value,
+      });
   }
 
   for my $key (keys %$c_schema) {
     my $check = $c_schema->{$key};
 
     if (not $check->{optional} and not exists $value->{ $key }) {
-      $self->fail({
-        error    => [ qw(missing) ],
-        message  => "no value given for required entry $key",
-        check    => ['required', $key],
-        value    => $value,
-      });
+      push @subchecks,
+        $self->new_fail({
+          error    => [ qw(missing) ],
+          message  => "no value given for required entry $key",
+          check    => ['required', $key],
+          value    => $value,
+        });
+      next;
     }
 
     if (exists $value->{$key}) {
-      $self->_subcheck(
-        $value->{$key},
-        $check->{schema},
-        { data  => [$key],
-          check => [$check->{optional} ? 'optional' : 'required',
-                    $key],
-        },
-      );
+      push @subchecks, [
+                        $value->{$key},
+                        $check->{schema},
+                        { data  => [$key],
+                          check => [$check->{optional}
+                                      ? 'optional' : 'required',
+                                    $key],
+                        },
+                       ];
     }
   }
 
-  if (@rest_keys) {
+  if (@rest_keys && $self->{rest_schema}) {
     my %rest = map { $_ => $value->{$_} } @rest_keys;
 
-    $self->_subcheck(
-      \%rest,
-      $self->{rest_schema},
-      { check => ['rest'] },
-    );
+    push @subchecks, [
+                      \%rest,
+                      $self->{rest_schema},
+                      { check => ['rest'] },
+                     ];
   }
+
+  $self->_subchecks(\@subchecks);
 
   return 1;
 }
