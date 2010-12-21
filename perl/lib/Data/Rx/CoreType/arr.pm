@@ -42,17 +42,19 @@ sub validate {
     });
   }
 
+  my @subchecks;
+
   if ($self->{length_check} and
       ! $self->{length_check}->(@$value - $self->{skip})) {
-    $self->fail({
-      error   => [ qw(size) ],
-      message => "number of entries is outside permitted range",
-      value   => $value,
-      check   => ['length'],
-    });
+    push @subchecks,
+      $self->new_fail({
+        error   => [ qw(size) ],
+        message => "number of entries is outside permitted range",
+        value   => $value,
+        check   => ['length'],
+      });
   }
   
-  my @subchecks;
   for my $i ($self->{skip} .. $#$value) {
     push @subchecks, [
                       $value->[$i],

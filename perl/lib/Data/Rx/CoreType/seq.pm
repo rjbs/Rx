@@ -41,23 +41,25 @@ sub validate {
     });
   }
 
-  my $content_schemata = $self->{content_schemata};
-  if (@$value < @$content_schemata) {
-    $self->fail({
-      error   => [ qw(size) ],
-      value   => $value,
-      check   => ['contents'],
-      message => sprintf(
-        "too few entries found; found %s, need at least %s",
-        0 + @$value,
-        0 + @$content_schemata,
-      ),
-    });
-  }
-
   my @subchecks;
 
+  my $content_schemata = $self->{content_schemata};
+  if (@$value < @$content_schemata) {
+    push @subchecks,
+      $self->new_fail({
+        error   => [ qw(size) ],
+        value   => $value,
+        check   => ['contents'],
+        message => sprintf(
+          "too few entries found; found %s, need at least %s",
+          0 + @$value,
+          0 + @$content_schemata,
+        ),
+      });
+  }
+
   for my $i (0 .. $#$content_schemata) {
+    last if $i > $#$value;
     push @subchecks, [
                       $value->[ $i ],
                       $content_schemata->[ $i ],
@@ -66,8 +68,6 @@ sub validate {
                       },
                      ];
   }
-
-  my @fails;
 
   if (@$value > @$content_schemata) {
     if ($self->{tail_check}) {
