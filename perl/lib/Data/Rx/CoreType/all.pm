@@ -28,17 +28,18 @@ sub new_checker {
 
 sub validate {
   my ($self, $value) = @_;
-  
-  for my $i (0 .. $#{ $self->{of} }) {
-    my $checker = $self->{of}[$i];
 
-    $self->_subcheck(
+  my @subchecks;
+  for my $i (0 .. $#{ $self->{of} }) {
+    push @subchecks, [
       $value,
       $self->{of}[$i],
       { check => ['of', $i],
       },
-    );
+    ];
   }
+
+  $self->_subchecks(\@subchecks);
 
   return 1;
 }
