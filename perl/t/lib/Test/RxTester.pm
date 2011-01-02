@@ -207,12 +207,19 @@ sub check_path {
 }
 
 sub run_tests {
-  my ($self) = @_;
+  my ($self, @spec_names) = @_;
 
   my $spec_data = $self->{spec};
-  SPEC: for my $spec_name (sort keys %$spec_data) {
+
+  if (!@spec_names) {
+    @spec_names = sort keys %$spec_data;
+  }
+
+  SPEC: for my $spec_name (@spec_names) {
+    my $spec = $spec_data->{ $spec_name }
+      or die "invalid spec name $spec_name";
+
     Test::More::diag "testing $spec_name";
-    my $spec = $spec_data->{ $spec_name };
 
     my $rx     = Data::Rx->new;
 

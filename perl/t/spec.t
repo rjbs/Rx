@@ -11,6 +11,12 @@ Test::Builder->new->failure_output(\*STDOUT);
 
 my $rx_tester = Test::RxTester->new('spec.json');
 
-plan tests => $rx_tester->plan;
+my @spec_names = @ARGV;
 
-$rx_tester->run_tests;
+if (@spec_names) {
+  plan 'no_plan';
+} else {
+  plan tests => $rx_tester->plan;
+}
+
+$rx_tester->run_tests(@spec_names);
