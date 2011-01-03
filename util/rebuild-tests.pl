@@ -14,7 +14,7 @@ my %test_set;
 # LOAD THE DATA FILES
 my %data_set;
 
-my @data_files   = File::Find::Rule->file->in('spec/data');
+my @data_files   = File::Find::Rule->file->name('*.json')->in('spec/data');
 
 for my $file (@data_files) {
   (my $name = $file) =~ s{\.json\z}{};
@@ -29,7 +29,7 @@ for my $file (@data_files) {
 }
 
 # LOAD THE SCHEMA TEST FILES
-my @schema_files = File::Find::Rule->file->in('spec/schemata');
+my @schema_files = File::Find::Rule->file->name('*.json')->in('spec/schemata');
 
 my $count = 0;
 
