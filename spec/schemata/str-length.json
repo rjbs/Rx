@@ -4,11 +4,15 @@
     "str": [ "len-6" ]
   },
   "fail": {
-    "arr" : "*",
-    "bool": "*",
-    "null": "*",
-    "num" : "*",
-    "obj" : "*",
-    "str" : [ "empty", "x", "len-9" ]
+    "arr" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "bool": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "null": { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "num" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "obj" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
+    "str" : {
+      "empty": { "data": [ ], "check": [ ], "error": [ "length" ] },
+      "x"    : { "data": [ ], "check": [ ], "error": [ "length" ] },
+      "len-9": { "data": [ ], "check": [ ], "error": [ "length" ] }
+    }
   }
 }
