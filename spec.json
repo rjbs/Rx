@@ -1,5 +1,5 @@
 {
-   "count" : 1524,
+   "count" : 1625,
    "tests" : {
       "all-2recs" : {
          "schema" : {
@@ -708,6 +708,36 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "of",
+                        0
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "of",
+                        0
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -955,6 +985,14 @@
             "str/false" : {
                "errors" : [],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [],
@@ -1635,6 +1673,34 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "of"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "none"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "of"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "none"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -2192,6 +2258,30 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -2705,6 +2795,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -3321,6 +3435,30 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -3907,6 +4045,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -4499,6 +4661,30 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -4745,6 +4931,14 @@
             "str/false" : {
                "errors" : [],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [],
@@ -5353,6 +5547,30 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "fail"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "fail"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -5899,6 +6117,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -6495,6 +6737,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -7115,6 +7381,30 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -7666,6 +7956,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -8355,6 +8669,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -9378,6 +9716,30 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -9912,6 +10274,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -10508,6 +10894,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -11120,6 +11530,30 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -11574,6 +12008,14 @@
             "str/false" : {
                "errors" : [],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [],
@@ -12130,6 +12572,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -12712,6 +13178,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -13303,6 +13793,30 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -13892,6 +14406,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -14486,6 +15024,30 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -15018,6 +15580,30 @@
                ],
                "input" : "\"false\""
             },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
             "str/null" : {
                "errors" : [
                   {
@@ -15541,6 +16127,30 @@
                   }
                ],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [
@@ -16108,6 +16718,14 @@
             "str/false" : {
                "errors" : [],
                "input" : "\"false\""
+            },
+            "str/len-6" : {
+               "errors" : [],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [],
+               "input" : "\"abcdefghi\""
             },
             "str/null" : {
                "errors" : [],
@@ -16740,6 +17358,549 @@
                      "data" : [],
                      "error" : [
                         "value"
+                     ]
+                  }
+               ],
+               "input" : "\"x\""
+            }
+         }
+      },
+      "str-length" : {
+         "schema" : {
+            "length" : {
+               "max" : 8,
+               "min" : 6
+            },
+            "type" : "//str"
+         },
+         "test" : {
+            "arr/0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0 ]"
+            },
+            "arr/0-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, 1 ]"
+            },
+            "arr/0-1-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, 1, 1 ]"
+            },
+            "arr/0-1-1-2" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, 1, 1, 2 ]"
+            },
+            "arr/0-s1-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"1\", 1 ]"
+            },
+            "arr/0-str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\" ]"
+            },
+            "arr/0-str-3" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3 ]"
+            },
+            "arr/0-str-3-18" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, 18 ]"
+            },
+            "arr/0-str-3-T" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true ]"
+            },
+            "arr/0-str-3-T-F" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true, false ]"
+            },
+            "arr/0-str-3-T-F-T" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true, false, true ]"
+            },
+            "arr/0-str-3-T-str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true, \"false\" ]"
+            },
+            "arr/empty" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[]"
+            },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
+            "arr/str-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\", 1 ]"
+            },
+            "bool/false" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "false"
+            },
+            "bool/true" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "true"
+            },
+            "null/null" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "null"
+            },
+            "num/-0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-0"
+            },
+            "num/-5" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-5"
+            },
+            "num/-5.0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-5.0"
+            },
+            "num/-5.1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "-5.1"
+            },
+            "num/0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "0"
+            },
+            "num/0e0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "0e0"
+            },
+            "num/5" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5"
+            },
+            "num/5.0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5.0"
+            },
+            "num/5.1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5.1"
+            },
+            "num/5.1e1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5.1e1"
+            },
+            "num/5E1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5E1"
+            },
+            "num/5E10" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "5E10"
+            },
+            "obj/alpha-num" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"a\": 1, \"b\": 2, \"c\": 3, \"d\": 4, \"e\": 5, \"f\": 6, \"g\": 7, \"h\": 8}"
+            },
+            "obj/empty" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{}"
+            },
+            "obj/key-0" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": 0 }"
+            },
+            "obj/key-0-opt-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": 0, \"opt\": 1 }"
+            },
+            "obj/key-0-opt-T" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": 0, \"opt\": true }"
+            },
+            "obj/key-0-opt-T-rest-F" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": 0, \"opt\": true, \"rest\": false}"
+            },
+            "obj/key-1" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": 1 }"
+            },
+            "obj/key-1-unknown" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": 1, \"unknown\": 2 }"
+            },
+            "obj/key-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": \"pants\" }"
+            },
+            "obj/opt-T" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
+            },
+            "str/empty" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "length"
+                     ]
+                  }
+               ],
+               "input" : "\"\""
+            },
+            "str/len-6" : {
+               "errors" : [],
+               "input" : "\"abcdef\""
+            },
+            "str/len-9" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "length"
+                     ]
+                  }
+               ],
+               "input" : "\"abcdefghi\""
+            },
+            "str/x" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "length"
                      ]
                   }
                ],

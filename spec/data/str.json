@@ -6,6 +6,8 @@
   "5.1": "\"5.1\"",
   "5." : "\"5.\"",
   "x"  : "\"x\"",
+  "len-6": "\"abcdef\"",
+  "len-9": "\"abcdefghi\"",
   "false": "\"false\"",
   "true" : "\"true\"",
   "null" : "\"null\"",
