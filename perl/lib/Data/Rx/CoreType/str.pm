@@ -11,11 +11,14 @@ sub new_checker {
   my $self = {};
 
   Carp::croak("unknown arguments to new")
-    unless Data::Rx::Util->_x_subset_keys_y($arg, { value => 1});
+    unless Data::Rx::Util->_x_subset_keys_y($arg, { length => 1, value => 1});
 
   # XXX: We should be able to reject num values, too. :( -- rjbs, 2008-08-25
   Carp::croak(sprintf 'invalid value for %s', $class->type_name)
     if exists $arg->{value} and (ref $arg->{value} or ! defined $arg->{value});
+
+  $self->{length_check} = Data::Rx::Util->_make_range_check($arg->{length})
+    if $arg->{length};
 
   $self->{value} = $arg->{value} if defined $arg->{value};
 
@@ -40,6 +43,14 @@ sub validate {
     $self->fail({
       error   => [ qw(type) ],
       message => "found value is a reference",
+      value   => $value,
+    });
+  }
+
+  if ($self->{length_check} && ! $self->{length_check}->(length $value)) {
+    $self->fail({
+      error   => [ qw(length) ],
+      message => "length of value is outside allowed range",
       value   => $value,
     });
   }

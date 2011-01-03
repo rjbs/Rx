@@ -1,0 +1,14 @@
+{
+  "schema": { "type": "//str", "length": { "min": 6, "max": 8 } },
+  "pass": {
+    "str": [ "len-6" ]
+  },
+  "fail": {
+    "arr" : "*",
+    "bool": "*",
+    "null": "*",
+    "num" : "*",
+    "obj" : "*",
+    "str" : [ "empty", "x", "len-9" ]
+  }
+}
