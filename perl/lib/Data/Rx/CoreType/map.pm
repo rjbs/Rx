@@ -35,15 +35,18 @@ sub validate {
     });
   }
 
+  my @subchecks;
   for my $key (keys %$value) {
-    $self->_subcheck(
+    push @subchecks, [
       $value->{ $key },
       $self->{value_constraint},
       { data  => [$key],
         check => ['values'],
       },
-    );
+    ];
   }
+
+  $self->_subchecks(\@subchecks);
 
   return 1;
 }
