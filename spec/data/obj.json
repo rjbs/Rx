@@ -11,5 +11,7 @@
 
   "key-0-opt-T-rest-F": "{\"key\": 0, \"opt\": true, \"rest\": false}",
 
+  "opt-pants-rest-pants": "{\"opt\": \"pants\", \"rest\": \"pants\"}",
+
   "alpha-num": "{\"a\": 1, \"b\": 2, \"c\": 3, \"d\": 4, \"e\": 5, \"f\": 6, \"g\": 7, \"h\": 8}"
 }

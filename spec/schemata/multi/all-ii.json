@@ -1,0 +1,32 @@
+{
+  "schema": {
+    "type": "//all",
+    "of": [
+      {
+        "type": "//int",
+        "value": 1
+      },
+      {
+        "type": "//int",
+        "range": { "min": 0, "max": 2 }
+      }
+    ]
+  },
+
+  "fail": {
+    "num": {
+      "5":
+        [
+         { "data": [ ], "check": [ "of", 0 ], "error": [ "value" ] },
+         { "data": [ ], "check": [ "of", 1 ], "error": [ "range" ] }
+        ]
+    },
+    "str": {
+      "x":
+        [
+         { "data": [ ], "check": [ "of", 0 ], "error": [ "type" ] },
+         { "data": [ ], "check": [ "of", 1 ], "error": [ "type" ] }
+        ]
+    }
+  }
+}

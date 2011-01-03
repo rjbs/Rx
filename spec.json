@@ -1,5 +1,5 @@
 {
-   "count" : 1467,
+   "count" : 1524,
    "tests" : {
       "all-2recs" : {
          "schema" : {
@@ -220,6 +220,21 @@
                   }
                ],
                "input" : "[]"
+            },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "of",
+                        0
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
             },
             "arr/str-1" : {
                "errors" : [
@@ -797,6 +812,10 @@
                "errors" : [],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [],
                "input" : "[\"string\", 1 ]"
@@ -900,6 +919,10 @@
             "obj/opt-T" : {
                "errors" : [],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [],
@@ -1138,6 +1161,20 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "of"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "none"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -1471,6 +1508,20 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "of"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "none"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -2033,6 +2084,18 @@
                ],
                "input" : "{\"opt\": true }"
             },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
+            },
             "str/0" : {
                "errors" : [
                   {
@@ -2226,6 +2289,10 @@
             "arr/empty" : {
                "errors" : [],
                "input" : "[]"
+            },
+            "arr/str" : {
+               "errors" : [],
+               "input" : "[\"string\" ]"
             },
             "arr/str-1" : {
                "errors" : [],
@@ -2530,6 +2597,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -2826,6 +2905,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -3121,6 +3212,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -3429,6 +3532,18 @@
                   }
                ],
                "input" : "[]"
+            },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
             },
             "arr/str-1" : {
                "errors" : [
@@ -4009,6 +4124,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -4467,6 +4594,10 @@
                "errors" : [],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [],
                "input" : "[\"string\", 1 ]"
@@ -4578,6 +4709,10 @@
             "obj/opt-T" : {
                "errors" : [],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [],
@@ -4786,6 +4921,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "fail"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -5097,6 +5244,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "fail"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -5393,6 +5552,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -5620,6 +5791,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -5917,6 +6100,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -6192,6 +6387,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -6492,6 +6699,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -6787,6 +7006,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -7084,6 +7315,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -7315,6 +7558,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -7745,6 +8000,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -8127,6 +8394,405 @@
             }
          }
       },
+      "multi/all-ii" : {
+         "schema" : {
+            "of" : [
+               {
+                  "type" : "//int",
+                  "value" : 1
+               },
+               {
+                  "range" : {
+                     "max" : 2,
+                     "min" : 0
+                  },
+                  "type" : "//int"
+               }
+            ],
+            "type" : "//all"
+         },
+         "test" : {
+            "num/5" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "of",
+                        0
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "value"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "of",
+                        1
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "range"
+                     ]
+                  }
+               ],
+               "input" : "5"
+            },
+            "str/x" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "of",
+                        0
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "of",
+                        1
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "\"x\""
+            }
+         }
+      },
+      "multi/array-3-int" : {
+         "schema" : {
+            "contents" : {
+               "type" : "//int"
+            },
+            "length" : {
+               "max" : 3,
+               "min" : 3
+            },
+            "type" : "//arr"
+         },
+         "test" : {
+            "arr/str-1" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "length"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "size"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "contents"
+                     ],
+                     "data" : [
+                        0
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\", 1 ]"
+            }
+         }
+      },
+      "multi/map-int" : {
+         "schema" : {
+            "type" : "//map",
+            "values" : {
+               "type" : "//int"
+            }
+         },
+         "test" : {
+            "obj/key-0-opt-T-rest-F" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "values"
+                     ],
+                     "data" : [
+                        "opt"
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "values"
+                     ],
+                     "data" : [
+                        "rest"
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"key\": 0, \"opt\": true, \"rest\": false}"
+            }
+         }
+      },
+      "multi/rec-key-opt" : {
+         "schema" : {
+            "optional" : {
+               "opt" : {
+                  "type" : "//bool"
+               }
+            },
+            "required" : {
+               "key" : {
+                  "type" : "//int"
+               }
+            },
+            "type" : "//rec"
+         },
+         "test" : {
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "unexpected"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "required",
+                        "key"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "missing"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "optional",
+                        "opt"
+                     ],
+                     "data" : [
+                        "opt"
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
+            }
+         }
+      },
+      "multi/rec-key-opt-rest" : {
+         "schema" : {
+            "optional" : {
+               "opt" : {
+                  "type" : "//bool"
+               }
+            },
+            "required" : {
+               "key" : {
+                  "type" : "//int"
+               }
+            },
+            "rest" : {
+               "type" : "//map",
+               "values" : "//bool"
+            },
+            "type" : "//rec"
+         },
+         "test" : {
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "required",
+                        "key"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "missing"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "optional",
+                        "opt"
+                     ],
+                     "data" : [
+                        "opt"
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "rest",
+                        "values"
+                     ],
+                     "data" : [
+                        "rest"
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
+            }
+         }
+      },
+      "multi/seq-ii" : {
+         "schema" : {
+            "contents" : [
+               {
+                  "type" : "//int"
+               },
+               {
+                  "type" : "//int"
+               }
+            ],
+            "type" : "//seq"
+         },
+         "test" : {
+            "arr/0-str-3" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "contents",
+                        1
+                     ],
+                     "data" : [
+                        1
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "contents"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "size"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3 ]"
+            }
+         }
+      },
+      "multi/seq-ii-2bools" : {
+         "schema" : {
+            "contents" : [
+               {
+                  "type" : "//int"
+               },
+               {
+                  "type" : "//int"
+               }
+            ],
+            "tail" : {
+               "contents" : {
+                  "type" : "//bool"
+               },
+               "length" : {
+                  "max" : 2
+               },
+               "type" : "//arr"
+            },
+            "type" : "//seq"
+         },
+         "test" : {
+            "arr/0-str-3-T-str" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "contents",
+                        1
+                     ],
+                     "data" : [
+                        1
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "tail",
+                        "length"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "size"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "tail",
+                        "contents"
+                     ],
+                     "data" : [
+                        2
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "tail",
+                        "contents"
+                     ],
+                     "data" : [
+                        4
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[ 0, \"string\", 3, true, \"false\" ]"
+            },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [
+                        "contents"
+                     ],
+                     "data" : [],
+                     "error" : [
+                        "size"
+                     ]
+                  },
+                  {
+                     "check" : [
+                        "contents",
+                        0
+                     ],
+                     "data" : [
+                        0
+                     ],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            }
+         }
+      },
       "nil" : {
          "schema" : {
             "type" : "//nil"
@@ -8287,6 +8953,18 @@
                   }
                ],
                "input" : "[]"
+            },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
             },
             "arr/str-1" : {
                "errors" : [
@@ -8591,6 +9269,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -8887,6 +9577,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -9102,6 +9804,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -9399,6 +10113,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -9674,6 +10400,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -9974,6 +10712,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -10261,6 +11011,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -10557,6 +11319,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -10756,6 +11530,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [],
@@ -10968,6 +11754,18 @@
                   }
                ],
                "input" : "[]"
+            },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
             },
             "arr/str-1" : {
                "errors" : [
@@ -11542,6 +12340,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -12110,6 +12920,18 @@
                   }
                ],
                "input" : "[]"
+            },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
             },
             "arr/str-1" : {
                "errors" : [
@@ -12688,6 +13510,18 @@
                   }
                ],
                "input" : "[]"
+            },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
             },
             "arr/str-1" : {
                "errors" : [
@@ -13544,6 +14378,18 @@
                ],
                "input" : "{\"opt\": true }"
             },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
+            },
             "str/0" : {
                "errors" : [
                   {
@@ -14064,6 +14910,18 @@
                ],
                "input" : "{\"opt\": true }"
             },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
+            },
             "str/0" : {
                "errors" : [
                   {
@@ -14576,6 +15434,18 @@
                ],
                "input" : "{\"opt\": true }"
             },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
+            },
             "str/0" : {
                "errors" : [
                   {
@@ -14871,6 +15741,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -15182,6 +16064,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [],
@@ -15391,6 +16285,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -15702,6 +16608,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [
@@ -15991,6 +16909,18 @@
                ],
                "input" : "[]"
             },
+            "arr/str" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "[\"string\" ]"
+            },
             "arr/str-1" : {
                "errors" : [
                   {
@@ -16302,6 +17232,18 @@
                   }
                ],
                "input" : "{\"opt\": true }"
+            },
+            "obj/opt-pants-rest-pants" : {
+               "errors" : [
+                  {
+                     "check" : [],
+                     "data" : [],
+                     "error" : [
+                        "type"
+                     ]
+                  }
+               ],
+               "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             },
             "str/0" : {
                "errors" : [

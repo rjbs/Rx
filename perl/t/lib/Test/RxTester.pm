@@ -7,7 +7,7 @@ use Data::Rx;
 use File::Find::Rule;
 use JSON ();
 use Scalar::Util;
-use Test::Deep::NoTest;
+use Test::Deep::NoTest qw/ :DEFAULT cmp_details deep_diag /;
 use Test::More ();
 use Try::Tiny;
 
@@ -102,76 +102,108 @@ sub assert_fail {
     my $ok   = 1;
     my @diag;
 
-    $want = $want ? $want->[0] : {};
+    if ($want && @$want > 1) {
+      if (try { $fail->isa('Data::Rx::Failures') }) {
+        my @got;
 
-    if (eval { $fail->isa('Data::Rx::Failures') }) {
-      $fail = $fail->failures->[0];
-    }
-
-    if (try { $fail->isa('Data::Rx::Failure') }) {
-      if ($want->{data}) {
-        eq_deeply([$fail->data_path],$want->{data})
-          or do {
-            $ok = 0;
-            my $want = @{ $want->{data} } ? "[ @{ $want->{data} } ]" : '(empty)';
-            my $have = $fail->data_path ? "[ @{[$fail->data_path]} ]" : '(empty)';
-            push @diag, "want path to data: $want",
-                        "have path to data: $have";
-          };
-        my $ref_to_value = check_path($input, [$fail->data_path]);
-        if ($ref_to_value) {
-          eq_deeply($$ref_to_value, shallow($fail->value))
-            or do {
-              $ok = 0;
-              push @diag, "value at path to data does not match failure value";
-            };
-        } else {
-          $ok = 0;
-          push @diag, "invalid path to data: " . $fail->data_string;
+        foreach my $fail1 (@{ $fail->failures }) {
+          push @got, { data => [$fail1->data_path],
+                       check => [$fail1->check_path],
+                       error => [sort $fail1->error_types],
+                     };
         }
-      }
 
-      if ($want->{check}) {
-        eq_deeply([$fail->check_path],$want->{check})
+        # need to use bag() because the order is nondeterministic
+        # for keys in //rec and //map
+        my ($tmp_ok, $stack) = cmp_details(\@got, bag(@$want));
+        $tmp_ok
           or do {
             $ok = 0;
-            my $want = @{ $want->{check} } ? "[ @{ $want->{check} } ]" : '(empty)';
-            my $have = $fail->check_path ? "[ @{[$fail->check_path]} ]" : '(empty)';
-            push @diag, "want path to check: $want",
-                        "have path to check: $have";
+            push @diag, deep_diag($stack);
           };
+      } else {
+        $ok = 0;
+        my $desc = Scalar::Util::blessed($fail) ? Scalar::Util::blessed($fail)
+                 : ref($fail)     ? "unblessed " . ref($fail)
+                 :                  "non-ref: $fail";
 
-        # path check doesn't work for composed types...  -- rjk, 2010-12-17
-        $schema_desc =~ /composed/
-          or check_path($schema_spec, [$fail->check_path])
+        push @diag, 'want $@: Data::Rx::Failures',
+                    'have $@: ' . $desc;
+      }
+
+    } else {
+
+      $want = $want ? $want->[0] : {};
+
+      if (eval { $fail->isa('Data::Rx::Failures') }) {
+        $fail = $fail->failures->[0];
+      }
+
+      if (try { $fail->isa('Data::Rx::Failure') }) {
+        if ($want->{data}) {
+          eq_deeply([$fail->data_path],$want->{data})
             or do {
               $ok = 0;
-              push @diag, "invalid path to check: " . $fail->check_string;
+              my $want = @{ $want->{data} } ? "[ @{ $want->{data} } ]" : '(empty)';
+              my $have = $fail->data_path ? "[ @{[$fail->data_path]} ]" : '(empty)';
+              push @diag, "want path to data: $want",
+                          "have path to data: $have";
             };
-      }
-
-      if ($want->{error}) {
-        eq_deeply([sort $fail->error_types],$want->{error})
-          or do {
+          my $ref_to_value = check_path($input, [$fail->data_path]);
+          if ($ref_to_value) {
+            eq_deeply($$ref_to_value, shallow($fail->value))
+              or do {
+                $ok = 0;
+                push @diag, "value at path to data does not match failure value";
+              };
+          } else {
             $ok = 0;
-            my $want = @{ $want->{error} } ? "[ @{ $want->{error} } ]" : '(empty)';
-            my $have = $fail->error_types ? "[ @{[$fail->error_types]} ]" : '(empty)';
-            push @diag, "want error types: $want",
-                        "have error types: $have";
-          };
-      }
+            push @diag, "invalid path to data: " . $fail->data_string;
+          }
+        }
 
-      if (!$ok) {
-        unshift @diag, "$fail";
-      }
-    } else {
-      $ok = 0;
-      my $desc = Scalar::Util::blessed($fail) ? Scalar::Util::blessed($fail)
-               : ref($fail)     ? "unblessed " . ref($fail)
-               :                  "non-ref: $fail";
+        if ($want->{check}) {
+          eq_deeply([$fail->check_path],$want->{check})
+            or do {
+              $ok = 0;
+              my $want = @{ $want->{check} } ? "[ @{ $want->{check} } ]" : '(empty)';
+              my $have = $fail->check_path ? "[ @{[$fail->check_path]} ]" : '(empty)';
+              push @diag, "want path to check: $want",
+                          "have path to check: $have";
+            };
 
-      push @diag, 'want $@: Data::Rx::Failure',
-                  'have $@: ' . $desc;
+          # path check doesn't work for composed types...  -- rjk, 2010-12-17
+          $schema_desc =~ /composed/
+            or check_path($schema_spec, [$fail->check_path])
+              or do {
+                $ok = 0;
+                push @diag, "invalid path to check: " . $fail->check_string;
+              };
+        }
+
+        if ($want->{error}) {
+          eq_deeply([sort $fail->error_types],$want->{error})
+            or do {
+              $ok = 0;
+              my $want = @{ $want->{error} } ? "[ @{ $want->{error} } ]" : '(empty)';
+              my $have = $fail->error_types ? "[ @{[$fail->error_types]} ]" : '(empty)';
+              push @diag, "want error types: $want",
+                          "have error types: $have";
+            };
+        }
+
+        if (!$ok) {
+          unshift @diag, "$fail";
+        }
+      } else {
+        $ok = 0;
+        my $desc = Scalar::Util::blessed($fail) ? Scalar::Util::blessed($fail)
+                 : ref($fail)     ? "unblessed " . ref($fail)
+                 :                  "non-ref: $fail";
+
+        push @diag, 'want $@: Data::Rx::Failure',
+                    'have $@: ' . $desc;
+      }
     }
 
     Test::More::ok($ok, $desc);

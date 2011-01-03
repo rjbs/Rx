@@ -1,0 +1,17 @@
+{
+  "schema": {
+    "type"    : "//arr",
+    "contents": { "type": "//int" },
+    "length"  : { "min": 3, "max": 3 }
+  },
+
+  "fail": {
+    "arr" : {
+      "str-1"  :
+        [
+         { "data": [   ], "check": [ "length"   ], "error": [ "size" ] },
+         { "data": [ 0 ], "check": [ "contents" ], "error": [ "type" ] }
+        ]
+    }
+  }
+}

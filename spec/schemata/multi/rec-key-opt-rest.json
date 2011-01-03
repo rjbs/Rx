@@ -1,0 +1,38 @@
+{
+  "schema": {
+    "type": "//rec",
+    "required": {
+      "key": { "type": "//int" }
+    },
+    "optional": {
+      "opt": { "type": "//bool" }
+    },
+    "rest": {
+      "type": "//map",
+      "values": "//bool"
+    }
+  },
+
+  "fail": {
+    "obj" : {
+      "opt-pants-rest-pants":
+        [
+         {
+          "data": [ ],
+          "check": [ "required", "key" ],
+          "error": [ "missing" ]
+         },
+         {
+          "data": [ "opt" ],
+          "check": [ "optional", "opt" ],
+          "error": [ "type" ]
+         },
+         {
+          "data": [ "rest" ],
+          "check": [ "rest", "values" ],
+          "error": [ "type" ]
+         }
+        ]
+    }
+  }
+}

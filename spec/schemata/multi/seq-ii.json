@@ -1,0 +1,16 @@
+{
+  "schema": {
+    "type": "//seq",
+    "contents": [ { "type": "//int" }, { "type": "//int" } ]
+  },
+
+  "fail": {
+    "arr"  : {
+      "0-str-3":
+        [
+         { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
+         { "data": [   ], "check": [ "contents"    ], "error": [ "size" ] }
+        ]
+    }
+  }
+}

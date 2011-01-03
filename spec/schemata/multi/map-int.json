@@ -1,0 +1,18 @@
+{
+  "schema": {
+    "type": "//map",
+    "values": {
+      "type": "//int"
+    }
+  },
+
+  "fail": {
+    "obj" : {
+      "key-0-opt-T-rest-F":
+        [
+         { "data": [ "opt"  ], "check": [ "values" ], "error": [ "type" ] },
+         { "data": [ "rest" ], "check": [ "values" ], "error": [ "type" ] }
+        ]
+    }
+  }
+}
