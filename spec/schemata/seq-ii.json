@@ -10,9 +10,9 @@
 
   "fail": {
     "arr"  : {
-      "0"            : { "data": [   ], "check": [ "contents" ], "error": [ "size" ] },
+      "0"            : { "data": [   ], "check": [               ], "error": [ "size" ] },
       "0-str-3"      : { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
-      "0-1-1-2"      : { "data": [   ], "check": [ "contents"    ], "error": [ "size" ] },
+      "0-1-1-2"      : { "data": [   ], "check": [               ], "error": [ "size" ] },
       "0-str-3-T"    : { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
       "0-str-3-T-F"  : { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
       "0-str-3-18"   : { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },

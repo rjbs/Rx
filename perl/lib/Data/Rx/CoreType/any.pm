@@ -37,7 +37,7 @@ sub validate {
     my $failure = $@;
     $failure->contextualize({
       type     => $self->type_uri,
-      check    => [$i],
+      check    => ['of', $i],
     });
 
     push @failures, $failure->{struct};
@@ -46,7 +46,6 @@ sub validate {
   $self->fail({
     error    => [ qw(none) ],
     message  => "matched none of the available alternatives",
-    check    => ['of'],
     value    => $value,
     failures => \@failures,
   });

@@ -51,7 +51,6 @@ sub validate {
         error   => [ qw(size) ],
         message => "number of entries is outside permitted range",
         value   => $value,
-        check   => ['length'],
       });
   }
   
