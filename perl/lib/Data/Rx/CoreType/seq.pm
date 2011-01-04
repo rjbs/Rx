@@ -46,7 +46,6 @@ sub validate {
     $self->fail({
       error   => [ qw(size) ],
       value   => $value,
-      check   => ['contents'],
       message => sprintf(
         "too few entries found; found %s, need at least %s",
         0 + @$value,
@@ -76,7 +75,6 @@ sub validate {
       $self->fail({
         error   => [ qw(size) ],
         value   => $value,
-        check   => ['contents'],
         message => sprintf(
           "too many entries found; found %s, need no more than %s",
           0 + @$value,

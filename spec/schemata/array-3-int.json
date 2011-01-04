@@ -13,7 +13,7 @@
     "arr" : {
       "str-1"  : { "data": [ 0 ], "check": [ "contents" ], "error": [ "type" ] },
       "0-s1-1" : { "data": [ 1 ], "check": [ "contents" ], "error": [ "type" ] },
-      "0-1-1-2": { "data": [   ], "check": [ "length"   ], "error": [ "size" ] },
+      "0-1-1-2": { "data": [   ], "check": [            ], "error": [ "size" ] },
       "0-str"  : { "data": [ 1 ], "check": [ "contents" ], "error": [ "type" ] },
       "0-str-3": { "data": [ 1 ], "check": [ "contents" ], "error": [ "type" ] }
     },

@@ -46,7 +46,6 @@ sub validate {
   $self->fail({
     error    => [ qw(none) ],
     message  => "matched none of the available alternatives",
-    check    => ['of'],
     value    => $value,
     failures => \@failures,
   });
