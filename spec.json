@@ -8713,9 +8713,7 @@
             "arr/str-1" : {
                "errors" : [
                   {
-                     "check" : [
-                        "length"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "size"
@@ -8913,9 +8911,7 @@
                      ]
                   },
                   {
-                     "check" : [
-                        "contents"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "size"
@@ -8964,8 +8960,7 @@
                   },
                   {
                      "check" : [
-                        "tail",
-                        "length"
+                        "tail"
                      ],
                      "data" : [],
                      "error" : [
@@ -9002,9 +8997,7 @@
             "arr/str" : {
                "errors" : [
                   {
-                     "check" : [
-                        "contents"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "size"
