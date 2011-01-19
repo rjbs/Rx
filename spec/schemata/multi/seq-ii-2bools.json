@@ -15,13 +15,13 @@
     "arr"  : {
       "str":
         [
-         { "data": [   ], "check": [ "contents"    ], "error": [ "size" ] },
+         { "data": [   ], "check": [               ], "error": [ "size" ] },
          { "data": [ 0 ], "check": [ "contents", 0 ], "error": [ "type" ] }
         ],
       "0-str-3-T-str": 
         [
          { "data": [ 1 ], "check": [ "contents", 1      ], "error": [ "type" ] },
-         { "data": [   ], "check": [ "tail", "length"   ], "error": [ "size" ] },
+         { "data": [   ], "check": [ "tail"             ], "error": [ "size" ] },
          { "data": [ 2 ], "check": [ "tail", "contents" ], "error": [ "type" ] },
          { "data": [ 4 ], "check": [ "tail", "contents" ], "error": [ "type" ] }
         ]

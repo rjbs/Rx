@@ -9,7 +9,7 @@
       "0-str-3":
         [
          { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
-         { "data": [   ], "check": [ "contents"    ], "error": [ "size" ] }
+         { "data": [   ], "check": [               ], "error": [ "size" ] }
         ]
     }
   }
