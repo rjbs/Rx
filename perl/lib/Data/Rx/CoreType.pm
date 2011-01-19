@@ -38,22 +38,6 @@ sub check {
   die $failures;
 }
 
-sub fails {
-  my ($self, $structs) = @_;
-
-  die Data::Rx::Failures->new({
-    rx       => $self->rx,
-    failures => [map { $_->{type} ||= $self->type_uri;
-                       Data::Rx::Failure->new({
-                         rx     => $self->rx,
-                         struct => $_,
-                       })
-                     }
-                     @$structs
-                ],
-  });
-}
-
 sub new_fail {
   my ($self, $struct) = @_;
 
