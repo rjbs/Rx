@@ -80,7 +80,6 @@ sub validate {
         $self->new_fail({
           error   => [ qw(size) ],
           value   => $value,
-          check   => ['contents'],
           message => sprintf(
             "too many entries found; found %s, need no more than %s",
             0 + @$value,
