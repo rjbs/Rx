@@ -1176,9 +1176,7 @@
             "arr/str" : {
                "errors" : [
                   {
-                     "check" : [
-                        "of"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "none"
@@ -1478,9 +1476,7 @@
             "obj/opt-pants-rest-pants" : {
                "errors" : [
                   {
-                     "check" : [
-                        "of"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "none"
