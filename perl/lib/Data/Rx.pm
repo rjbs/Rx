@@ -83,8 +83,9 @@ sub new {
   unshift @plugins, $class->core_bundle unless $arg->{no_core_bundle};
 
   my $self = {
-    prefix  => { },
-    handler => { },
+    prefix    => { },
+    handler   => { },
+    sort_keys => !!$arg->{sort_keys},
   };
 
   bless $self => $class;
@@ -216,6 +217,14 @@ sub add_prefix {
     if $self->{prefix}{ $name };
 
   $self->{prefix}{ $name } = $base;
+}
+
+sub sort_keys {
+  my $self = shift;
+
+  $self->{sort_keys} = !!$_[0] if @_;
+
+  return $self->{sort_keys};
 }
 
 sub core_bundle {

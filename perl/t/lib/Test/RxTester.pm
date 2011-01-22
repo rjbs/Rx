@@ -114,9 +114,7 @@ sub assert_fail {
                      };
         }
 
-        # need to use bag() because the order is nondeterministic
-        # for keys in //rec and //map
-        my ($tmp_ok, $stack) = cmp_details(\@got, bag(@$want));
+        my ($tmp_ok, $stack) = cmp_details(\@got, $want);
         $tmp_ok
           or do {
             $ok = 0;
@@ -254,7 +252,7 @@ sub run_tests {
 
     Test::More::diag "testing $spec_name";
 
-    my $rx     = Data::Rx->new;
+    my $rx     = Data::Rx->new({ sort_keys => 1 });
 
     if ($spec->{'composed-type'}) {
       my $rc =

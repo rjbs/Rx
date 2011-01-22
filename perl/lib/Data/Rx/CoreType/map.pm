@@ -36,7 +36,7 @@ sub validate {
   }
 
   my @subchecks;
-  for my $key (keys %$value) {
+  for my $key ($self->rx->sort_keys ? sort keys %$value : keys %$value) {
     push @subchecks, [
       $value->{ $key },
       $self->{value_constraint},

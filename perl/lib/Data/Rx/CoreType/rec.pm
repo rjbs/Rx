@@ -58,6 +58,7 @@ sub validate {
 
   my @rest_keys = grep { ! exists $c_schema->{$_} } keys %$value;
   if (@rest_keys and not $self->{rest_schema}) {
+    @rest_keys = sort @rest_keys;
     push @subchecks,
       $self->new_fail({
         error    => [ qw(unexpected) ],
@@ -66,7 +67,7 @@ sub validate {
       });
   }
 
-  for my $key (keys %$c_schema) {
+  for my $key ($self->rx->sort_keys ? sort keys %$c_schema : keys %$c_schema) {
     my $check = $c_schema->{$key};
 
     if (not $check->{optional} and not exists $value->{ $key }) {
