@@ -23,13 +23,6 @@ sub check {
   return 1 if eval { $self->validate($value); };
   my $failures = $@;
 
-  if (eval { $failures->isa('Data::Rx::Failure') }) {
-    $failures = Data::Rx::Failures->new({
-      rx       => $self->rx,
-      failures => [$failures],
-    });
-  }
-
   if (eval { $failures->isa('Data::Rx::Failures') }) {
     $self->failure($failures);
     return 0;
@@ -43,9 +36,13 @@ sub new_fail {
 
   $struct->{type} ||= $self->type_uri;
 
-  Data::Rx::Failure->new({
-    rx     => $self->rx,
-    struct => $struct,
+  Data::Rx::Failures->new({
+    failures => [
+      Data::Rx::Failure->new({
+        rx     => $self->rx,
+        struct => $struct,
+      })
+    ]
   });
 }
 
