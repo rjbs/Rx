@@ -197,7 +197,7 @@ sub assert_fail {
                  : ref($fail)     ? "unblessed " . ref($fail)
                  :                  "non-ref: $fail";
 
-        push @diag, 'want $@: Data::Rx::Failure',
+        push @diag, 'want $@: Data::Rx::Failures',
                     'have $@: ' . $desc;
       }
     }
