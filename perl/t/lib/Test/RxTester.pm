@@ -138,61 +138,12 @@ sub assert_fail {
 
       if (try { $fails->isa('Data::Rx::Failures') }) {
         my $fail = $fails->failures->[0];
-        if ($want->{data}) {
-          eq_deeply([$fail->data_path],$want->{data})
-            or do {
-              $ok = 0;
-              my $want = @{ $want->{data} } ? "[ @{ $want->{data} } ]" : '(empty)';
-              my $have = $fail->data_path ? "[ @{[$fail->data_path]} ]" : '(empty)';
-              push @diag, "want path to data: $want",
-                          "have path to data: $have";
-            };
-          my $ref_to_value = check_path($input, [$fail->data_path]);
-          if ($ref_to_value) {
-            eq_deeply($$ref_to_value, shallow($fail->value))
-              or do {
-                $ok = 0;
-                push @diag, "value at path to data does not match failure value";
-              };
-          } else {
-            $ok = 0;
-            push @diag, "invalid path to data: " . $fail->data_string;
-          }
-        }
 
-        if ($want->{check}) {
-          eq_deeply([$fail->check_path],$want->{check})
-            or do {
-              $ok = 0;
-              my $want = @{ $want->{check} } ? "[ @{ $want->{check} } ]" : '(empty)';
-              my $have = $fail->check_path ? "[ @{[$fail->check_path]} ]" : '(empty)';
-              push @diag, "want path to check: $want",
-                          "have path to check: $have";
-            };
+        my ($tmp_ok, @tmp_diag) =
+          $self->compare_fail({ %$arg, want => $want, fail => $fail });
 
-          # path check doesn't work for composed types...  -- rjk, 2010-12-17
-          $schema_desc =~ /composed/
-            or check_path($schema_spec, [$fail->check_path])
-              or do {
-                $ok = 0;
-                push @diag, "invalid path to check: " . $fail->check_string;
-              };
-        }
-
-        if ($want->{error}) {
-          eq_deeply([sort $fail->error_types],$want->{error})
-            or do {
-              $ok = 0;
-              my $want = @{ $want->{error} } ? "[ @{ $want->{error} } ]" : '(empty)';
-              my $have = $fail->error_types ? "[ @{[$fail->error_types]} ]" : '(empty)';
-              push @diag, "want error types: $want",
-                          "have error types: $have";
-            };
-        }
-
-        if (!$ok) {
-          unshift @diag, "$fail";
-        }
+        $ok &&= $tmp_ok;
+        push @diag, @tmp_diag;
       } else {
         $ok = 0;
         my $desc = Scalar::Util::blessed($fails)
@@ -209,6 +160,73 @@ sub assert_fail {
     Test::More::ok($ok, $desc);
     Test::More::diag "    $_" for @diag;
   }
+}
+
+sub compare_fail {
+  my ($self, $arg) = @_;
+  my ($schema, $schema_desc, $schema_spec, $input, $input_desc, $want, $fail)
+    = @$arg{ qw(schema schema_desc schema_spec input input_desc want fail) };
+
+  my $ok = 1;
+  my @diag;
+
+  if ($want->{data}) {
+    eq_deeply([$fail->data_path],$want->{data})
+      or do {
+        $ok = 0;
+        my $want = @{ $want->{data} } ? "[ @{ $want->{data} } ]" : '(empty)';
+        my $have = $fail->data_path ? "[ @{[$fail->data_path]} ]" : '(empty)';
+        push @diag, "want path to data: $want",
+                    "have path to data: $have";
+      };
+    my $ref_to_value = check_path($input, [$fail->data_path]);
+    if ($ref_to_value) {
+      eq_deeply($$ref_to_value, shallow($fail->value))
+        or do {
+          $ok = 0;
+          push @diag, "value at path to data does not match failure value";
+        };
+    } else {
+      $ok = 0;
+      push @diag, "invalid path to data: " . $fail->data_string;
+    }
+  }
+
+  if ($want->{check}) {
+    eq_deeply([$fail->check_path],$want->{check})
+      or do {
+        $ok = 0;
+        my $want = @{ $want->{check} } ? "[ @{ $want->{check} } ]" : '(empty)';
+        my $have = $fail->check_path ? "[ @{[$fail->check_path]} ]" : '(empty)';
+        push @diag, "want path to check: $want",
+                    "have path to check: $have";
+      };
+
+    # path check doesn't work for composed types...  -- rjk, 2010-12-17
+    $schema_desc =~ /composed/
+      or check_path($schema_spec, [$fail->check_path])
+        or do {
+          $ok = 0;
+          push @diag, "invalid path to check: " . $fail->check_string;
+        };
+  }
+
+  if ($want->{error}) {
+    eq_deeply([sort $fail->error_types],$want->{error})
+      or do {
+        $ok = 0;
+        my $want = @{ $want->{error} } ? "[ @{ $want->{error} } ]" : '(empty)';
+        my $have = $fail->error_types ? "[ @{[$fail->error_types]} ]" : '(empty)';
+        push @diag, "want error types: $want",
+                    "have error types: $have";
+      };
+  }
+
+  if (!$ok) {
+    unshift @diag, "$fail";
+  }
+
+  return ($ok, @diag);
 }
 
 sub check_path {
