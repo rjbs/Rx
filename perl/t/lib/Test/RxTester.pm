@@ -103,8 +103,8 @@ sub assert_fail {
     my $ok   = 1;
     my @diag;
 
-    if ($want && @$want > 1) {
-      if (try { $fails->isa('Data::Rx::Failures') }) {
+    if (try { $fails->isa('Data::Rx::Failures') }) {
+      if ($want && @$want > 1) {
         my @got;
 
         foreach my $fail (@{ $fails->failures }) {
@@ -121,22 +121,7 @@ sub assert_fail {
             push @diag, deep_diag($stack);
           };
       } else {
-        $ok = 0;
-        my $desc = Scalar::Util::blessed($fails)
-                     ? Scalar::Util::blessed($fails)
-                     : ref($fails)
-                       ? "unblessed " . ref($fails)
-                       : "non-ref: $fails";
-
-        push @diag, 'want $@: Data::Rx::Failures',
-                    'have $@: ' . $desc;
-      }
-
-    } else {
-
-      $want = $want ? $want->[0] : {};
-
-      if (try { $fails->isa('Data::Rx::Failures') }) {
+        $want = $want ? $want->[0] : {};
         my $fail = $fails->failures->[0];
 
         my ($tmp_ok, @tmp_diag) =
@@ -144,17 +129,17 @@ sub assert_fail {
 
         $ok &&= $tmp_ok;
         push @diag, @tmp_diag;
-      } else {
-        $ok = 0;
-        my $desc = Scalar::Util::blessed($fails)
-                     ? Scalar::Util::blessed($fails)
-                     : ref($fails)
-                       ? "unblessed " . ref($fails)
-                       : "non-ref: $fails";
-
-        push @diag, 'want $@: Data::Rx::Failures',
-                    'have $@: ' . $desc;
       }
+    } else {
+      $ok = 0;
+      my $desc = Scalar::Util::blessed($fails)
+                   ? Scalar::Util::blessed($fails)
+                   : ref($fails)
+                     ? "unblessed " . ref($fails)
+                     : "non-ref: $fails";
+
+      push @diag, 'want $@: Data::Rx::Failures',
+                  'have $@: ' . $desc;
     }
 
     Test::More::ok($ok, $desc);
