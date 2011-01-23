@@ -103,43 +103,49 @@ sub assert_fail {
     my $ok   = 1;
     my @diag;
 
-    if (try { $fails->isa('Data::Rx::Failures') }) {
-      if ($want && @$want > 1) {
-        my @got;
+  FAILS:
+    {
+      if (try { $fails->isa('Data::Rx::Failures') }) {
+        my $fail = $fails->failures;
+        $want ||= [];
 
-        foreach my $fail (@{ $fails->failures }) {
-          push @got, { data => [$fail->data_path],
-                       check => [$fail->check_path],
-                       error => [sort $fail->error_types],
-                     };
+        if (@$want > 1) {
+          if (@$want != @$fail) {
+            $ok = 0;
+            push @diag, 'want ' . @$want . ' failures',
+                        'have ' . @$fail . ' failures';
+            last FAILS;
+          }
+        } else {
+          @$fail = $fail->[0];
         }
 
-        my ($tmp_ok, $stack) = cmp_details(\@got, $want);
-        $tmp_ok
-          or do {
-            $ok = 0;
-            push @diag, deep_diag($stack);
-          };
+        for (my $i = 0; $i <= $#$want; ++$i) {
+
+          my ($tmp_ok, @tmp_diag) =
+            $self->compare_fail({ %$arg, want => $want->[$i],
+                                         fail => $fail->[$i] });
+
+          $tmp_ok
+            or do {
+              $ok = 0;
+              push @diag, "want/fail index $i:",
+                          map "  $_", @tmp_diag;
+            };
+
+        }
+
       } else {
-        $want = $want ? $want->[0] : {};
-        my $fail = $fails->failures->[0];
+        $ok = 0;
+        my $desc = Scalar::Util::blessed($fails)
+                     ? Scalar::Util::blessed($fails)
+                     : ref($fails)
+                       ? "unblessed " . ref($fails)
+                       : "non-ref: $fails";
 
-        my ($tmp_ok, @tmp_diag) =
-          $self->compare_fail({ %$arg, want => $want, fail => $fail });
-
-        $ok &&= $tmp_ok;
-        push @diag, @tmp_diag;
+        push @diag, 'want $@: Data::Rx::Failures',
+                    'have $@: ' . $desc;
       }
-    } else {
-      $ok = 0;
-      my $desc = Scalar::Util::blessed($fails)
-                   ? Scalar::Util::blessed($fails)
-                   : ref($fails)
-                     ? "unblessed " . ref($fails)
-                     : "non-ref: $fails";
-
-      push @diag, 'want $@: Data::Rx::Failures',
-                  'have $@: ' . $desc;
     }
 
     Test::More::ok($ok, $desc);
