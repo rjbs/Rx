@@ -1,0 +1,27 @@
+
+LIST OF THINGS TO DO FOR STRUCT-FAIL RELEASE
+
+  * sanity check and finalize behavior of //any struct-fail
+
+  * document the whole struct-fail protocol
+
+  * formalize new spec test data format
+
+  * update Perl tests
+
+  * update JavaScript implementation
+
+  * update JavaScript implementation
+
+  * update PHP implementation
+
+  * update PHP implementation
+
+  * update Ruby implementation
+
+  * update Ruby implementation
+
+  * update Python implementation
+
+  * update Python implementation
+

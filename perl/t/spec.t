@@ -9,7 +9,7 @@ use Test::RxTester;
 
 Test::Builder->new->failure_output(\*STDOUT);
 
-my $rx_tester = Test::RxTester->new('spec.json');
+my $rx_tester = Test::RxTester->new('spec/spec.json');
 
 my @spec_names = @ARGV;
 
