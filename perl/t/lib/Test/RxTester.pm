@@ -81,9 +81,9 @@ sub assert_pass {
 
   try {
     $schema->validate($input);
-    Test::More::pass("VALID  : $input_desc against $schema_desc");
+    Test::More::pass("$schema_desc should ACCEPT $input_desc");
   } catch {
-    Test::More::fail("VALID  : $input_desc against $schema_desc");
+    Test::More::fail("$schema_desc should REJECT $input_desc");
     # should diag the failure paths here
   }
 }
@@ -95,10 +95,10 @@ sub assert_fail {
 
   try {
     $schema->validate($input);
-    Test::More::fail("INVALID: $input_desc against $schema_desc");
+    Test::More::fail("$schema_desc should REJECT $input_desc");
   } catch {
     my $fail = $_;
-    my $desc = "INVALID: $input_desc against $schema_desc";
+    my $desc = "$schema_desc should ACCEPT $input_desc";
     my $ok   = 1;
     my @diag;
 
@@ -148,7 +148,6 @@ sub run_tests {
 
   my $spec_data = $self->{spec};
   SPEC: for my $spec_name (sort keys %$spec_data) {
-    Test::More::diag "testing $spec_name";
     my $spec = $spec_data->{ $spec_name };
 
     my $rx     = Data::Rx->new;
@@ -156,7 +155,7 @@ sub run_tests {
     my $error  = $@;
 
     if ($spec->{invalid}) {
-      Test::More::ok($error && ! $schema, "BAD SCHEMA: $spec_name");
+      Test::More::ok($error && ! $schema, "$spec_name should be INVALID");
       next SPEC;
     }
 
