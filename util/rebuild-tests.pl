@@ -71,7 +71,7 @@ SCHEMA: for my $file (@schema_files) {
   }
 }
 
-open my $fh, '>', 'spec.json';
+open my $fh, '>', 'spec/spec.json';
 
 print {$fh} JSON->new->pretty->canonical->encode({
   count => $count,
@@ -108,7 +108,7 @@ sub normalize {
 my $JSON;
 sub slurp_json {
   my ($fn) = @_;
-  $JSON ||= JSON->new;
+  $JSON ||= JSON->new->relaxed;
 
   my $json = do { local $/; open my $fh, '<', $fn; <$fh> };
   my $data = eval { $JSON->decode($json) };
