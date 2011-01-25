@@ -75,7 +75,6 @@ sub validate {
         $self->new_fail({
           error    => [ qw(missing) ],
           message  => "no value given for required entry $key",
-          check    => ['required', $key],
           value    => $value,
         });
       next;

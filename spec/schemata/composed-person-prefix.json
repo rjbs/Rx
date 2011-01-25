@@ -24,7 +24,7 @@
     "str" : { "*": { "data": [ ], "check": [ ], "error": [ "type" ] } },
     "person": {
       "empty": { "data": [ ], "error": [ "missing" ] },
-      "first": { "data": [ ], "check": [ "required", "lastname" ], "error": [ "missing" ] },
+      "first": { "data": [ ], "check": [ ], "error": [ "missing" ] },
       "first-last-unknown": { "data": [ ], "check": [ ], "error": [ "unexpected" ] },
       "first-last-null": { "data": [ "lastname" ], "check": [ "required", "lastname" ], "error": [ "type" ] },
       "unknown": { "data": [ ], "check": [ ], "error": [ "unexpected" ] }

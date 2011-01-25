@@ -481,9 +481,7 @@
                   {
                      "check" : [
                         "of",
-                        0,
-                        "required",
-                        "key"
+                        0
                      ],
                      "data" : [],
                      "error" : [
@@ -498,9 +496,7 @@
                   {
                      "check" : [
                         "of",
-                        1,
-                        "required",
-                        "opt"
+                        1
                      ],
                      "data" : [],
                      "error" : [
@@ -523,9 +519,7 @@
                   {
                      "check" : [
                         "of",
-                        1,
-                        "required",
-                        "opt"
+                        1
                      ],
                      "data" : [],
                      "error" : [
@@ -540,9 +534,7 @@
                   {
                      "check" : [
                         "of",
-                        1,
-                        "required",
-                        "opt"
+                        1
                      ],
                      "data" : [],
                      "error" : [
@@ -576,9 +568,7 @@
                   {
                      "check" : [
                         "of",
-                        0,
-                        "required",
-                        "key"
+                        0
                      ],
                      "data" : [],
                      "error" : [
@@ -3785,10 +3775,7 @@
             "person/first" : {
                "errors" : [
                   {
-                     "check" : [
-                        "required",
-                        "lastname"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "missing"
@@ -4400,10 +4387,7 @@
             "person/first" : {
                "errors" : [
                   {
-                     "check" : [
-                        "required",
-                        "lastname"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "missing"
@@ -8797,10 +8781,7 @@
                      ]
                   },
                   {
-                     "check" : [
-                        "required",
-                        "key"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "missing"
@@ -8845,10 +8826,7 @@
             "obj/opt-pants-rest-pants" : {
                "errors" : [
                   {
-                     "check" : [
-                        "required",
-                        "key"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "missing"
@@ -12293,10 +12271,7 @@
             "obj/empty" : {
                "errors" : [
                   {
-                     "check" : [
-                        "required",
-                        "key"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "missing"
@@ -12902,10 +12877,7 @@
             "obj/empty" : {
                "errors" : [
                   {
-                     "check" : [
-                        "required",
-                        "key"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "missing"
@@ -13507,10 +13479,7 @@
             "obj/empty" : {
                "errors" : [
                   {
-                     "check" : [
-                        "required",
-                        "key"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "missing"
@@ -14121,10 +14090,7 @@
             "obj/empty" : {
                "errors" : [
                   {
-                     "check" : [
-                        "required",
-                        "key"
-                     ],
+                     "check" : [],
                      "data" : [],
                      "error" : [
                         "missing"

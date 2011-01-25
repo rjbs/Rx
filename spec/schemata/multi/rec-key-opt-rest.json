@@ -19,7 +19,7 @@
         [
          {
           "data": [ ],
-          "check": [ "required", "key" ],
+          "check": [ ],
           "error": [ "missing" ]
          },
          {
