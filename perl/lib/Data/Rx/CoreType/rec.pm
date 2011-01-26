@@ -62,6 +62,7 @@ sub validate {
     push @subchecks,
       $self->new_fail({
         error    => [ qw(unexpected) ],
+        keys     => [@rest_keys],
         message  => "found unexpected entries: @rest_keys",
         value    => $value,
       });
@@ -74,6 +75,7 @@ sub validate {
       push @subchecks,
         $self->new_fail({
           error    => [ qw(missing) ],
+          keys     => [$key],
           message  => "no value given for required entry $key",
           value    => $value,
         });
