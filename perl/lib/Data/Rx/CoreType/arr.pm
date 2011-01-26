@@ -58,8 +58,10 @@ sub validate {
     push @subchecks, [
                       $value->[$i],
                       $self->{content_check},
-                      { data => [$i],
-                        check => ['contents'],
+                      { data       => [$i ],
+                        data_type  => ['i'],
+                        check      => ['contents'],
+                        check_type => ['k'       ],
                       },
                      ];
   }

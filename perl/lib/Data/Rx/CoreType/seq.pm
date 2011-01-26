@@ -62,8 +62,10 @@ sub validate {
     push @subchecks, [
                       $value->[ $i ],
                       $content_schemata->[ $i ],
-                      { data => [$i],
-                        check => ['contents', $i],
+                      { data       => [$i ],
+                        data_type  => ['i'],
+                        check      => ['contents', $i ],
+                        check_type => ['k'       , 'i'],
                       },
                      ];
   }
@@ -73,7 +75,9 @@ sub validate {
       push @subchecks, [
                         $value,
                         $self->{tail_check},
-                        { check => ['tail'] },
+                        { check      => ['tail'],
+                          check_type => ['k'   ],
+                        },
                        ];
     } else {
       push @subchecks,

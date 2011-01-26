@@ -34,7 +34,8 @@ sub validate {
     push @subchecks, [
       $value,
       $self->{of}[$i],
-      { check => ['of', $i],
+      { check      => ['of', $i ],
+        check_type => ['k' , 'i'],
       },
     ];
   }

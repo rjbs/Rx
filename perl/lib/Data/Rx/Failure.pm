@@ -51,12 +51,16 @@ sub data_path {
   map @{ $_->{data} || [] }, reverse @{ $self->struct };
 }
 
+sub data_path_type {
+  my ($self) = @_;
+
+  map @{ $_->{data_type} || [] }, reverse @{ $self->struct };
+}
+
 sub data_string {
   my ($self) = @_;
 
-  my @data_path = $self->data_path;
-
-  return '$data' . (@data_path ? '->' . join('', map "{$_}", @data_path) : '');
+  return $self->path_string('$data', [$self->data_path], [$self->data_path_type]);
 }
 
 sub check_path {
@@ -65,12 +69,31 @@ sub check_path {
   map @{ $_->{check} || [] }, reverse @{ $self->struct };
 }
 
+sub check_path_type {
+  my ($self) = @_;
+
+  map @{ $_->{check_type} || [] }, reverse @{ $self->struct };
+}
+
 sub check_string {
   my ($self) = @_;
 
-  my @check_path = $self->check_path;
+  return $self->path_string('$schema', [$self->check_path], [$self->check_path_type]);
+}
 
-  return '$schema' . (@check_path ? '->' . join('', map "{$_}", @check_path) : '');
+sub path_string {
+  my ($self, $base, $path, $type) = @_;
+
+  my $str = $base;
+
+  if (@$path) {
+    $str .= '->';
+    for (my $i = 0; $i < @$path; ++$i) {
+      $str .= $type->[$i] eq 'i' ? "[$path->[$i]]" : "{$path->[$i]}";
+    }
+  }
+
+  return $str;
 }
 
 sub stringify {

@@ -40,8 +40,10 @@ sub validate {
     push @subchecks, [
       $value->{ $key },
       $self->{value_constraint},
-      { data  => [$key],
-        check => ['values'],
+      { data       => [$key],
+        data_type  => ['k' ],
+        check      => ['values'],
+        check_type => ['k'     ],
       },
     ];
   }

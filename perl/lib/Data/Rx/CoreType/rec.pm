@@ -84,10 +84,12 @@ sub validate {
       push @subchecks, [
                         $value->{$key},
                         $check->{schema},
-                        { data  => [$key],
-                          check => [$check->{optional}
-                                      ? 'optional' : 'required',
-                                    $key],
+                        { data       => [$key],
+                          data_type  => ['k' ],
+                          check      => [$check->{optional}
+                                           ? 'optional' : 'required',
+                                         $key],
+                          check_type => ['k', 'k'],
                         },
                        ];
     }
@@ -99,7 +101,9 @@ sub validate {
     push @subchecks, [
                       \%rest,
                       $self->{rest_schema},
-                      { check => ['rest'] },
+                      { check      => ['rest'],
+                        check_type => ['k'],
+                      },
                      ];
   }
 
