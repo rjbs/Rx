@@ -49,6 +49,7 @@ sub validate {
     push @subchecks,
       $self->new_fail({
         error   => [ qw(size) ],
+        size    => 0 + @$value,  # note: actual size, not size - skip
         message => "number of entries is outside permitted range",
         value   => $value,
       });

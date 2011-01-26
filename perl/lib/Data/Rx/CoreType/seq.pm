@@ -48,6 +48,7 @@ sub validate {
     push @subchecks,
       $self->new_fail({
         error   => [ qw(size) ],
+        size    => 0 + @$value,
         value   => $value,
         message => sprintf(
           "too few entries found; found %s, need at least %s",
@@ -83,6 +84,7 @@ sub validate {
       push @subchecks,
         $self->new_fail({
           error   => [ qw(size) ],
+          size    => 0 + @$value,
           value   => $value,
           message => sprintf(
             "too many entries found; found %s, need no more than %s",
