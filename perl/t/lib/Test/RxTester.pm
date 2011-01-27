@@ -135,6 +135,8 @@ sub assert_fail {
 
         }
 
+        # test build_struct() here - requires restructuring test specs!  -- rjk
+
       } else {
         $ok = 0;
         my $desc = Scalar::Util::blessed($fails)
