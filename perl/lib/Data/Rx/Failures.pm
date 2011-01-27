@@ -65,16 +65,20 @@ sub build_struct {
 
     for (my $i = 0; $i < @path; ++$i) {
       if ($type[$i] eq 'k') {
-        if (defined $$p && ref $$p ne 'HASH') {
+        if (ref $$p && ref $$p ne 'HASH') {
           die "Path mismatch";
         }
-        $$p ||= {};
+        # if $$p already points to an error, replace it with the ref
+        # I believe this can only happen with type errors in //all  -- rjk
+        $$p = {} unless ref $$p;
         $p = \$$p->{$path[$i]};
       } elsif ($type[$i] eq 'i') {
-        if (defined $$p && ref $$p ne 'ARRAY') {
+        if (ref $$p && ref $$p ne 'ARRAY') {
           die "Path mismatch";
         }
-        $$p ||= [];
+        # if $$p already points to an error, replace it with the ref
+        # I believe this can only happen with type errors in //all  -- rjk
+        $$p = [] unless ref $$p;
         $p = \$$p->[$path[$i]];
       } else {
         die "Invalid path type";
@@ -111,11 +115,12 @@ sub build_struct {
     } else {
 
       if (ref $$p) {
-        die "Path mismatch";
+        # if $$p already points to a ref, leave it and skip the error
+        # I believe this can only happen with type errors in //all  -- rjk
+      } else {
+        $$p .= ',' if defined $$p;
+        $$p .= $error;
       }
-
-      $$p .= ',' if defined $$p;
-      $$p .= $error;
 
     }
   }
