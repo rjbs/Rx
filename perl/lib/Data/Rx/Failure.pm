@@ -45,6 +45,18 @@ sub error_string {
   join ', ', $self->error_types;
 }
 
+sub keys {
+  my ($self) = @_;
+
+  return @{ $self->struct->[0]{keys} || [] };
+}
+
+sub size {
+  my ($self) = @_;
+
+  return $self->struct->[0]{size};
+}
+
 sub data_path {
   my ($self) = @_;
 
