@@ -56,7 +56,7 @@ sub build_struct {
     my @path = $failure->data_path;
     my @type = $failure->data_path_type;
 
-    @path == @type or die "Length mismatch";
+    @path == @type or die "bad path info in build_struct()";
 
 
     # go to the appropriate location in the struct, vivifying as necessary
@@ -66,7 +66,7 @@ sub build_struct {
     for (my $i = 0; $i < @path; ++$i) {
       if ($type[$i] eq 'k') {
         if (ref $$p && ref $$p ne 'HASH') {
-          die "Path mismatch";
+          die "conflict in path info in build_struct()";
         }
         # if $$p already points to an error, replace it with the ref
         # I believe this can only happen with type errors in //all  -- rjk
@@ -74,14 +74,14 @@ sub build_struct {
         $p = \$$p->{$path[$i]};
       } elsif ($type[$i] eq 'i') {
         if (ref $$p && ref $$p ne 'ARRAY') {
-          die "Path mismatch";
+          die "conflict in path info in build_struct()";
         }
         # if $$p already points to an error, replace it with the ref
         # I believe this can only happen with type errors in //all  -- rjk
         $$p = [] unless ref $$p;
         $p = \$$p->[$path[$i]];
       } else {
-        die "Invalid path type";
+        die "bad path type in build_struct()";
       }
     }
 
@@ -93,7 +93,7 @@ sub build_struct {
     if ($error eq 'missing' || $error eq 'unexpected') {
 
       if (defined $$p && ref $$p ne 'HASH') {
-        die "Path mismatch";
+        die "conflict in path info in build_struct()";
       }
 
       my @keys = $failure->keys;
@@ -104,7 +104,7 @@ sub build_struct {
     } elsif ($error eq 'size') {
 
       if (defined $$p && ref $$p ne 'ARRAY') {
-        die "Path mismatch";
+        die "conflict in path info in build_struct()";
       }
 
       my $size = $failure->size;
