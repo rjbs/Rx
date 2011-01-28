@@ -64,6 +64,7 @@ Valid arguments are:
   prefix        - optional; a hashref of prefix pairs for type shorthand
   type_plugins  - optional; an arrayref of type or type bundle plugins
   no_core_types - optional; if true, core type bundle is not loaded
+  sort_keys     - optional; see L</sort_keys>
 
 The prefix hashref should look something like this:
 
@@ -218,6 +219,16 @@ sub add_prefix {
 
   $self->{prefix}{ $name } = $base;
 }
+
+=method sort_keys
+
+  $rx->sort_keys(1);
+
+When sort_keys is enabled, causes Rx checkers for //rec and //map to
+sort the keys before validating.  This results in failures being
+produced in a consistent order.
+
+=cut
 
 sub sort_keys {
   my $self = shift;
