@@ -41,7 +41,7 @@ sub validate {
       check_type => [ 'k', 'i'],
     });
 
-    push @failures, $failure->{struct};
+    push @failures, $failure;
   }
 
   $self->fail({
