@@ -10,14 +10,15 @@ sub subname   { 'arr' }
 
 sub new_checker {
   my ($class, $arg, $rx) = @_;
-  my $self = $class->SUPER::new_checker({}, $rx);
-
-  Carp::croak("no contents schema given")
-    unless $arg->{contents} and (ref $arg->{contents} || 'HASH' eq 'HASH');
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, {length=>1, contents=>1,
                                                    skip=>1});
+
+  Carp::croak("no contents schema given")
+    unless $arg->{contents} and (ref $arg->{contents} || 'HASH' eq 'HASH');
+
+  my $self = $class->SUPER::new_checker({}, $rx);
 
   my $content_check = $rx->make_schema($arg->{contents});
 
@@ -28,7 +29,7 @@ sub new_checker {
 
   $self->{skip} = $arg->{skip} || 0;
 
-  bless $self => $class;
+  return $self;
 }
 
 sub validate {

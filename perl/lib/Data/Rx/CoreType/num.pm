@@ -6,10 +6,11 @@ use base 'Data::Rx::CoreType';
 
 sub new_checker {
   my ($class, $arg, $rx) = @_;
-  my $self = {};
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, { range => 1, value => 1});
+
+  my $self = $class->SUPER::new_checker({}, $rx);
 
   $self->{range_check} = Data::Rx::Util->_make_range_check($arg->{range})
     if $arg->{range};
@@ -27,7 +28,7 @@ sub new_checker {
 
   $self->{value} = $arg->{value} if defined $arg->{value};
 
-  bless $self => $class;
+  return $self;
 }
 
 sub __type_fail {

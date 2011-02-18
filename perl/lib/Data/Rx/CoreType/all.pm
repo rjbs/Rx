@@ -12,7 +12,7 @@ sub new_checker {
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, { of  => 1});
 
-  my $self = bless { } => $class;
+  my $self = $class->SUPER::new_checker({}, $rx);
 
   Carp::croak("no 'of' parameter given to //all") unless exists $arg->{of};
 

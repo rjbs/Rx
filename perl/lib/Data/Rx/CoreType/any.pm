@@ -12,7 +12,7 @@ sub new_checker {
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, { of  => 1});
 
-  my $self = bless { } => $class;
+  my $self = $class->SUPER::new_checker({}, $rx);
 
   if (my $of = $arg->{of}) {
     Carp::croak("invalid 'of' argument to //any") unless

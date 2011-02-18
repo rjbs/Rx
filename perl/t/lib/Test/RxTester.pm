@@ -294,6 +294,9 @@ sub run_tests {
     Carp::croak("couldn't produce schema for valid input ($spec_name): $error")
       unless $schema;
 
+    Carp::croak("rx attribute not set in schema ($spec_name)")
+      unless $schema->rx;
+
     for my $test_name (sort keys %{ $spec->{test} }) {
       my $test_spec = $spec->{test}{$test_name};
 

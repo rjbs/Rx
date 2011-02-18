@@ -10,12 +10,11 @@ sub subname   { 'map' }
 
 sub new_checker {
   my ($class, $arg, $rx) = @_;
-  my $self = $class->SUPER::new_checker({}, $rx);
 
   Carp::croak("unknown arguments to new") unless
-  Data::Rx::Util->_x_subset_keys_y($arg, { values => 1 });
+    Data::Rx::Util->_x_subset_keys_y($arg, { values => 1 });
 
-  my $content_schema = {};
+  my $self = $class->SUPER::new_checker({}, $rx);
 
   Carp::croak("no values constraint given") unless $arg->{values};
 
