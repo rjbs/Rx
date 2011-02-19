@@ -7,12 +7,12 @@ use base 'Data::Rx::CoreType';
 use Scalar::Util ();
 
 sub new_checker {
-  my ($class, $arg, $rx) = @_;
+  my ($class, $type, $arg, $rx) = @_;
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, { of  => 1});
 
-  my $self = $class->SUPER::new_checker({}, $rx);
+  my $self = $class->SUPER::new_checker($type, {}, $rx);
 
   Carp::croak("no 'of' parameter given to //all") unless exists $arg->{of};
 

@@ -9,7 +9,7 @@ use Scalar::Util ();
 sub subname   { 'seq' }
 
 sub new_checker {
-  my ($class, $arg, $rx) = @_;
+  my ($class, $type, $arg, $rx) = @_;
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, {contents=>1,tail=>1});
@@ -17,7 +17,7 @@ sub new_checker {
   Carp::croak("no contents array given")
     unless $arg->{contents} and (ref $arg->{contents} eq 'ARRAY');
 
-  my $self = $class->SUPER::new_checker({}, $rx);
+  my $self = $class->SUPER::new_checker($type, {}, $rx);
 
   my @content_schemata = map { $rx->make_schema($_) }
                          @{ $arg->{contents} };

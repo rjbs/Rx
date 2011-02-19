@@ -130,7 +130,7 @@ sub make_schema {
     }
     $checker = $self->make_schema($handler->{'schema'});
   } else {
-    $checker = $handler->new_checker($schema_arg, $self);
+    $checker = $handler->new_checker($type, $schema_arg, $self);
   }
 
   return $checker;

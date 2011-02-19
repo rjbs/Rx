@@ -7,7 +7,7 @@ use base 'Data::Rx::CoreType';
 use Data::Rx::Util;
 
 sub new_checker {
-  my ($class, $arg, $rx) = @_;
+  my ($class, $type, $arg, $rx) = @_;
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, { length => 1, value => 1});
@@ -16,7 +16,7 @@ sub new_checker {
   Carp::croak(sprintf 'invalid value for %s', $class->type_name)
     if exists $arg->{value} and (ref $arg->{value} or ! defined $arg->{value});
 
-  my $self = $class->SUPER::new_checker({}, $rx);
+  my $self = $class->SUPER::new_checker($type, {}, $rx);
 
   $self->{length_check} = Data::Rx::Util->_make_range_check($arg->{length})
     if $arg->{length};
