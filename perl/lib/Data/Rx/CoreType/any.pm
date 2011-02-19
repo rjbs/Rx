@@ -36,7 +36,7 @@ sub validate {
 
     my $failure = $@;
     $failure->contextualize({
-      type       => $self->type_uri,
+      type       => $self->type,
       check      => ['of',  $i],
       check_type => [ 'k', 'i'],
     });

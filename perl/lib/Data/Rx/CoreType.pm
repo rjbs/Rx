@@ -14,6 +14,8 @@ sub new_checker {
   bless { type => $type, rx => $rx } => $class;
 }
 
+sub type { $_[0]->{type} }
+
 sub rx { $_[0]->{rx} }
 
 sub check {
@@ -34,7 +36,7 @@ sub check {
 sub new_fail {
   my ($self, $struct) = @_;
 
-  $struct->{type} ||= $self->type_uri;
+  $struct->{type} ||= $self->type;
 
   Data::Rx::Failures->new({
     failures => [
@@ -81,7 +83,7 @@ sub _subchecks {
                     $failures->isa('Data::Rx::Failure') };
 
     $failures->contextualize({
-      type  => $self->type_uri,
+      type  => $self->type,
       %$context,
     });
 
@@ -106,7 +108,7 @@ sub _subcheck {
                     $failures->isa('Data::Rx::Failure') };
 
   $failures->contextualize({
-    type  => $self->type_uri,
+    type  => $self->type,
     %$context,
   });
 
