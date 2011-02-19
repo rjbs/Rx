@@ -22,7 +22,11 @@ sub new_checker {
       or ref $val
       or ! $class->_value_is_of_type($val)
     ) {
-      Carp::croak(sprintf 'invalid value (%s) for %s', $val, $class->type_uri);
+      Carp::croak(sprintf(
+        'invalid value (%s) for //%s',
+        defined $val ? $val : 'undef',
+        $class->subname,
+      ));
     }
   }
 

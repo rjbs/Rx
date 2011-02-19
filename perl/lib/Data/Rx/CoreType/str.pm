@@ -13,8 +13,18 @@ sub new_checker {
     unless Data::Rx::Util->_x_subset_keys_y($arg, { length => 1, value => 1});
 
   # XXX: We should be able to reject num values, too. :( -- rjbs, 2008-08-25
-  Carp::croak(sprintf 'invalid value for %s', $class->type_name)
-    if exists $arg->{value} and (ref $arg->{value} or ! defined $arg->{value});
+  if (exists $arg->{value}) {
+    my $val = $arg->{value};
+    if (
+      (! defined $val)
+      or ref $val
+    ) {
+      Carp::croak(sprintf(
+        'invalid value (%s) for //str',
+        defined $val ? $val : 'undef',
+      ));
+    }
+  }
 
   my $self = $class->SUPER::new_checker($type, {}, $rx);
 
