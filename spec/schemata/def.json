@@ -10,8 +10,6 @@
   },
 
   "fail": {
-    "null": {
-      "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
-    }
+    "null": { "*": { "value": [ ], "check": [ ], "error": [ "type" ] } }
   }
 }
