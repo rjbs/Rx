@@ -20,6 +20,13 @@ Rx.prototype.expand_uri = function (name) {
   return this.prefix_registry[ matches[1] ] + matches[2];
 }
 
+Rx.prototype.addPrefix = function (name, base) {
+  if (this.prefix_registry[ name ])
+      throw new Rx.Error("the prefix " + name + " is already registered");
+
+  this.prefix_registry[ name ] = base;
+}
+
 Rx.prototype.registerType = function (type, opt) {
   var uri = type.uri;
 
@@ -27,6 +34,17 @@ Rx.prototype.registerType = function (type, opt) {
     throw new Rx.Error("tried to register type for already-registered uri " + uri);
 
   this.type_registry[ uri ] = type;
+};
+
+Rx.prototype.learnType = function (uri, schema) {
+  if (this.type_registry[ uri ])
+    throw new Rx.Error("tried to learn type for already-registered uri " + uri);
+
+  // make sure schema is valid
+  // should this be in a try/catch?
+  this.makeSchema(schema);
+
+  this.type_registry[ uri ] = { schema: schema };
 };
 
 Rx.prototype.typeFor = function (typeName) {
@@ -41,7 +59,12 @@ Rx.prototype.typeFor = function (typeName) {
 Rx.prototype.makeSchema = function (schema) {
   if (schema.constructor == String) schema = { type: schema };
   var typeChecker = this.typeFor(schema.type);
-  return new typeChecker(schema, this);
+
+  if (typeof(typeChecker) == 'object') {
+    return this.makeSchema(typeChecker.schema);
+  } else {
+    return new typeChecker(schema, this);
+  }
 };
 
 Rx.Error = function (message) { this.message = message };
