@@ -12,10 +12,10 @@ Rx.prototype.expand_uri = function (name) {
   var matches = name.match(/^\/(\w*)\/(\w+)$/);
 
   if (! matches)
-    throw "couldn't understand type name '" + name + "'";
+    throw new Rx.Error("couldn't understand type name '" + name + "'");
 
   if (! this.prefix_registry[ matches[1] ])
-    throw "unknown prefix '" + matches[1] + "' in type name '" + name + "'";
+    throw new Rx.Error("unknown prefix '" + matches[1] + "' in type name '" + name + "'");
 
   return this.prefix_registry[ matches[1] ] + matches[2];
 }
@@ -24,7 +24,7 @@ Rx.prototype.registerType = function (type, opt) {
   var uri = type.uri;
 
   if (this.type_registry[ uri ])
-    throw "tried to register type for already-registered uri " + uri;
+    throw new Rx.Error("tried to register type for already-registered uri " + uri);
 
   this.type_registry[ uri ] = type;
 };
@@ -33,7 +33,7 @@ Rx.prototype.typeFor = function (typeName) {
   var uri = this.expand_uri(typeName);
 
   var typeChecker = this.type_registry[ uri ];
-  if (! typeChecker) throw 'unknown type: ' + uri;
+  if (! typeChecker) throw new Rx.Error('unknown type: ' + uri);
 
   return typeChecker;
 };
