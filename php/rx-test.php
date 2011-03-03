@@ -87,7 +87,7 @@ foreach ($test_schemata as $schema_name => $test) {
     $expect = ($pf == 'pass') ? 'VALID  ' : 'INVALID';
     if ($test->$pf == null) continue;
     foreach ($test->$pf as $source => $which) {
-      if (is_string(which) and ($which == "*")) {
+      if (is_string($which) and ($which == "*")) {
         $which = array();
         foreach ($test_data[$source] as $name => $x)
           $which[ count($which) ] = $name;
