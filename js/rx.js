@@ -22,7 +22,7 @@ Rx.prototype.expand_uri = function (name) {
 
 Rx.prototype.addPrefix = function (name, base) {
   if (this.prefix_registry[ name ])
-      throw new Rx.Error("the prefix " + name + " is already registered");
+      throw new Rx.Error("the prefix '" + name + "' is already registered");
 
   this.prefix_registry[ name ] = base;
 }
