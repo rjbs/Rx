@@ -90,7 +90,15 @@ class RxCoretypeAll {
     return true;
   }
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'of' and $key != 'type')
+        throw new Exception("unknown parameter $key for //all schema");
+  }
+
   function __construct($schema, $rx) {
+    RxCoretypeAll::_check_schema($schema);
+
     if (empty($schema->of))
       throw new Exception("no alternatives given for //all of");
 
@@ -111,7 +119,15 @@ class RxCoretypeAny {
     return false;
   }
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'of' and $key != 'type')
+        throw new Exception("unknown parameter $key for //any schema");
+  }
+
   function __construct($schema, $rx) {
+    RxCoretypeAny::_check_schema($schema);
+
     if (property_exists($schema, 'of')) {
       if (count($schema->of) == 0)
         throw new Exception("no alternatives given for //any of");
@@ -280,7 +296,15 @@ class RxCoretypeStr {
     return true;
   }
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'value' and $key != 'type')
+        throw new Exception("unknown parameter $key for //str schema");
+  }
+
   function __construct($schema, $rx) {
+    RxCoretypeStr::_check_schema($schema);
+
     if (isset($schema->value)) {
       if (! is_string($schema->value))
         throw new Exception('invalid value for //str schema');
@@ -319,7 +343,15 @@ class RxCoretypeSeq {
     return true;
   }
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'contents' and $key != 'tail' and $key != 'type')
+        throw new Exception("unknown parameter $key for //arr schema");
+  }
+
   function __construct($schema, $rx) {
+    RxCoretypeSeq::_check_schema($schema);
+
     if (! isset($schema->contents))
       throw new Exception('no contents entry for //seq schema');
   
