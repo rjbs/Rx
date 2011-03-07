@@ -71,6 +71,9 @@ class Rx {
 
     $uri = $this->expand_uri($schema->type);
 
+    if (! isset($this->type_registry->$uri))
+      throw new Exception("unknown type: $uri");
+
     $type_class = $this->type_registry->$uri;
   
     if ($type_class)
