@@ -66,11 +66,10 @@ class Rx {
       $schema->type = $schema_name;
     }
 
-    $type = $schema->type;
+    if (empty($schema->type))
+      throw new Exception("can't make a schema with no type");
 
-    if (! $type) throw new Exception("can't make a schema with no type");
-
-    $uri = $this->expand_uri($type);
+    $uri = $this->expand_uri($schema->type);
 
     $type_class = $this->type_registry->$uri;
   
@@ -92,7 +91,7 @@ class RxCoretypeAll {
   }
 
   function __construct($schema, $rx) {
-    if (! $schema->of)
+    if (empty($schema->of))
       throw new Exception("no alternatives given for //all of");
 
     $this->alts = Array();
@@ -113,7 +112,7 @@ class RxCoretypeAny {
   }
 
   function __construct($schema, $rx) {
-    if ($schema->of !== null) {
+    if (property_exists($schema, 'of')) {
       if (count($schema->of) == 0)
         throw new Exception("no alternatives given for //any of");
 
@@ -144,12 +143,12 @@ class RxCoreTypeArr {
   function __construct($schema, $rx) {
     RxCoretypeArr::_check_schema($schema);
 
-    if (! $schema->contents)
+    if (empty($schema->contents))
       throw new Exception('no contents entry for //arr schema');
 
     $this->content_schema = $rx->make_schema($schema->contents);
 
-    if ($schema->length) {
+    if (isset($schema->length)) {
       $this->length_checker = new RxRangeChecker( $schema->length );
     }
   }
@@ -197,14 +196,14 @@ class RxCoreTypeNum {
   function __construct ($schema) {
     RxCoretypeNum::_check_schema($schema, '//num');
 
-    if ($schema->value !== null) {
+    if (isset($schema->value)) {
       if (! (is_int($schema->value) || is_float($schema->value)))
         throw new Exception('invalid value for //num schema');
 
       $this->fixed_value = $schema->value;
     }
 
-    if ($schema->range) {
+    if (isset($schema->range)) {
       $this->range_checker = new RxRangeChecker( $schema->range );
     }
   }
@@ -234,7 +233,7 @@ class RxCoreTypeInt {
   function __construct ($schema) {
     RxCoretypeNum::_check_schema($schema, '//int');
 
-    if ($schema->value !== null) {
+    if (isset($schema->value)) {
       if (! (is_int($schema->value) || is_float($schema->value)))
         throw new Exception('invalid value for //int schema');
 
@@ -244,7 +243,7 @@ class RxCoreTypeInt {
       $this->fixed_value = $schema->value;
     }
 
-    if ($schema->range) {
+    if (isset($schema->range)) {
       $this->range_checker = new RxRangeChecker( $schema->range );
     }
   }
@@ -282,7 +281,7 @@ class RxCoretypeStr {
   }
 
   function __construct($schema, $rx) {
-    if ($schema->value !== null) {
+    if (isset($schema->value)) {
       if (! is_string($schema->value))
         throw new Exception('invalid value for //str schema');
 
@@ -321,7 +320,7 @@ class RxCoretypeSeq {
   }
 
   function __construct($schema, $rx) {
-    if (! $schema->contents)
+    if (! isset($schema->contents))
       throw new Exception('no contents entry for //seq schema');
   
     if (! is_array($schema->contents))
@@ -333,7 +332,8 @@ class RxCoretypeSeq {
       array_push($this->content_schemata, $rx->make_schema($entry));
     }
 
-    if ($schema->tail) $this->tail_schema = $rx->make_schema($schema->tail);
+    if (isset($schema->tail))
+      $this->tail_schema = $rx->make_schema($schema->tail);
   }
 }
 
@@ -383,7 +383,7 @@ class RxCoretypeRec {
     $have_rest = false;
 
     foreach ($value as $key => $entry) {
-      if (! $this->known->$key) {
+      if (! isset($this->known->$key)) {
         $have_rest = true;
         $rest->$key = $entry;
       }
@@ -419,18 +419,19 @@ class RxCoretypeRec {
     $this->required = new stdClass();
     $this->optional = new stdClass();
 
-    if ($schema->rest) $this->rest_schema = $rx->make_schema($schema->rest);
+    if (isset($schema->rest))
+      $this->rest_schema = $rx->make_schema($schema->rest);
 
-    if ($schema->required) {
+    if (isset($schema->required)) {
       foreach ($schema->required as $key => $entry) {
         $this->known->$key = true;
         $this->required->$key = $rx->make_schema($entry);
       }
     }
 
-    if ($schema->optional) {
+    if (isset($schema->optional)) {
       foreach ($schema->optional as $key => $entry) {
-        if ($this->known->$key)
+        if (isset($this->known->$key))
           throw new Exception("$key is both required and optional in //map");
 
         $this->known->$key = true;

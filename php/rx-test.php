@@ -60,7 +60,7 @@ $Rx = new Rx();
 
 asort($test_schemata);
 foreach ($test_schemata as $schema_name => $test) {
-  if ($_ENV["RX_TEST_SCHEMA"] and $_ENV["RX_TEST_SCHEMA"] != $schema_name)
+  if (isset($_ENV["RX_TEST_SCHEMA"]) and $_ENV["RX_TEST_SCHEMA"] != $schema_name)
     continue;
 
   $schema = null;
@@ -76,7 +76,7 @@ foreach ($test_schemata as $schema_name => $test) {
     }
   }
 
-  if ($test->invalid) {
+  if (isset($test->invalid)) {
     fail("BAD SCHEMA: $schema_name");
     continue;
   }
@@ -85,7 +85,7 @@ foreach ($test_schemata as $schema_name => $test) {
 
   foreach (array('pass', 'fail') as $pf) {
     $expect = ($pf == 'pass') ? 'VALID  ' : 'INVALID';
-    if ($test->$pf == null) continue;
+    if (!isset($test->$pf)) continue;
     foreach ($test->$pf as $source => $which) {
       if (is_string($which) and ($which == "*")) {
         $which = array();
