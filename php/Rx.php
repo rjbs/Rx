@@ -343,7 +343,7 @@ class RxCoretypeMap {
   var $values_schema;
 
   function check($value) {
-    if (get_class($value) != 'stdClass') return false;
+    if (!is_object($value) || get_class($value) != 'stdClass') return false;
 
     if ($this->values_schema) {
       foreach ($value as $key => $entry) {
@@ -377,7 +377,7 @@ class RxCoretypeRec {
   var $rest_schema;
 
   function check($value) {
-    if (get_class($value) != 'stdClass') return false;
+    if (!is_object($value) || get_class($value) != 'stdClass') return false;
 
     $rest = new stdClass();
     $have_rest = false;
