@@ -80,20 +80,20 @@ sub test_spec {
 
   my $rx = Data::Rx->new;
 
-  if ($schema_test->{'composed-type'}) {
+  if ($schema_test->{'composedtype'}) {
     my $rc =
-      eval { $rx->learn_type($schema_test->{'composed-type'}{'uri'},
-                             $schema_test->{'composed-type'}{'schema'});
+      eval { $rx->learn_type($schema_test->{'composedtype'}{'uri'},
+                             $schema_test->{'composedtype'}{'schema'});
              1 };
     my $error = $@;
 
-    if ($schema_test->{'composed-type'}{'invalid'}) {
+    if ($schema_test->{'composedtype'}{'invalid'}) {
       ok($error && !$rc, "BAD COMPOSED TYPE: $schema_fn");
       return;
     }
 
-    $rx->add_prefix(@{$schema_test->{'composed-type'}{'prefix'}})
-      if $schema_test->{'composed-type'}{'prefix'};
+    $rx->add_prefix(@{$schema_test->{'composedtype'}{'prefix'}})
+      if $schema_test->{'composedtype'}{'prefix'};
   }
 
   my $schema = eval { $rx->make_schema($schema_test->{schema}) };
