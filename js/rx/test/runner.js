@@ -19,12 +19,12 @@ for (i in schemaToTest) {
   var schemaName = schemaToTest[i];
   var schemaTest = plan.testSchema[ schemaName ];
 
-  if (schemaTest['composed-type']) {
+  if (schemaTest.composedtype) {
     try {
-      rx.learnType(schemaTest['composed-type'].uri,
-                   schemaTest['composed-type'].schema);
+      rx.learnType(schemaTest.composedtype.uri,
+                   schemaTest.composedtype.schema);
     } catch (e) {
-      if (schemaTest['composed-type'].invalid && (e instanceof Rx.Error)) {
+      if (schemaTest.composedtype.invalid && (e instanceof Rx.Error)) {
         print('ok ' + currentTest++ + ' - BAD COMPOSED TYPE: ' + schemaName);
         continue;
       }
@@ -32,14 +32,14 @@ for (i in schemaToTest) {
       throw e;
     }
 
-    if (schemaTest['composed-type'].invalid) {
+    if (schemaTest.composedtype.invalid) {
       print('not ok ' + currentTest++ + ' - BAD COMPOSED TYPE: ' + schemaName);
       continue;
     }
 
-    if (schemaTest['composed-type'].prefix) {
-      rx.addPrefix(schemaTest['composed-type'].prefix[0],
-                   schemaTest['composed-type'].prefix[1]);
+    if (schemaTest.composedtype.prefix) {
+      rx.addPrefix(schemaTest.composedtype.prefix[0],
+                   schemaTest.composedtype.prefix[1]);
     }
   }
 
