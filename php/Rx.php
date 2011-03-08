@@ -59,6 +59,23 @@ class Rx {
     return $core_types;
   }
 
+  function add_prefix($name, $base) {
+    if (isset($this->prefix_registry[$name]))
+      throw new Exception("the prefix '$name' is already registered");
+
+    $this->prefix_registry[$name] = $base;
+  }
+
+  function learn_type($uri, $schema) {
+    if (isset($this->type_registry->$uri))
+      throw new Exception("tried to learn type for already-registered uri $uri");
+
+    # make sure schema is valid
+    $this->make_schema($schema);
+
+    $this->type_registry->$uri = array( 'schema' => $schema );
+  }
+
   function make_schema($schema) {
     if (! is_object($schema)) {
       $schema_name = $schema;
@@ -76,8 +93,14 @@ class Rx {
 
     $type_class = $this->type_registry->$uri;
   
-    if ($type_class)
+    if (is_array($type_class)) {
+      foreach ($schema as $key => $entry)
+        if ($key != 'type')
+          throw new Exception('composed type does not take check arguments');
+      return $this->make_schema($type_class['schema']);
+    } elseif ($type_class) {
       return new $type_class($schema, $this);
+    }
 
     return false;
   }
