@@ -68,7 +68,7 @@ foreach ($test_schemata as $schema_name => $test) {
   try {
     $schema = $Rx->make_schema($test->schema);
   } catch (Exception $e) {
-    if ($test->invalid) {
+    if (isset($test->invalid)) {
       pass("BAD SCHEMA: $schema_name");
       continue;
     } else {
