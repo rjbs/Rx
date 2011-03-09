@@ -32,7 +32,7 @@ my $harness = TAP::Harness->new({
 
 # You may only choose one of 'exec', 'stream', 'tap' or 'source' at - line 12
 
-$harness->runtests(qw(
+$harness->runtests(@ARGV ? @ARGV : qw(
   js/rx/test/runner.js
   perl/t/spec.t
   perl/t/util-range.t
