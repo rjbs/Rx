@@ -60,6 +60,7 @@ for schema_name in schema_names:
 
   if schema_test_spec.get("invalid", False):
     ok(0, "BAD SCHEMA: schemata %s" % schema_name)
+    continue
 
   if not schema: raise Exception("got no schema obj for valid input")
 
