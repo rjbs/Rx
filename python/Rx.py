@@ -52,6 +52,12 @@ class Factory(object):
 
     return '%s%s' % (self.prefix_registry[ m.group(1) ], m.group(2))
 
+  def add_prefix(self, name, base):
+    if self.prefix_registry.get(name, None):
+      raise Error("the prefix '%s' is already registered" % name)
+
+    self.prefix_registry[name] = base;
+
   def register_type(self, t):
     t_uri = t.uri()
 
@@ -59,6 +65,16 @@ class Factory(object):
       raise Error("type already registered for %s" % t_uri)
 
     self.type_registry[t_uri] = t
+
+  def learn_type(self, uri, schema):
+    if self.type_registry.get(uri, None):
+      raise Error("tried to learn type for already-registered uri %s" % uri)
+
+    # make sure schema is valid
+    # should this be in a try/except?
+    self.make_schema(schema)
+
+    self.type_registry[uri] = { "schema": schema }
 
   def make_schema(self, schema):
     if type(schema) in (str, unicode):
@@ -73,7 +89,12 @@ class Factory(object):
 
     type_class = self.type_registry[ uri ]
 
-    return type_class(schema, self)
+    if type(type_class) is dict:
+      if not set(schema.keys()).issubset(set(['type'])):
+        raise Error('composed type does not take check arguments');
+      return self.make_schema(type_class["schema"])
+    else:
+      return type_class(schema, self)
 
 class _CoreType(object):
   @classmethod
