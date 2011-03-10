@@ -13,7 +13,7 @@ class Util(object):
     range = { }
     for entry in opt.keys():
       if entry not in ('min', 'max', 'min-ex', 'max-ex'):
-        raise "illegal argument to make_range_check"
+        raise Error("illegal argument to make_range_check")
 
       range[entry] = opt[entry]
 
@@ -45,10 +45,10 @@ class Factory(object):
 
     m = re.match('^/([-._a-z0-9]*)/([-._a-z0-9]+)$', type_name)
 
-    if not m: raise "couldn't understand type name '%s'" % type_name
+    if not m: raise Error("couldn't understand type name '%s'" % type_name)
 
     if not self.prefix_registry.get(m.group(1)):
-      raise "unknown prefix '%s' in type name '%s'" % (m.group(1), type_name)
+      raise Error("unknown prefix '%s' in type name '%s'" % (m.group(1), type_name))
 
     return '%s%s' % (self.prefix_registry[ m.group(1) ], m.group(2))
 
@@ -56,7 +56,7 @@ class Factory(object):
     t_uri = t.uri()
 
     if self.type_registry.get(t_uri, None):
-      raise "type already registered for %s" % t_uri
+      raise Error("type already registered for %s" % t_uri)
 
     self.type_registry[t_uri] = t
 
@@ -69,7 +69,7 @@ class Factory(object):
   
     uri = self.expand_uri(schema["type"])
 
-    if not self.type_registry.get(uri): raise "unknown type %s" % uri
+    if not self.type_registry.get(uri): raise Error("unknown type %s" % uri)
 
     type_class = self.type_registry[ uri ]
 

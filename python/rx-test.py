@@ -41,7 +41,7 @@ for filename in index:
         boxed_data = json.loads("[ %s ]" % payload[entry])
         test_data[ leaf_name ][ entry ] = boxed_data[0]
   else:
-    raise "weird file in data dir: %s" % filename
+    raise Exception("weird file in data dir: %s" % filename)
 
 schema_names = test_schemata.keys()
 schema_names.sort()
@@ -61,7 +61,7 @@ for schema_name in schema_names:
   if schema_test_spec.get("invalid", False):
     ok(0, "BAD SCHEMA: schemata %s" % schema_name)
 
-  if not schema: raise "got no schema obj for valid input"
+  if not schema: raise Exception("got no schema obj for valid input")
 
   for pf in [ 'pass', 'fail' ]:
     for source in schema_test_spec.get(pf, []):
