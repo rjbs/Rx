@@ -168,6 +168,16 @@ class RxCoretypeAny {
 class RxCoretypeBool {
   const uri = 'tag:codesimply.com,2008:rx/core/bool';
   function check($value) { return is_bool($value); }
+
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'type')
+        throw new Exception("unknown parameter $key for //bool schema");
+  }
+
+  function __construct($schema, $rx) {
+    RxCoretypeBool::_check_schema($schema);
+  }
 }
 
 class RxCoreTypeArr {
@@ -294,21 +304,61 @@ class RxCoreTypeInt {
 class RxCoretypeDef {
   const uri = 'tag:codesimply.com,2008:rx/core/def';
   function check($value) { return ! is_null($value); }
+
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'type')
+        throw new Exception("unknown parameter $key for //def schema");
+  }
+
+  function __construct($schema, $rx) {
+    RxCoretypeDef::_check_schema($schema);
+  }
 }
 
 class RxCoretypeFail {
   const uri = 'tag:codesimply.com,2008:rx/core/fail';
   function check($value) { return false; }
+
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'type')
+        throw new Exception("unknown parameter $key for //fail schema");
+  }
+
+  function __construct($schema, $rx) {
+    RxCoretypeFail::_check_schema($schema);
+  }
 }
 
 class RxCoretypeNil {
   const uri = 'tag:codesimply.com,2008:rx/core/nil';
   function check($value) { return is_null($value); }
+
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'type')
+        throw new Exception("unknown parameter $key for //nil schema");
+  }
+
+  function __construct($schema, $rx) {
+    RxCoretypeNil::_check_schema($schema);
+  }
 }
 
 class RxCoretypeOne {
   const uri = 'tag:codesimply.com,2008:rx/core/one';
   function check($value) { return is_scalar($value); }
+
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'type')
+        throw new Exception("unknown parameter $key for //one schema");
+  }
+
+  function __construct($schema, $rx) {
+    RxCoretypeOne::_check_schema($schema);
+  }
 }
 
 class RxCoretypeStr {
