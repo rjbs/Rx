@@ -2,7 +2,7 @@
   "invalid": true,
 
   "schema" : {
-    "type"    : "//rec",
+    "type"    : "//any",
     "unknown" : "this will cause things to explode"
   }
 }
