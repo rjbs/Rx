@@ -358,7 +358,7 @@ class StrType(_CoreType):
   def subname(): return 'str'
 
   def __init__(self, schema, rx):
-    if not set(schema.keys()).issubset(set(('type', 'value'))):
+    if not set(schema.keys()).issubset(set(('type', 'value', 'length'))):
       raise Error('unknown parameter for //str')
 
     self.value = None
@@ -367,8 +367,13 @@ class StrType(_CoreType):
         raise Error('invalid value parameter for //str')
       self.value = schema['value']
 
+    self.length = None
+    if schema.has_key('length'):
+      self.length = Util.make_range_check( schema["length"] )
+
   def check(self, value):
     if not type(value) in (str, unicode): return False
+    if self.length and not self.length(len(value)): return False
     if (not self.value is None) and value != self.value: return False
     return True
 
