@@ -101,7 +101,9 @@ class _CoreType(object):
   def uri(self):
     return 'tag:codesimply.com,2008:rx/core/' + self.subname()
 
-  def __init__(self, schema, rx): pass
+  def __init__(self, schema, rx):
+    if not set(schema.keys()).issubset(set(['type'])):
+      raise Error('unknown parameter for //%s' % self.subname())
 
   def check(self, value): return False
 
@@ -110,6 +112,9 @@ class AllType(_CoreType):
   def subname(): return 'all'
 
   def __init__(self, schema, rx):
+    if not set(schema.keys()).issubset(set(('type', 'of'))):
+      raise Error('unknown parameter for //all')
+    
     if not(schema.get('of') and len(schema.get('of'))):
       raise Error('no alternatives given in //all of')
 
@@ -127,6 +132,9 @@ class AnyType(_CoreType):
   def __init__(self, schema, rx):
     self.alts = None
 
+    if not set(schema.keys()).issubset(set(('type', 'of'))):
+      raise Error('unknown parameter for //any')
+    
     if schema.get('of') != None:
       if not schema['of']: raise Error('no alternatives given in //any of')
       self.alts = [ rx.make_schema(alt) for alt in schema['of'] ]
@@ -219,6 +227,9 @@ class MapType(_CoreType):
 
   def __init__(self, schema, rx):
     self.allowed = set()
+
+    if not set(schema.keys()).issubset(set(('type', 'values'))):
+      raise Error('unknown parameter for //map')
 
     if not schema.get('values'):
       raise Error('no values given for //map')
@@ -326,6 +337,9 @@ class SeqType(_CoreType):
   def subname(): return 'seq'
 
   def __init__(self, schema, rx):
+    if not set(schema.keys()).issubset(set(('type', 'contents', 'tail'))):
+      raise Error('unknown parameter for //seq')
+
     if not schema.get('contents'):
       raise Error('no contents provided for //seq')
 
