@@ -1,8 +1,13 @@
 <h2>//str</h2>
 
 <p>
-  The <tt>//str</tt> type accepts strings and only strings.  It does not take
-  any parameters.
+  The <tt>//str</tt> type accepts strings and only strings.
+</p>
+
+<p>
+  The optional <tt>value</tt> parameter may provide an exact value to be
+  compared againt.  If this paramter is given, the schema will only accept
+  a string that is equal to the parameter's value.
 </p>
 
 <div class='sample'>
@@ -11,6 +16,9 @@
   "type": "//rec",
   "required": {
     "type": { "type": "//str", "value": "//str" }
+  },
+  "optional": {
+    "value": { "type": "//str" }
   }
 }</pre>
 </div>
