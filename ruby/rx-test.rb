@@ -49,11 +49,36 @@ Find.find('spec/schemata') { |path|
   test_schema[leaf] = JSON.parse(json)
 }
 
-rx  = Rx.new({ :load_core => true })
 tap = TAP_Emitter.new
 
 test_schema.keys.sort.each { |schema_name|
+  rx  = Rx.new({ :load_core => true })
+
   schema_test_desc = test_schema[ schema_name ]
+
+  if schema_test_desc['composedtype'] then
+    begin
+      rx.learn_type(schema_test_desc['composedtype']['uri'],
+                     schema_test_desc['composedtype']['schema'])
+    rescue Rx::Exception => e
+      if schema_test_desc['composedtype']['invalid'] then
+        tap.ok(true, "BAD COMPOSED TYPE: #{ schema_name }")
+        next
+      end
+
+      throw e
+    end
+
+    if schema_test_desc['composedtype']['invalid'] then
+      tap.ok(false, "BAD COMPOSED TYPE: #{ schema_name }")
+      next
+    end
+
+    if schema_test_desc['composedtype']['prefix'] then
+      rx.add_prefix(schema_test_desc['composedtype']['prefix'][0],
+                    schema_test_desc['composedtype']['prefix'][1])
+    end
+  end
 
   begin
     schema = rx.make_schema(schema_test_desc['schema'])

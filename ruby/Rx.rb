@@ -12,12 +12,12 @@ class Rx
     }
 
     if opt[:load_core] then
-      Type::Core.core_types.each { |t| learn_type(t) }
+      Type::Core.core_types.each { |t| register_type(t) }
     end
   end
 
 
-  def learn_type(type)
+  def register_type(type)
     uri = type.uri
 
     if @type_registry.has_key?(uri) then
@@ -27,6 +27,20 @@ class Rx
     end
 
     @type_registry[ uri ] = type
+  end
+
+  def learn_type(uri, schema)
+    if @type_registry.has_key?(uri) then
+      raise Rx::Exception.new(
+        "attempted to learn type for already-registered uri #{uri}"
+      )
+    end
+
+    # make sure schema is valid
+    # should this be in a begin/rescue?
+    make_schema(schema)
+
+    @type_registry[ uri ] = { 'schema' => schema }
   end
 
   def expand_uri(name)
@@ -44,6 +58,14 @@ class Rx
     return @prefix[ match[1] ] + match[2]
   end
 
+  def add_prefix(name, base)
+    if @prefix.has_key?(name) then
+      throw Rx::Exception.new("the prefix '#{name}' is already registered")
+    end
+
+    @prefix[name] = base
+  end
+
   def make_schema(schema)
     schema = { 'type' => schema } if schema.instance_of?(String)
 
@@ -59,7 +81,14 @@ class Rx
 
     type_class = @type_registry[uri]
 
-    return type_class.new(schema, self)
+    if type_class.instance_of?(Hash) then
+      if schema.keys != [ 'type' ] then
+        raise Rx::Exception.new('composed type does not take check arguments')
+      end
+      return make_schema(type_class['schema'])
+    else
+      return type_class.new(schema, self)
+    end
   end
   
   class Helper; end;
