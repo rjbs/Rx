@@ -578,7 +578,7 @@ class Rx
 
       class Str < Type::Core
         class << self; def subname; return 'str'; end; end
-        @@allowed_param = { 'type' => true, 'value' => true }
+        @@allowed_param = { 'type' => true, 'value' => true, 'length' => true }
         def allowed_param?(p); return @@allowed_param[p]; end
 
         def initialize(param, rx)
@@ -591,11 +591,20 @@ class Rx
 
             @value = param['value']
           end
+
+          if param['length'] then
+            @length_range = Rx::Helper::Range.new( param['length'] )
+          end
         end
 
         def check!(value)
           unless value.instance_of?(String)
             raise ValidationError.new("expected String got #{value.inspect}", "/str")
+          end
+          if @length_range
+            unless @length_range.check(value.length)
+              raise ValidationError.new("expected String of length #{@length_range}, got #{value.length}", "/str")
+            end
           end
           if @value and value != @value
             raise ValidationError.new("expected #{@value.inspect} got #{value.inspect}", "/str")
