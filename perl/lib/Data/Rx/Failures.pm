@@ -38,7 +38,7 @@ sub stringify {
   my ($self) = @_;
 
   if (@{$self->{failures}}) {
-    return join '', map "$_", @{$self->{failures}};
+    return join "\n", map "$_", @{$self->{failures}};
   } else {
     return "No failures\n";
   }
