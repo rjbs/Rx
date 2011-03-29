@@ -79,7 +79,7 @@ sub stringify {
 
   return "Failed $struct->[0]{type}: $struct->[0]{message} " .
          "(error: " . $self->error_string . " " .
-         "at " . $self->data_string . ")\n";
+         "at " . $self->data_string . ")";
 }
 
 1;
