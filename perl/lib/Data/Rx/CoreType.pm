@@ -97,24 +97,6 @@ sub _subchecks {
   return 1;
 }
 
-sub _subcheck {
-  my ($self, $value, $checker, $context) = @_;
-
-  return if eval { $checker->validate($value) };
-
-  my $failures = $@;
-  Carp::confess($failures)
-      unless eval { $failures->isa('Data::Rx::Failures') ||
-                    $failures->isa('Data::Rx::Failure') };
-
-  $failures->contextualize({
-    type  => $self->type,
-    %$context,
-  });
-
-  die $failures;
-}
-
 sub type_uri {
   sprintf 'tag:codesimply.com,2008:rx/core/%s', $_[0]->subname
 }
