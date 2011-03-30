@@ -24,6 +24,10 @@ sub contextualize {
 
   push @{ $self->struct }, $struct;
 
+  if (my $failures = $self->struct->[0]{failures}) {
+    $_->contextualize($struct) foreach @$failures;
+  }
+
   return $self;
 }
 
@@ -113,9 +117,22 @@ sub stringify {
 
   my $struct = $self->struct;
 
-  return "Failed $struct->[0]{type}: $struct->[0]{message} " .
-         "(error: " . $self->error_string . " " .
-         "at " . $self->data_string . ")";
+  my $str = "Failed $struct->[0]{type}: $struct->[0]{message} " .
+            "(error: " . $self->error_string . " " .
+            "at " . $self->data_string . ")";
+
+  # also stringify failures under the current failure (as for //any),
+  # with indentation
+  if (my $failures = $struct->[0]{failures}) {
+    foreach my $fail (@$failures) {
+      my $tmp = "$fail";
+      $tmp =~ s/\A/  - /;
+      $tmp =~ s/(?<=\n)^/    /mg;
+      $str .= "\n$tmp";
+    }
+  }
+
+  return $str;
 }
 
 1;
