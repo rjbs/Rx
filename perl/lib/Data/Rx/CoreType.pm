@@ -39,6 +39,7 @@ sub new_fail {
   $struct->{type} ||= $self->type;
 
   Data::Rx::Failures->new({
+    rx => $self->rx,
     failures => [
       Data::Rx::Failure->new({
         rx     => $self->rx,
@@ -91,7 +92,7 @@ sub _subchecks {
   }
 
   if (@fails) {
-    die Data::Rx::Failures->new( { failures => \@fails } );
+    die Data::Rx::Failures->new( { rx => $self->rx, failures => \@fails } );
   }
 
   return 1;
