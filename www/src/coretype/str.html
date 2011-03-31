@@ -10,6 +10,14 @@
   a string that is equal to the parameter's value.
 </p>
 
+<p>
+  The optional <tt>length</tt> parameter may provide a range of acceptable
+  values for the length of the string.  Providing both <tt>range</tt> and
+  <tt>value</tt> is not an error, but the Rx implementation may choose to
+  return a <tt>//fail</tt> schema if no value could possibly satisfy the
+  combination of the given value and range of length.
+</p>
+
 <div class='sample'>
   <p>/.meta/str, the schema for //str definitions:</p>
   <pre class='json'>{
@@ -18,7 +26,8 @@
     "type": { "type": "//str", "value": "//str" }
   },
   "optional": {
-    "value": { "type": "//str" }
+    "value": { "type": "//str" },
+    "length": { "type": "/.meta//range" }
   }
 }</pre>
 </div>
