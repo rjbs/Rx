@@ -84,8 +84,10 @@ sub assert_pass {
     $schema->validate($input);
     Test::More::pass("$schema_desc should ACCEPT $input_desc");
   } catch {
+    my $fail = $_;
     Test::More::fail("$schema_desc should ACCEPT $input_desc");
-    # should diag the failure paths here
+
+    Test::More::diag("    $fail");
   }
 }
 
