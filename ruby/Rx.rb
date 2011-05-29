@@ -347,9 +347,11 @@ class Rx
         def initialize(param, rx)
           super
 
-          if param['values'] then
-            @value_schema = rx.make_schema(param['values'])
+          unless param['values'] then
+            raise Rx::Exception.new("no values schema given for #{uri}")
           end
+
+          @value_schema = rx.make_schema(param['values'])
         end
 
         def check!(value)
