@@ -12,7 +12,7 @@ $(function() {
 
 <p>
   There are really only two things you need to know about in Rx: types and
-  schemata.  A type is an abstract descripition of a type of data.  For
+  schemata.  A type is an abstract description of a type of data.  For
   example, "an integer" or "an associative array" are data types.  When they're
   made into concrete, checkable constraints, they become schemata.  This is
   done by parameterizing them.
@@ -99,8 +99,8 @@ $(function() {
 
   <tr>
     <th>//int</th>
-    <td>a integer; any number such that <tt>(x == floor(x))</tt>; may be
-  parameterized by range</td>
+    <td>an integer; any number such that <tt>(x == floor(x))</tt>; may be
+  parameterized by a range</td>
   </tr>
 
   <tr>
@@ -116,7 +116,7 @@ $(function() {
 
 <h2 id='collect'>Collection Types</h2>
 <p>
-  The basic collecting (many-value) types are:
+  The basic collection (many-value) types are:
 </p>
 
 <table class='types'>
@@ -127,7 +127,7 @@ $(function() {
 
   <tr>
     <th>//seq</th>
-    <td>a list of values all of varying types; each slot has a schema</td>
+    <td>a list of values of varying types; each slot has a schema</td>
   </tr>
 
   <tr>
@@ -150,7 +150,7 @@ $(function() {
 <table class='types'>
   <tr>
     <th>//any</th>
-    <td>either anything at all, or any of a given list of schematas</td>
+    <td>either anything at all, or any of a given list of schemata</td>
   </tr>
 
   <tr>
