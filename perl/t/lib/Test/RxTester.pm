@@ -77,8 +77,8 @@ sub fudge_reason {
 
 sub assert_pass {
   my ($self, $arg) = @_;
-  my ($schema, $schema_desc, $input, $input_desc, $want)
-    = @$arg{ qw(schema schema_desc input input_desc want) };
+  my ($schema, $schema_desc, $input, $input_desc)
+    = @$arg{ qw(schema schema_desc input input_desc) };
 
   try {
     $schema->validate($input);
@@ -94,8 +94,8 @@ sub assert_pass {
 
 sub assert_fail {
   my ($self, $arg) = @_;
-  my ($schema, $schema_desc, $schema_spec, $input, $input_desc, $want)
-    = @$arg{ qw(schema schema_desc schema_spec input input_desc want) };
+  my ($schema, $schema_desc, $schema_spec, $input, $input_desc, $want, $want_struct)
+    = @$arg{ qw(schema schema_desc schema_spec input input_desc want want_struct) };
 
   try {
     $schema->validate($input);
@@ -138,7 +138,15 @@ sub assert_fail {
 
         }
 
-        # test build_struct() here - requires restructuring test specs!  -- rjk
+        if ($want_struct) {
+          my ($tmp_ok, $stack) =
+            cmp_details($want_struct,$fails->build_struct);
+          $tmp_ok
+            or do {
+              $ok = 0;
+              push @diag, "errors struct does not match", deep_diag($stack);
+            };
+        }
 
       } else {
         $ok = 0;
@@ -319,6 +327,7 @@ sub run_tests {
           input       => $input,
           input_desc  => $test_name,
           want        => $test_spec->{errors},
+          want_struct => $test_spec->{errors_struct},
         });
       }
     }

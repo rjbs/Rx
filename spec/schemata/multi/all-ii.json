@@ -15,18 +15,24 @@
 
   "fail": {
     "num": {
-      "5":
-        [
-         { "data": [ ], "check": [ "of", 0 ], "error": [ "value" ] },
-         { "data": [ ], "check": [ "of", 1 ], "error": [ "range" ] }
-        ]
+      "5": {
+        "errors":
+          [
+           { "data": [ ], "check": [ "of", 0 ], "error": [ "value" ] },
+           { "data": [ ], "check": [ "of", 1 ], "error": [ "range" ] }
+          ],
+        "errors_struct": "value,range"
+      }
     },
     "str": {
-      "x":
-        [
-         { "data": [ ], "check": [ "of", 0 ], "error": [ "type" ] },
-         { "data": [ ], "check": [ "of", 1 ], "error": [ "type" ] }
-        ]
+      "x": {
+        "errors":
+          [
+           { "data": [ ], "check": [ "of", 0 ], "error": [ "type" ] },
+           { "data": [ ], "check": [ "of", 1 ], "error": [ "type" ] }
+          ],
+        "errors_struct": "type,type"
+      }
     }
   }
 }

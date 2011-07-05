@@ -6,11 +6,15 @@
 
   "fail": {
     "arr"  : {
-      "0-str-3":
-        [
-         { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
-         { "data": [   ], "check": [               ], "error": [ "size" ] }
-        ]
+      "0-str-3": {
+        "errors":
+          [
+           { "data": [ 1 ], "check": [ "contents", 1 ], "error": [ "type" ] },
+           { "data": [   ], "check": [               ], "error": [ "size" ] }
+          ],
+        "errors_struct":
+          [ null, "type", null, "size" ]
+      }
     }
   }
 }

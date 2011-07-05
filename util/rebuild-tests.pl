@@ -66,11 +66,11 @@ SCHEMA: for my $file (@schema_files) {
 
       for my $entry (keys %$expect) {
         die "bogus test input $name $source $pf"
-          if $pf eq 'fail' and ! $expect->{$entry};
+          if $pf eq 'fail' and ! $expect->{$entry}{'errors'};
 
         $test->{"$source/$entry"} = {
           input  => $data_set{ $source }{ $entry },
-          errors => $expect->{$entry} || [],
+          %{ $expect->{$entry} },
         };
 
         $count += 1;
@@ -108,8 +108,14 @@ sub normalize {
 
   for my $key (keys %entries) {
     my $eref = ref $entries{ $key };
-    $entries{ $key } = [ $entries{ $key } ]
-      if defined $eref and $eref eq 'HASH';
+    if (! $entries{ $key }) {
+      $entries{ $key } = { errors => [] };
+    } elsif ( defined $eref and $eref eq 'ARRAY' ) {
+      $entries{ $key } = { errors => $entries{ $key } };
+    } elsif ( defined $eref and $eref eq 'HASH' and
+              ! exists $entries{ $key }{'errors'} ) {
+      $entries{ $key } = { errors => [ $entries{ $key } ] };
+    }
   }
 
   return \%entries;

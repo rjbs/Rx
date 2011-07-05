@@ -13,18 +13,26 @@
 
   "fail": {
     "arr"  : {
-      "str":
-        [
-         { "data": [   ], "check": [               ], "error": [ "size" ] },
-         { "data": [ 0 ], "check": [ "contents", 0 ], "error": [ "type" ] }
-        ],
-      "0-str-3-T-str": 
-        [
-         { "data": [ 1 ], "check": [ "contents", 1      ], "error": [ "type" ] },
-         { "data": [   ], "check": [ "tail"             ], "error": [ "size" ] },
-         { "data": [ 2 ], "check": [ "tail", "contents" ], "error": [ "type" ] },
-         { "data": [ 4 ], "check": [ "tail", "contents" ], "error": [ "type" ] }
-        ]
+      "str": {
+        "errors":
+          [
+           { "data": [   ], "check": [               ], "error": [ "size" ] },
+           { "data": [ 0 ], "check": [ "contents", 0 ], "error": [ "type" ] }
+          ],
+        "errors_struct":
+          [ "type", "size" ]
+      },
+      "0-str-3-T-str": {
+        "errors":
+          [
+           { "data": [ 1 ], "check": [ "contents", 1      ], "error": [ "type" ] },
+           { "data": [   ], "check": [ "tail"             ], "error": [ "size" ] },
+           { "data": [ 2 ], "check": [ "tail", "contents" ], "error": [ "type" ] },
+           { "data": [ 4 ], "check": [ "tail", "contents" ], "error": [ "type" ] }
+          ],
+        "errors_struct":
+          [ null, "type", "type", null, "type", "size" ]
+      }
     }
   }
 }

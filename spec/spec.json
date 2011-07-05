@@ -8653,6 +8653,7 @@
                      ]
                   }
                ],
+               "errors_struct" : "value,range",
                "input" : "5"
             },
             "str/x" : {
@@ -8678,6 +8679,7 @@
                      ]
                   }
                ],
+               "errors_struct" : "type,type",
                "input" : "\"x\""
             }
          }
@@ -8714,6 +8716,11 @@
                         "type"
                      ]
                   }
+               ],
+               "errors_struct" : [
+                  "type",
+                  null,
+                  "size"
                ],
                "input" : "[\"string\", 1 ]"
             }
@@ -8752,6 +8759,10 @@
                      ]
                   }
                ],
+               "errors_struct" : {
+                  "opt" : "type",
+                  "rest" : "type"
+               },
                "input" : "{\"key\": 0, \"opt\": true, \"rest\": false}"
             }
          }
@@ -8857,6 +8868,11 @@
                      ]
                   }
                ],
+               "errors_struct" : {
+                  "key" : "missing",
+                  "opt" : "type",
+                  "rest" : "type"
+               },
                "input" : "{\"opt\": \"pants\", \"rest\": \"pants\"}"
             }
          }
@@ -8895,6 +8911,12 @@
                         "size"
                      ]
                   }
+               ],
+               "errors_struct" : [
+                  null,
+                  "type",
+                  null,
+                  "size"
                ],
                "input" : "[ 0, \"string\", 3 ]"
             }
@@ -8970,6 +8992,14 @@
                      ]
                   }
                ],
+               "errors_struct" : [
+                  null,
+                  "type",
+                  "type",
+                  null,
+                  "type",
+                  "size"
+               ],
                "input" : "[ 0, \"string\", 3, true, \"false\" ]"
             },
             "arr/str" : {
@@ -8993,6 +9023,10 @@
                         "type"
                      ]
                   }
+               ],
+               "errors_struct" : [
+                  "type",
+                  "size"
                ],
                "input" : "[\"string\" ]"
             }

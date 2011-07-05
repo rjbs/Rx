@@ -7,11 +7,15 @@
 
   "fail": {
     "arr" : {
-      "str-1"  :
-        [
-         { "data": [   ], "check": [            ], "error": [ "size" ] },
-         { "data": [ 0 ], "check": [ "contents" ], "error": [ "type" ] }
-        ]
+      "str-1"  : {
+        "errors":
+          [
+           { "data": [   ], "check": [            ], "error": [ "size" ] },
+           { "data": [ 0 ], "check": [ "contents" ], "error": [ "type" ] }
+          ],
+        "errors_struct":
+          [ "type", null, "size" ]
+      }
     }
   }
 }

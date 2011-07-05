@@ -15,24 +15,28 @@
 
   "fail": {
     "obj" : {
-      "opt-pants-rest-pants":
-        [
-         {
-          "data": [ ],
-          "check": [ ],
-          "error": [ "missing" ]
-         },
-         {
-          "data": [ "opt" ],
-          "check": [ "optional", "opt" ],
-          "error": [ "type" ]
-         },
-         {
-          "data": [ "rest" ],
-          "check": [ "rest", "values" ],
-          "error": [ "type" ]
-         }
-        ]
+      "opt-pants-rest-pants": {
+        "errors":
+          [
+           {
+            "data": [ ],
+            "check": [ ],
+            "error": [ "missing" ]
+           },
+           {
+            "data": [ "opt" ],
+            "check": [ "optional", "opt" ],
+            "error": [ "type" ]
+           },
+           {
+            "data": [ "rest" ],
+            "check": [ "rest", "values" ],
+            "error": [ "type" ]
+           }
+          ],
+        "errors_struct":
+          { "key": "missing", "opt": "type", "rest": "type" }
+      }
     }
   }
 }
