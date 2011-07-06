@@ -104,6 +104,9 @@ sub assert_fail {
   try {
     $schema->validate($input);
     Test::More::fail($desc);
+    if ($want_struct) {
+      Test::More::fail("$desc, failures struct");
+    }
   } catch {
     my $fails = $_;
     my $ok   = 1;
@@ -141,16 +144,6 @@ sub assert_fail {
 
         }
 
-        if ($want_struct) {
-          my ($tmp_ok, $stack) =
-            cmp_details($want_struct,$fails->build_struct);
-          $tmp_ok
-            or do {
-              $ok = 0;
-              push @diag, "errors struct does not match", deep_diag($stack);
-            };
-        }
-
       } else {
         $ok = 0;
         my $desc = Scalar::Util::blessed($fails)
@@ -166,6 +159,20 @@ sub assert_fail {
 
     Test::More::ok($ok, $desc);
     Test::More::diag "    $_" for @diag;
+
+    if ($want_struct) {
+      my ($ok, $stack) =
+        cmp_details($want_struct,$fails->build_struct);
+
+      my @diag;
+
+      if (!$ok) {
+        push @diag, "errors struct does not match", deep_diag($stack);
+      }
+
+      Test::More::ok($ok, "$desc, failures struct");
+      Test::More::diag "    $_" for @diag;
+    }
   }
 }
 

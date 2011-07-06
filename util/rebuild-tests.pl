@@ -74,6 +74,9 @@ SCHEMA: for my $file (@schema_files) {
         };
 
         $count += 1;
+
+        $count += 1
+          if $pf eq 'fail' and $expect->{$entry}{'errors_struct'};
       }
 
       $test_set{ $name } = $set;
