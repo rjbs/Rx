@@ -80,12 +80,14 @@ sub assert_pass {
   my ($schema, $schema_desc, $input, $input_desc, $want)
     = @$arg{ qw(schema schema_desc input input_desc want) };
 
+  my $desc = "$schema_desc should ACCEPT $input_desc";
+
   try {
     $schema->validate($input);
-    Test::More::pass("$schema_desc should ACCEPT $input_desc");
+    Test::More::pass("$desc");
   } catch {
     my $fail = $_;
-    Test::More::fail("$schema_desc should ACCEPT $input_desc");
+    Test::More::fail("$desc");
 
     Test::More::diag("    $fail");
   }
@@ -96,12 +98,13 @@ sub assert_fail {
   my ($schema, $schema_desc, $schema_spec, $input, $input_desc, $want)
     = @$arg{ qw(schema schema_desc schema_spec input input_desc want) };
 
+  my $desc = "$schema_desc should REJECT $input_desc";
+
   try {
     $schema->validate($input);
-    Test::More::fail("$schema_desc should REJECT $input_desc");
+    Test::More::fail($desc);
   } catch {
     my $fail = $_;
-    my $desc = "$schema_desc should REJECT $input_desc";
     my $ok   = 1;
     my @diag;
 
