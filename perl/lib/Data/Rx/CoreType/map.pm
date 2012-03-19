@@ -3,6 +3,7 @@ use warnings;
 package Data::Rx::CoreType::map;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //map type
+use Data::Rx::Failure;
 
 use Scalar::Util ();
 
@@ -27,11 +28,28 @@ sub new_checker {
 sub check {
   my ($self, $value) = @_;
 
-  return unless
+  return Data::Rx::Failure->new($self,{
+      message => 'not a defined value',
+      value=>$value,
+  })
+      unless defined $value;
+
+  return Data::Rx::Failure->new($self,{
+      message => "<$value> is not a hashref",
+      value=>$value,
+  }) unless
     ! Scalar::Util::blessed($value) and ref $value eq 'HASH';
 
-  for my $entry_value (values %$value) {
-    return unless $self->{value_constraint}->check($entry_value);
+  for my $entry_key (keys %$value) {
+      my $entry_value = $value->{$entry_key};
+      my $sub = $self->{value_constraint}->check($entry_value);
+      return Data::Rx::Failure->new($self,{
+          message => "bad value in map for key <$entry_key>",
+          sub_failures=>[$sub],
+          value => $value,
+          key=>$entry_key,
+      })
+          unless $sub;
   }
 
   return 1;

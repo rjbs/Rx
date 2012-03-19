@@ -7,6 +7,7 @@ use Data::Rx;
 use File::Find::Rule;
 use JSON 2 ();
 use Test::More;
+use Data::Printer;
 
 my $JSON = JSON->new;
 sub decode_json { $JSON->decode($_[0]) }
@@ -91,8 +92,16 @@ sub test_spec {
     unless $schema;
 
   my %pf = (
-    pass => sub { ok($schema->check($_[0]),   "VALID  : $_[2] against $_[1]") },
-    fail => sub { ok(! $schema->check($_[0]), "INVALID: $_[2] against $_[1]") },
+    pass => sub { my $res = $schema->check($_[0]);
+                  ok($res,   "VALID  : $_[2] against $_[1]");
+                  #note p $res;
+                  #note $res->message if defined($res) && !$res;
+              },
+    fail => sub { my $res = $schema->check($_[0]);
+                  ok(!$res, "INVALID: $_[2] against $_[1]");
+                  #note p $res;
+                  #note $res->message if defined($res) && !$res;
+              },
   );
 
   for my $pf (keys %pf) {

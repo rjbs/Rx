@@ -3,6 +3,7 @@ use warnings;
 package Data::Rx::CoreType::rec;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //rec type
+use Data::Rx::Failure;
 
 use Scalar::Util ();
 
@@ -44,23 +45,61 @@ sub new_checker {
 sub check {
   my ($self, $value) = @_;
 
-  return unless
+  return Data::Rx::Failure->new($self,{
+      message => 'not a defined value',
+      value=>$value,
+  })
+      unless defined $value;
+
+  return Data::Rx::Failure->new($self,{
+      message => "<$value> is not a hashref",
+      value=>$value,
+  }) unless
     ! Scalar::Util::blessed($value) and ref $value eq 'HASH';
 
   my $c_schema = $self->{content_schema};
 
   my @rest_keys = grep { ! exists $c_schema->{$_} } keys %$value;
-  return if @rest_keys and not $self->{rest_schema};
+  return Data::Rx::Failure->new($self,{
+      message => "found extra keys (@rest_keys) but no 'rest' schema defined",
+      value=>$value,
+      subtype=>'rest_no_schema',
+      keys=>\@rest_keys,
+  })
+      if @rest_keys and not $self->{rest_schema};
 
   for my $key (keys %$c_schema) {
     my $check = $c_schema->{$key};
-    return if not $check->{optional} and not exists $value->{$key};
-    return if exists $value->{$key} and ! $check->{schema}->check($value->{$key});
+    return Data::Rx::Failure->new($self,{
+        message => "key <$key> is required but missing",
+        value=>$value,
+        subtype=>'missing_key',
+        key=>$key,
+    })
+        if not $check->{optional} and not exists $value->{$key};
+    if (exists $value->{$key}) {
+        my $sub = $check->{schema}->check($value->{$key});
+        return Data::Rx::Failure->new($self,{
+            message => "bad value for key <$key>",
+            value=>$value,
+            key=>$key,
+            sub_failures => [ $sub ],
+        })
+            unless $sub;
+    }
   }
 
   if (@rest_keys) {
     my %rest = map { $_ => $value->{$_} } @rest_keys;
-    return unless $self->{rest_schema}->check(\%rest);
+    my $sub = $self->{rest_schema}->check(\%rest);
+    return Data::Rx::Failure->new($self,{
+        message => "bad value for extra keys (@rest_keys)",
+        value=>$value,
+        subtype => 'rest',
+        keys=>\@rest_keys,
+        sub_failures => [ $sub ],
+    })
+        unless $sub;
   }
 
   return 1;

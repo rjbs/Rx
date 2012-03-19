@@ -3,6 +3,7 @@ use warnings;
 package Data::Rx::CoreType::seq;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //seq type
+use Data::Rx::Failure;
 
 use Scalar::Util ();
 
@@ -32,19 +33,48 @@ sub new_checker {
 sub check {
   my ($self, $value) = @_;
 
-  return unless
+  return Data::Rx::Failure->new($self,{
+      message => 'not a defined value',
+      value=>$value,
+  })
+      unless defined $value;
+
+  return Data::Rx::Failure->new($self,{
+      message => "<$value> is not an arrayref",
+      value=>$value,
+  }) unless
     ! Scalar::Util::blessed($value) and ref $value eq 'ARRAY';
 
   my $content_schemata = $self->{content_schemata};
-  return if @$value < @$content_schemata;
-  
+  return Data::Rx::Failure->new($self,{
+      message => 'sequence too short ('.@$value.
+          'elements, expected at least '.@$content_schemata.')',
+      subtype=>'length',
+      value=>$value,
+  })
+      if @$value < @$content_schemata;
+
   for my $i (0 .. $#$content_schemata) {
-    return unless $content_schemata->[ $i ]->check( $value->[ $i ] );
+      my $sub = $content_schemata->[ $i ]->check( $value->[ $i ] );
+      return Data::Rx::Failure->new($self,{
+          message => "bad value at sequence position $i",
+          sub_failures=>[$sub],
+          value => $value,
+          pos=>$i,
+      })
+          unless $sub;
   }
 
   if ($self->{tail_check} and @$value > @$content_schemata) {
     my $tail = [ @$value[ @$content_schemata..$#$value ] ];
-    return unless $self->{tail_check}->check($tail);
+    my $sub = $self->{tail_check}->check($tail);
+      return Data::Rx::Failure->new($self,{
+          message => 'bad values at sequence tail',
+          subtype=>'tail',
+          sub_failures=>[$sub],
+          value=>$value,
+      })
+          unless $sub;
   }
 
   return 1;

@@ -3,6 +3,7 @@ use warnings;
 package Data::Rx::CoreType::arr;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //arr type
+use Data::Rx::Failure;
 
 use Scalar::Util ();
 
@@ -31,13 +32,35 @@ sub new_checker {
 sub check {
   my ($self, $value) = @_;
 
-  return unless
+  return Data::Rx::Failure->new($self,{
+      message => 'not a defined value',
+      value=>$value,
+  })
+      unless defined $value;
+
+  return Data::Rx::Failure->new($self,{
+      message => "<$value> is not an array",
+      value=>$value
+  }) unless
     ! Scalar::Util::blessed($value) and ref $value eq 'ARRAY';
 
-  return if $self->{length_check} and ! $self->{length_check}->(0+@$value);
-  
+  return Data::Rx::Failure->new($self,{
+      message => 'wrong array length '.@$value,
+      subtype=>'length',value=>$value,
+  })
+      if $self->{length_check} and ! $self->{length_check}->(0+@$value);
+
+  my $pos=0;
   for my $item (@$value) {
-    return unless $self->{content_check}->check($item);
+      my $sub = $self->{content_check}->check($item);
+      return Data::Rx::Failure->new($self,{
+          message => "bad value at array position $pos",
+          sub_failures=>[$sub],
+          value => $value,
+          pos=>$pos,
+      })
+          unless $sub;
+      ++$pos;
   }
 
   return 1;
