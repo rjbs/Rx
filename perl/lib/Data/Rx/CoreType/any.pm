@@ -3,6 +3,7 @@ use warnings;
 package Data::Rx::CoreType::any;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //any type
+use Data::Rx::Failure;
 
 use Scalar::Util ();
 
@@ -28,9 +29,18 @@ sub check {
   return 1 unless $_[0]->{of};
 
   my ($self, $value) = @_;
-  
-  $_->check($value) && return 1 for @{ $self->{of} };
-  return;
+
+  my @failures;
+  for my $sub (@{ $self->{of} }) {
+      my $ok=$sub->check($value);
+      return 1 if $ok;
+      push @failures,$ok;
+  }
+  return Data::Rx::Failure->new($self,{
+      message => 'none of the constraints matched',
+      sub_failures=>\@failures,
+      value => $value,
+  });
 }
 
 sub subname   { 'any' }

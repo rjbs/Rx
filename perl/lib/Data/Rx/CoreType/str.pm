@@ -25,14 +25,26 @@ sub new_checker {
 sub check {
   my ($self, $value) = @_;
 
-  return unless defined $value;
+  return Data::Rx::Failure->new($self,{
+      message => 'not a defined value',
+      value=>$value,
+  })
+      unless defined $value;
 
   # XXX: This is insufficiently precise.  It's here to keep us from believing
   # that JSON::XS::Boolean objects, which end up looking like 0 or 1, are
   # integers. -- rjbs, 2008-07-24
-  return if ref $value;
+  return Data::Rx::Failure->new($self,{
+      message=>"<$value> is a reference, not a string",
+      value=>$value,
+  }) if ref $value;
 
-  return if defined $self->{value} and $self->{value} ne $value;
+  return Data::Rx::Failure->new($self,{
+      message => "expected value <$self->{value}>, got <$value>",
+      subtype=>'value',
+      value=>$value,
+  })
+      if defined $self->{value} and $self->{value} ne $value;
 
   # XXX: Really, we need a way to know whether (say) the JSON was one of the
   # following:  { "foo": 1 } or { "foo": "1" }

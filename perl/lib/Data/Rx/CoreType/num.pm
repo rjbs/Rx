@@ -3,6 +3,7 @@ use warnings;
 package Data::Rx::CoreType::num;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //num type
+use Data::Rx::Failure;
 
 sub _int_re { qr{(?:0|[1-9]\d*)} }
 sub _dec_re { qr{(?:\.\d+)?}     }
@@ -46,16 +47,36 @@ sub new_checker {
 sub check {
   my ($self, $value) = @_;
 
-  return unless defined $value and length $value;
+  return Data::Rx::Failure->new($self,{
+      message => 'no numeric value',
+      value=>$value,
+  })
+      unless defined $value and length $value;
 
   # XXX: This is insufficiently precise.  It's here to keep us from believing
   # that JSON::XS::Boolean objects, which end up looking like 0 or 1, are
   # integers. -- rjbs, 2008-07-24
-  return if ref $value;
+  return Data::Rx::Failure->new($self,{
+      message => "<$value> is a reference, not a number",
+      value=>$value,
+  })
+      if ref $value;
 
-  return unless $value =~ $self->_val_re;
-  return if $self->{range_check} && ! $self->{range_check}->($value);
-  return if defined($self->{value}) && $value != $self->{value};
+  return Data::Rx::Failure->new($self,{
+      message => "<$value> doesn't look like a number",
+      value=>$value,
+  })
+      unless $value =~ $self->_val_re;
+  return Data::Rx::Failure->new($self,{
+      message => "<$value> is out of range",
+      subtype=>'range',value=>$value,
+  })
+      if $self->{range_check} && ! $self->{range_check}->($value);
+  return Data::Rx::Failure->new($self,{
+      message => "expected value <$self->{value}>, got <$value>",
+      subtype=>'value',value=>$value,
+  })
+      if defined($self->{value}) && $value != $self->{value};
   return 1;
 }
 
