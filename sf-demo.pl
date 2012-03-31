@@ -38,15 +38,12 @@ my $input = [
   undef,
   {
     foo => 1,
-    bar => 2,
+    bar => 2.2,
     baz => [ 3, 4, 5, 6.2, 7 ],
   },
 ];
 
 eval { $schema->validate($input); };
 my $fail = $@;
+print $fail;
 
-print Dump($fail->struct);
-
-print "PATH TO VALUE: " . join(q{ }, $fail->path_to_value) . "\n";
-print "PATH TO CHECK: " . join(q{ }, $fail->path_to_check) . "\n";
