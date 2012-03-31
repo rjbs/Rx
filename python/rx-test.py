@@ -39,7 +39,7 @@ for filename in index:
 
   leaf_name = '/'.join(parts[1:])
   leaf_name = re.sub('\.json$', '', leaf_name)
-  
+
   filetype = parts.pop(0)
 
   if filetype == 'schemata':
