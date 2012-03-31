@@ -56,6 +56,9 @@ var loadRxTests = (function (specRoot) {
     var schemaName = schemaToTest[i];
     var schema = testSchema[ schemaName ];
 
+    if (schema['composed-type'])
+      continue;
+
     if (schema.invalid) {
       totalTests++;
       if (schema.pass || schema.fail)
