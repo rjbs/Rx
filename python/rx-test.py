@@ -65,6 +65,8 @@ schema_names.sort()
 for schema_name in schema_names:
   schema_test_spec = test_schemata[ schema_name ]
 
+  if schema_test_spec.get('composed-type'): continue
+
   try:
     schema = rx.make_schema(schema_test_spec["schema"])
   except Rx.Error, e:
