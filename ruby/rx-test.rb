@@ -50,9 +50,17 @@ end
 
 class TAP_Emitter
   attr_reader :i
+  attr_reader :failures
+
+  def initialize()
+    @failures = 0
+  end
 
   def ok(bool, desc)
     @i === nil ? @i = 1 : @i += 1
+    if ! bool then
+      @failures += 1
+    end
     printf("%s %s - %s\n", bool ? 'ok' : 'not ok', @i, desc);
   end
 end
@@ -74,6 +82,10 @@ tap = TAP_Emitter.new
 
 test_schema.keys.sort.each { |schema_name|
   schema_test_desc = test_schema[ schema_name ]
+
+  if schema_test_desc['composed-type'] then
+    next
+  end
 
   begin
     schema = rx.make_schema(schema_test_desc['schema'])
@@ -113,12 +125,12 @@ test_schema.keys.sort.each { |schema_name|
       }
 
       entries.each_pair { |entry, want|
-        result = begin 
-                   schema.check!(test_data[source][entry])
-                   true
-                 rescue Rx::ValidationError => e
-                   false
-                 end
+        result = begin
+          schema.check!(test_data[source][entry])
+          true
+        rescue Rx::ValidationError => e
+          false
+        end
         ok = (pf == 'pass' and result) || (pf == 'fail' and !result)
 
         desc = sprintf "%s: %s-%s against %s",
@@ -131,3 +143,4 @@ test_schema.keys.sort.each { |schema_name|
 }
 
 puts "1..#{tap.i}"
+exit(tap.failures ? 1 : 0)

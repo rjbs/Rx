@@ -3,7 +3,7 @@ class Rx
   def self.schema(schema)
     Rx.new(:load_core => true).make_schema(schema)
   end
-  
+
   def initialize(opt={})
     @type_registry = {}
     @prefix = {
@@ -61,10 +61,10 @@ class Rx
 
     return type_class.new(schema, self)
   end
-  
+
   class Helper; end;
   class Helper::Range
-    
+
     def initialize(arg)
       @range = { }
 
@@ -96,11 +96,11 @@ class Rx
       @message = message
       @path = path
     end
-    
+
     def path
       @path ||= ""
     end
-    
+
     def message
       "#{@message} (#{@path})"
     end
@@ -113,7 +113,7 @@ class Rx
       inspect
     end
   end
-  
+
   class Type
     def initialize(param, rx)
       assert_valid_params(param)
@@ -176,7 +176,7 @@ class Rx
         class << self; def subname; return 'all'; end; end
 
         def check!(value)
-          @alts.each do |alt| 
+          @alts.each do |alt|
             begin
               alt.check!(value)
             rescue ValidationError => e
@@ -218,7 +218,7 @@ class Rx
             rescue ValidationError
             end
           end
-          
+
           raise ValidationError.new("expected one to match", "/any")
         end
       end
@@ -243,7 +243,7 @@ class Rx
           end
         end
 
-        def check!(value) 
+        def check!(value)
           unless value.instance_of?(Array)
             raise ValidationError.new("expected array got #{value.class}", "/arr")
           end
@@ -255,7 +255,7 @@ class Rx
           end
 
           if @contents_schema then
-            value.each do |v| 
+            value.each do |v|
               begin
                 @contents_schema.check!(v)
               rescue ValidationError => e
@@ -277,7 +277,7 @@ class Rx
         def check!(value)
           unless value.instance_of?(TrueClass) or value.instance_of?(FalseClass)
             raise ValidationError.new("expected bool got #{value.inspect}", "/bool")
-          end        
+          end
           true
         end
       end
@@ -288,14 +288,14 @@ class Rx
         def check(value); return false; end
         def check!(value); raise ValidationError.new("explicit fail", "/fail"); end
       end
-      
+
       #
       # Added by dan - 81030
       class Date < Type::Core
         class << self; def subname; return 'date'; end; end
-        
+
         include Type::NoParams
-        
+
         def check!(value)
           unless value.instance_of?(::Date)
             raise ValidationError("expected Date got #{value.inspect}", "/date")
@@ -329,7 +329,7 @@ class Rx
           end
 
           if @value_schema
-            value.each_value do |v| 
+            value.each_value do |v|
               begin
                 @value_schema.check!(v)
               rescue ValidationError => e
@@ -549,7 +549,7 @@ class Rx
 
       class Str < Type::Core
         class << self; def subname; return 'str'; end; end
-        @@allowed_param = { 'type' => true, 'value' => true }
+        @@allowed_param = { 'type' => true, 'value' => true, 'length' => true }
         def allowed_param?(p); return @@allowed_param[p]; end
 
         def initialize(param, rx)
@@ -560,6 +560,10 @@ class Rx
               raise Rx::Exception.new("invalid value parameter for #{uri}")
             end
 
+            if param['length'] then
+              @length_range = Rx::Helper::Range.new( param['length'] )
+            end
+
             @value = param['value']
           end
         end
@@ -568,6 +572,13 @@ class Rx
           unless value.instance_of?(String)
             raise ValidationError.new("expected String got #{value.inspect}", "/str")
           end
+
+          if @length_range
+            unless @length_range.check(value.length)
+              raise ValidationError.new("expected string with #{@length_range} characters, got #{value.length}", "/str")
+            end
+          end
+
           if @value and value != @value
             raise ValidationError.new("expected #{@value.inspect} got #{value.inspect}", "/str")
           end
@@ -579,9 +590,9 @@ class Rx
       # Added by dan - 81106
       class Time < Type::Core
         class << self; def subname; return 'time'; end; end
-        
+
         include Type::NoParams
-        
+
         def check!(value)
           unless value.instance_of?(::Time)
             raise ValidationError.new("expected Time got #{value.inspect}", "/time")
