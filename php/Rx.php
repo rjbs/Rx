@@ -273,11 +273,16 @@ class RxCoretypeOne {
 class RxCoretypeStr {
   const uri = 'tag:codesimply.com,2008:rx/core/str';
   var $fixed_value;
+  var $length_checker;
 
   function check($value) {
     if (! is_string($value)) return false;
     if ($this->fixed_value !== null and $value != $this->fixed_value)
       return false;
+
+    if ($this->length_checker)
+      if (! $this->length_checker->check(strlen($value))) return false;
+
     return true;
   }
 
@@ -287,6 +292,10 @@ class RxCoretypeStr {
         throw new Exception('invalid value for //str schema');
 
       $this->fixed_value = $schema->value;
+    }
+
+    if ($schema->length) {
+      $this->length_checker = new RxRangeChecker( $schema->length );
     }
   }
 }
