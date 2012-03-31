@@ -143,4 +143,4 @@ test_schema.keys.sort.each { |schema_name|
 }
 
 puts "1..#{tap.i}"
-exit(tap.failures ? 1 : 0)
+exit(tap.failures > 0 ? 1 : 0)
