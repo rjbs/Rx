@@ -9,12 +9,12 @@ use Scalar::Util ();
 sub subname   { 'map' }
 
 sub new_checker {
-  my ($class, $type, $arg, $rx) = @_;
+  my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new") unless
     Data::Rx::Util->_x_subset_keys_y($arg, { values => 1 });
 
-  my $self = $class->SUPER::new_checker($type, {}, $rx);
+  my $self = $class->SUPER::new_checker({}, $rx, $type);
 
   Carp::croak("no values constraint given") unless $arg->{values};
 

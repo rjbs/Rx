@@ -9,7 +9,7 @@ use Data::Rx::Failure;
 use Data::Rx::Failures;
 
 sub new_checker {
-  my ($class, $type, $arg, $rx) = @_;
+  my ($class, $arg, $rx, $type) = @_;
   Carp::croak "$class does not take check arguments" if %$arg;
   bless { type => $type, rx => $rx } => $class;
 }
