@@ -16,7 +16,6 @@ class Rx
     end
   end
 
-
   def learn_type(type)
     uri = type.uri
 
@@ -555,13 +554,13 @@ class Rx
         def initialize(param, rx)
           super
 
+          if param['length'] then
+            @length_range = Rx::Helper::Range.new( param['length'] )
+          end
+
           if param.has_key?('value') then
             if ! param['value'].instance_of?(String) then
               raise Rx::Exception.new("invalid value parameter for #{uri}")
-            end
-
-            if param['length'] then
-              @length_range = Rx::Helper::Range.new( param['length'] )
             end
 
             @value = param['value']
