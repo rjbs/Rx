@@ -92,6 +92,9 @@ foreach ($test_schemata as $schema_name => $test) {
   if ($_ENV["RX_TEST_SCHEMA"] and $_ENV["RX_TEST_SCHEMA"] != $schema_name)
     continue;
 
+  if ($test->{'composed-type'})
+    continue;
+
   $schema = null;
 
   try {
