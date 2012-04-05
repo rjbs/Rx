@@ -3384,7 +3384,7 @@
          }
       },
       "composed-person" : {
-         "composed-type" : {
+         "composedtype" : {
             "schema" : {
                "optional" : {
                   "middlename" : "//str"
@@ -3992,7 +3992,7 @@
          }
       },
       "composed-person-prefix" : {
-         "composed-type" : {
+         "composedtype" : {
             "prefix" : [
                "example",
                "tag:www.example.com:types/rx/"
@@ -7950,7 +7950,7 @@
          }
       },
       "invalid/composed-cycle" : {
-         "composed-type" : {
+         "composedtype" : {
             "invalid" : true,
             "schema" : {
                "type" : "tag:www.example.com:rx/cycle"
@@ -7960,7 +7960,7 @@
          "schema" : "tag:www.example.com:rx/cycle"
       },
       "invalid/composed-invalid" : {
-         "composed-type" : {
+         "composedtype" : {
             "invalid" : true,
             "schema" : {
                "type" : "//rec",

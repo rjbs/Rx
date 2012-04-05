@@ -288,20 +288,20 @@ sub run_tests {
 
     my $rx     = Data::Rx->new({ sort_keys => 1 });
 
-    if ($spec->{'composed-type'}) {
+    if ($spec->{'composedtype'}) {
       my $rc =
-        eval { $rx->learn_type($spec->{'composed-type'}{'uri'},
-                               $spec->{'composed-type'}{'schema'});
+        eval { $rx->learn_type($spec->{'composedtype'}{'uri'},
+                               $spec->{'composedtype'}{'schema'});
                1 };
       my $error = $@;
 
-      if ($spec->{'composed-type'}{'invalid'}) {
+      if ($spec->{'composedtype'}{'invalid'}) {
         Test::More::ok($error && !$rc, "BAD COMPOSED TYPE: $spec_name");
         next SPEC;
       }
 
-      $rx->add_prefix(@{$spec->{'composed-type'}{'prefix'}})
-        if $spec->{'composed-type'}{'prefix'};
+      $rx->add_prefix(@{$spec->{'composedtype'}{'prefix'}})
+        if $spec->{'composedtype'}{'prefix'};
     }
 
     my $schema = eval { $rx->make_schema($spec->{schema}) };
