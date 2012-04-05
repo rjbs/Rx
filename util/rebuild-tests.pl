@@ -48,10 +48,10 @@ SCHEMA: for my $file (@schema_files) {
     next SCHEMA;
   }
 
-  if ($spec->{'composed-type'}) {
-    $set->{'composed-type'} = $spec->{'composed-type'};
+  if ($spec->{'composedtype'}) {
+    $set->{'composedtype'} = $spec->{'composedtype'};
 
-    if ($spec->{'composed-type'}{'invalid'}) {
+    if ($spec->{'composedtype'}{'invalid'}) {
       $test_set{ $name } = $set;
       $count += 1;
       next SCHEMA;

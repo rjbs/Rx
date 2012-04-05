@@ -1,5 +1,5 @@
 {
-  "composed-type": {
+  "composedtype": {
     "uri": "tag:www.example.com:rx/cycle",
     "schema": {
       "type": "tag:www.example.com:rx/cycle"

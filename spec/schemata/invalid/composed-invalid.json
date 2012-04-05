@@ -1,5 +1,5 @@
 {
-  "composed-type": {
+  "composedtype": {
     "uri": "tag:www.example.com:rx/person",
     "schema": {
       "type": "//rec",

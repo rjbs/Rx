@@ -1,5 +1,5 @@
 {
-  "composed-type": {
+  "composedtype": {
     "uri": "tag:www.example.com:types/rx/person",
     "prefix": ["example", "tag:www.example.com:types/rx/"],
     "schema": {
