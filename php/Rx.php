@@ -368,10 +368,12 @@ class RxCoretypeStr {
 
   function check($value) {
     if (! is_string($value)) return false;
-    if ($this->length_checker)
-      if (! $this->length_checker->check(strlen($value))) return false;
     if ($this->fixed_value !== null and $value != $this->fixed_value)
       return false;
+
+    if ($this->length_checker)
+      if (! $this->length_checker->check(strlen($value))) return false;
+
     return true;
   }
 

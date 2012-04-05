@@ -9,7 +9,7 @@ use Data::Rx::Failure;
 use Data::Rx::Failures;
 
 sub new_checker {
-  my ($class, $type, $arg, $rx) = @_;
+  my ($class, $arg, $rx, $type) = @_;
   Carp::croak "$class does not take check arguments" if %$arg;
   bless { type => $type, rx => $rx } => $class;
 }
@@ -22,7 +22,7 @@ sub check {
   my ($self, $value) = @_;
   local $@;
 
-  return 1 if eval { $self->validate($value); };
+  return 1 if eval { $self->assert_valid($value); };
   my $failures = $@;
 
   if (eval { $failures->isa('Data::Rx::Failures') }) {
@@ -76,7 +76,7 @@ sub _subchecks {
 
     my ($value, $checker, $context) = @$subcheck;
 
-    next if eval { $checker->validate($value) };
+    next if eval { $checker->assert_valid($value) };
 
     my $failures = $@;
     Carp::confess($failures)

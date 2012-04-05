@@ -5,4 +5,5 @@ php/Test.php
 python/*.pyc
 perl/spec
 perl/.build
+perl/Data-Rx-*
 *~

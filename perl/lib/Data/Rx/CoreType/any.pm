@@ -7,12 +7,12 @@ use base 'Data::Rx::CoreType';
 use Scalar::Util ();
 
 sub new_checker {
-  my ($class, $type, $arg, $rx) = @_;
+  my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, { of  => 1});
 
-  my $self = $class->SUPER::new_checker($type, {}, $rx);
+  my $self = $class->SUPER::new_checker({}, $rx, $type);
 
   if (my $of = $arg->{of}) {
     Carp::croak("invalid 'of' argument to //any") unless
@@ -24,7 +24,7 @@ sub new_checker {
   return $self;
 }
 
-sub validate {
+sub assert_valid {
   return 1 unless $_[0]->{of};
 
   my ($self, $value) = @_;
@@ -32,7 +32,7 @@ sub validate {
   my @failures;
   for my $i (0 .. $#{ $self->{of} }) {
     my $check = $self->{of}[ $i ];
-    return 1 if eval { $check->validate($value) };
+    return 1 if eval { $check->assert_valid($value) };
 
     my $failure = $@;
     $failure->contextualize({

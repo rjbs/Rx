@@ -85,7 +85,7 @@ for (i in schemaToTest) {
         var testDesc = (expect ? 'VALID  : ' : 'INVALID: ')
                      + sourceName + '/' + sourceEntry
                      + ' against ' + schemaName;
-        
+
         // JavaScript needs logical xor! -- rjbs, 2008-07-31
         if ((valid && !expect) || (!valid && expect)) {
           fail(testDesc);

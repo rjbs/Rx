@@ -1,6 +1,7 @@
 #!perl
 use strict;
 use warnings;
+use 5.10.1;
 
 use lib 'perl/lib';
 use Data::Rx;
@@ -38,15 +39,12 @@ my $input = [
   undef,
   {
     foo => 1,
-    bar => 2,
+    bar => 2.2,
     baz => [ 3, 4, 5, 6.2, 7 ],
   },
 ];
 
-eval { $schema->validate($input); };
+eval { $schema->assert_valid($input); };
 my $fail = $@;
+say $fail;
 
-print Dump($fail->struct);
-
-print "PATH TO VALUE: " . join(q{ }, $fail->path_to_value) . "\n";
-print "PATH TO CHECK: " . join(q{ }, $fail->path_to_check) . "\n";

@@ -7,7 +7,7 @@ use base 'Data::Rx::CoreType';
 use Data::Rx::Util;
 
 sub new_checker {
-  my ($class, $type, $arg, $rx) = @_;
+  my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, { length => 1, value => 1});
@@ -26,7 +26,7 @@ sub new_checker {
     }
   }
 
-  my $self = $class->SUPER::new_checker($type, {}, $rx);
+  my $self = $class->SUPER::new_checker({}, $rx, $type);
 
   $self->{length_check} = Data::Rx::Util->_make_range_check($arg->{length})
     if $arg->{length};
@@ -36,7 +36,7 @@ sub new_checker {
   return $self;
 }
 
-sub validate {
+sub assert_valid {
   my ($self, $value) = @_;
 
   unless (defined $value) {

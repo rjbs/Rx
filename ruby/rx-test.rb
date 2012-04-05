@@ -50,9 +50,17 @@ end
 
 class TAP_Emitter
   attr_reader :i
+  attr_reader :failures
+
+  def initialize()
+    @failures = 0
+  end
 
   def ok(bool, desc)
     @i === nil ? @i = 1 : @i += 1
+    if ! bool then
+      @failures += 1
+    end
     printf("%s %s - %s\n", bool ? 'ok' : 'not ok', @i, desc);
   end
 end
@@ -138,12 +146,12 @@ test_schema.keys.sort.each { |schema_name|
       }
 
       entries.each_pair { |entry, want|
-        result = begin 
-                   schema.check!(test_data[source][entry])
-                   true
-                 rescue Rx::ValidationError => e
-                   false
-                 end
+        result = begin
+          schema.check!(test_data[source][entry])
+          true
+        rescue Rx::ValidationError => e
+          false
+        end
         ok = (pf == 'pass' and result) || (pf == 'fail' and !result)
 
         desc = sprintf "%s: %s-%s against %s",
@@ -156,3 +164,4 @@ test_schema.keys.sort.each { |schema_name|
 }
 
 puts "1..#{tap.i}"
+exit(tap.failures > 0 ? 1 : 0)

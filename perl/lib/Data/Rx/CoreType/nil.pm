@@ -4,7 +4,7 @@ package Data::Rx::CoreType::nil;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //nil type
 
-sub validate {
+sub assert_valid {
   my ($self, $value) = @_;
 
   return 1 if ! defined $value;

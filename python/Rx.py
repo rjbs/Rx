@@ -13,7 +13,7 @@ class Util(object):
     range = { }
     for entry in opt.keys():
       if entry not in ('min', 'max', 'min-ex', 'max-ex'):
-        raise Error("illegal argument to make_range_check")
+        raise ValueError("illegal argument to make_range_check")
 
       range[entry] = opt[entry]
 
@@ -45,10 +45,13 @@ class Factory(object):
 
     m = re.match('^/([-._a-z0-9]*)/([-._a-z0-9]+)$', type_name)
 
-    if not m: raise Error("couldn't understand type name '%s'" % type_name)
+    if not m:
+      raise ValueError("couldn't understand type name '%s'" % type_name)
 
     if not self.prefix_registry.get(m.group(1)):
-      raise Error("unknown prefix '%s' in type name '%s'" % (m.group(1), type_name))
+      raise ValueError(
+        "unknown prefix '%s' in type name '%s'" % (m.group(1), type_name)
+      )
 
     return '%s%s' % (self.prefix_registry[ m.group(1) ], m.group(2))
 
@@ -62,7 +65,7 @@ class Factory(object):
     t_uri = t.uri()
 
     if self.type_registry.get(t_uri, None):
-      raise Error("type already registered for %s" % t_uri)
+      raise ValueError("type already registered for %s" % t_uri)
 
     self.type_registry[t_uri] = t
 
@@ -82,7 +85,7 @@ class Factory(object):
 
     if not type(schema) is dict:
       raise Error('invalid schema argument to make_schema')
-  
+
     uri = self.expand_uri(schema["type"])
 
     if not self.type_registry.get(uri): raise Error("unknown type %s" % uri)
@@ -141,7 +144,7 @@ class AnyType(_CoreType):
 
   def check(self, value):
     if self.alts is None: return True
-    
+
     for alt in self.alts:
       if alt.check(value): return True
 
@@ -156,7 +159,7 @@ class ArrType(_CoreType):
 
     if not set(schema.keys()).issubset(set(('type', 'contents', 'length'))):
       raise Error('unknown parameter for //arr')
-    
+
     if not schema.get('contents'):
       raise Error('no contents provided for //arr')
 
@@ -317,7 +320,7 @@ class RecType(_CoreType):
 
     if len(unknown) and not self.rest_schema: return False
 
-    for field in self.required.keys(): 
+    for field in self.required.keys():
       if not value.has_key(field): return False
       if not self.required[field].check( value[field] ): return False
 
@@ -389,6 +392,7 @@ class StrType(_CoreType):
     if not type(value) in (str, unicode): return False
     if self.length and not self.length(len(value)): return False
     if (not self.value is None) and value != self.value: return False
+    if self.length and not self.length(len(value)): return False
     return True
 
 core_types = [

@@ -5,12 +5,12 @@ use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //num type
 
 sub new_checker {
-  my ($class, $type, $arg, $rx) = @_;
+  my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, { range => 1, value => 1});
 
-  my $self = $class->SUPER::new_checker($type, {}, $rx);
+  my $self = $class->SUPER::new_checker({}, $rx, $type);
 
   $self->{range_check} = Data::Rx::Util->_make_range_check($arg->{range})
     if $arg->{range};
@@ -64,7 +64,7 @@ sub _value_is_of_type {
   return $value =~ $_NUM_RE;
 }
 
-sub validate {
+sub assert_valid {
   my ($self, $value) = @_;
 
   $self->__type_fail($value) unless defined $value and length $value;

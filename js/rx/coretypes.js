@@ -123,13 +123,12 @@ Rx.CoreType.numType.prototype.check  = function (v) {
 };
 
 Rx.CoreType.strType  = function (opt) {
-  if (! Rx.Util._x_subset_keys_y(opt, {type: true, length: true, value: true }))
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true, value: true, length: true }))
     throw new Rx.Error('unknown argument for str type');
   if (typeof(opt.value) != "undefined")
     if (opt.value.constructor != String)
       throw new Rx.Error('invalid value parameter for str type');
     this.value = opt.value;
-
   if (opt.length) {
     this.length_check = new Rx.Util.RangeChecker( opt.length );
   }
@@ -139,6 +138,9 @@ Rx.CoreType.strType.prototype.check  = function (v) {
   if (! ((typeof(v) == 'string') || (v instanceof String))) return false;
   if (this.length_check && ! this.length_check.check(v.length)) return false;
   if (this.value != null && v != this.value) return false;
+  if (this.length_check && ! this.length_check.check(v.length)) {
+    return false;
+  }
   return true;
 };
 

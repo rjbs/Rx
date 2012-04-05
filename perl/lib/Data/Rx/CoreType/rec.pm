@@ -9,7 +9,7 @@ use Scalar::Util ();
 sub subname   { 'rec' }
 
 sub new_checker {
-  my ($class, $type, $arg, $rx) = @_;
+  my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new") unless
     Data::Rx::Util->_x_subset_keys_y($arg, {
@@ -18,7 +18,7 @@ sub new_checker {
       optional => 1,
     });
 
-  my $self = $class->SUPER::new_checker($type, {}, $rx);
+  my $self = $class->SUPER::new_checker({}, $rx, $type);
 
   my $content_schema = {};
 
@@ -42,7 +42,7 @@ sub new_checker {
   return $self;
 }
 
-sub validate {
+sub assert_valid {
   my ($self, $value) = @_;
 
   unless (! Scalar::Util::blessed($value) and ref $value eq 'HASH') {
