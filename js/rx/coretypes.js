@@ -136,7 +136,6 @@ Rx.CoreType.strType  = function (opt) {
 Rx.CoreType.strType.uri = 'tag:codesimply.com,2008:rx/core/str';
 Rx.CoreType.strType.prototype.check  = function (v) {
   if (! ((typeof(v) == 'string') || (v instanceof String))) return false;
-  if (this.length_check && ! this.length_check.check(v.length)) return false;
   if (this.value != null && v != this.value) return false;
   if (this.length_check && ! this.length_check.check(v.length)) {
     return false;

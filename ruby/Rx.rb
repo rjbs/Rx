@@ -596,10 +596,6 @@ class Rx
 
             @value = param['value']
           end
-
-          if param['length'] then
-            @length_range = Rx::Helper::Range.new( param['length'] )
-          end
         end
 
         def check!(value)

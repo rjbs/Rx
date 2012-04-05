@@ -390,7 +390,6 @@ class StrType(_CoreType):
 
   def check(self, value):
     if not type(value) in (str, unicode): return False
-    if self.length and not self.length(len(value)): return False
     if (not self.value is None) and value != self.value: return False
     if self.length and not self.length(len(value)): return False
     return True
