@@ -85,19 +85,41 @@ function test_json($x, $y) {
   return false;
 }
 
-$Rx = new Rx();
-
 asort($test_schemata);
 foreach ($test_schemata as $schema_name => $test) {
-  if ($_ENV["RX_TEST_SCHEMA"] and $_ENV["RX_TEST_SCHEMA"] != $schema_name)
+  if (isset($_ENV["RX_TEST_SCHEMA"]) and $_ENV["RX_TEST_SCHEMA"] != $schema_name)
     continue;
 
+  $Rx = new Rx();
+
   $schema = null;
+
+  if (isset($test->composedtype)) {
+    try {
+      $Rx->learn_type($test->composedtype->uri, $test->composedtype->schema);
+    } catch (Exception $e) {
+      if (isset($test->composedtype->invalid)) {
+        pass("BAD COMPOSED TYPE: $schema_name");
+        continue;
+      } else {
+        throw $e;
+      }
+    }
+
+    if (isset($test->composedtype->invalid)) {
+      fail("BAD COMPOSED TYPE: $schema_name");
+      continue;
+    }
+
+    if (isset($test->composedtype->prefix))
+      $Rx->add_prefix($test->composedtype->prefix[0],
+                      $test->composedtype->prefix[1]);
+  }
 
   try {
     $schema = $Rx->make_schema($test->schema);
   } catch (Exception $e) {
-    if ($test->invalid) {
+    if (isset($test->invalid)) {
       pass("BAD SCHEMA: $schema_name");
       continue;
     } else {
@@ -105,7 +127,7 @@ foreach ($test_schemata as $schema_name => $test) {
     }
   }
 
-  if ($test->invalid) {
+  if (isset($test->invalid)) {
     fail("BAD SCHEMA: $schema_name");
     continue;
   }
@@ -114,7 +136,7 @@ foreach ($test_schemata as $schema_name => $test) {
 
   foreach (array('pass', 'fail') as $pf) {
     $expect = ($pf == 'pass') ? 'VALID  ' : 'INVALID';
-    if ($test->$pf == null) continue;
+    if (!isset($test->$pf)) continue;
 
     foreach ($test->$pf as $source => $entries) {
       $entries = normalize($entries, $test_data[$source]);

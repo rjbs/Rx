@@ -5,6 +5,9 @@ Rx.CoreType = {};
 // Simple types
 
 Rx.CoreType.allType = function (opt, rx) {
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true, of: true }))
+    throw new Rx.Error('unknown argument for all type');
+
   if (! opt.of) throw new Rx.Error('no of given for //all');
 
   if (opt.of.length == 0)
@@ -21,6 +24,9 @@ Rx.CoreType.allType.prototype.check  = function (v) {
 };
 
 Rx.CoreType.anyType = function (opt, rx) {
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true, of: true }))
+    throw new Rx.Error('unknown argument for any type');
+
   this.alts = null;
   if (opt.of) {
     if (opt.of.length == 0)
@@ -38,17 +44,26 @@ Rx.CoreType.anyType.prototype.check  = function (v) {
   return false;
 };
 
-Rx.CoreType.boolType = function (opt) {};
+Rx.CoreType.boolType = function (opt) {
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true }))
+    throw new Rx.Error('unknown argument for bool type');
+};
 Rx.CoreType.boolType.uri = 'tag:codesimply.com,2008:rx/core/bool';
 Rx.CoreType.boolType.prototype.check = function (v) {
   return((typeof(v) == 'boolean') || (v instanceof Boolean));
 };
 
-Rx.CoreType.defType  = function (opt) {};
+Rx.CoreType.defType  = function (opt) {
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true }))
+    throw new Rx.Error('unknown argument for def type');
+};
 Rx.CoreType.defType.uri = 'tag:codesimply.com,2008:rx/core/def';
 Rx.CoreType.defType.prototype.check  = function (v) { return v != null; };
 
-Rx.CoreType.failType  = function (opt) {};
+Rx.CoreType.failType  = function (opt) {
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true }))
+    throw new Rx.Error('unknown argument for fail type');
+};
 Rx.CoreType.failType.uri = 'tag:codesimply.com,2008:rx/core/fail';
 Rx.CoreType.failType.prototype.check  = function (v) { false; };
 
@@ -77,7 +92,10 @@ Rx.CoreType.intType.prototype.check  = function (v) {
   return true;
 };
 
-Rx.CoreType.nilType  = function (opt) {};
+Rx.CoreType.nilType  = function (opt) {
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true }))
+    throw new Rx.Error('unknown argument for nil type');
+};
 Rx.CoreType.nilType.uri = 'tag:codesimply.com,2008:rx/core/nil';
 Rx.CoreType.nilType.prototype.check  = function (v) { return v === null };
 
@@ -105,21 +123,29 @@ Rx.CoreType.numType.prototype.check  = function (v) {
 };
 
 Rx.CoreType.strType  = function (opt) {
-  if (! Rx.Util._x_subset_keys_y(opt, {type: true, value: true }))
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true, length: true, value: true }))
     throw new Rx.Error('unknown argument for str type');
   if (typeof(opt.value) != "undefined")
     if (opt.value.constructor != String)
       throw new Rx.Error('invalid value parameter for str type');
     this.value = opt.value;
+
+  if (opt.length) {
+    this.length_check = new Rx.Util.RangeChecker( opt.length );
+  }
 };
 Rx.CoreType.strType.uri = 'tag:codesimply.com,2008:rx/core/str';
 Rx.CoreType.strType.prototype.check  = function (v) {
   if (! ((typeof(v) == 'string') || (v instanceof String))) return false;
+  if (this.length_check && ! this.length_check.check(v.length)) return false;
   if (this.value != null && v != this.value) return false;
   return true;
 };
 
-Rx.CoreType.oneType  = function (opt) {};
+Rx.CoreType.oneType  = function (opt) {
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true }))
+    throw new Rx.Error('unknown argument for one type');
+};
 Rx.CoreType.oneType.uri = 'tag:codesimply.com,2008:rx/core/one';
 Rx.CoreType.oneType.prototype.check = function (v) {
   // for some reason this was false: (false instanceof Boolean)
@@ -159,8 +185,9 @@ Rx.CoreType.arrType.prototype.check  = function (v) {
 }
 
 Rx.CoreType.recType = function (opt, rx) {
-  if (! Rx.Util._x_subset_keys_y(opt, Rx.CoreType.recType._valid_options))
-    throw new Rx.Error('unknown argument for map type');
+  if (! Rx.Util._x_subset_keys_y(opt, {type: true, rest: true,
+                                       required: true, optional: true }))
+    throw new Rx.Error('unknown argument for rec type');
 
   this.known = {};
 
@@ -185,12 +212,6 @@ Rx.CoreType.recType = function (opt, rx) {
   if (opt.rest) this.restSchema = rx.makeSchema(opt.rest);
 };
 Rx.CoreType.recType.uri = 'tag:codesimply.com,2008:rx/core/rec';
-Rx.CoreType.recType._valid_options = {
-  type: true,
-  rest: true,
-  required: true,
-  optional: true
-};
 Rx.CoreType.recType.prototype.check  = function (v) {
   if (!(((v != null) && (typeof(v) == 'object')) && ! (v instanceof Array)))
     return false;
@@ -221,7 +242,7 @@ Rx.CoreType.recType.prototype.check  = function (v) {
 
 Rx.CoreType.mapType = function (opt, rx) {
   if (! Rx.Util._x_subset_keys_y(opt, { type: true, values: true }))
-    throw new Rx.Error('unknown argument for mapall type');
+    throw new Rx.Error('unknown argument for map type');
 
   this.valueSchema = rx.makeSchema(opt.values);
 };

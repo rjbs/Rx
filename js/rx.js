@@ -12,28 +12,46 @@ Rx.prototype.expand_uri = function (name) {
   var matches = name.match(/^\/(\w*)\/(\w+)$/);
 
   if (! matches)
-    throw "couldn't understand type name '" + name + "'";
+    throw new Rx.Error("couldn't understand type name '" + name + "'");
 
   if (! this.prefix_registry[ matches[1] ])
-    throw "unknown prefix '" + matches[1] + "' in type name '" + name + "'";
+    throw new Rx.Error("unknown prefix '" + matches[1] + "' in type name '" + name + "'");
 
   return this.prefix_registry[ matches[1] ] + matches[2];
+}
+
+Rx.prototype.addPrefix = function (name, base) {
+  if (this.prefix_registry[ name ])
+      throw new Rx.Error("the prefix '" + name + "' is already registered");
+
+  this.prefix_registry[ name ] = base;
 }
 
 Rx.prototype.registerType = function (type, opt) {
   var uri = type.uri;
 
   if (this.type_registry[ uri ])
-    throw "tried to register type for already-registered uri " + uri;
+    throw new Rx.Error("tried to register type for already-registered uri " + uri);
 
   this.type_registry[ uri ] = type;
+};
+
+Rx.prototype.learnType = function (uri, schema) {
+  if (this.type_registry[ uri ])
+    throw new Rx.Error("tried to learn type for already-registered uri " + uri);
+
+  // make sure schema is valid
+  // should this be in a try/catch?
+  this.makeSchema(schema);
+
+  this.type_registry[ uri ] = { schema: schema };
 };
 
 Rx.prototype.typeFor = function (typeName) {
   var uri = this.expand_uri(typeName);
 
   var typeChecker = this.type_registry[ uri ];
-  if (! typeChecker) throw 'unknown type: ' + uri;
+  if (! typeChecker) throw new Rx.Error('unknown type: ' + uri);
 
   return typeChecker;
 };
@@ -41,7 +59,14 @@ Rx.prototype.typeFor = function (typeName) {
 Rx.prototype.makeSchema = function (schema) {
   if (schema.constructor == String) schema = { type: schema };
   var typeChecker = this.typeFor(schema.type);
-  return new typeChecker(schema, this);
+
+  if (typeof(typeChecker) == 'object') {
+    if (! Rx.Util._x_subset_keys_y(schema, { type: true }))
+      throw new Rx.Error('composed type does not take check arguments');
+    return this.makeSchema(typeChecker.schema);
+  } else {
+    return new typeChecker(schema, this);
+  }
 };
 
 Rx.Error = function (message) { this.message = message };

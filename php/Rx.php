@@ -59,6 +59,23 @@ class Rx {
     return $core_types;
   }
 
+  function add_prefix($name, $base) {
+    if (isset($this->prefix_registry[$name]))
+      throw new Exception("the prefix '$name' is already registered");
+
+    $this->prefix_registry[$name] = $base;
+  }
+
+  function learn_type($uri, $schema) {
+    if (isset($this->type_registry->$uri))
+      throw new Exception("tried to learn type for already-registered uri $uri");
+
+    # make sure schema is valid
+    $this->make_schema($schema);
+
+    $this->type_registry->$uri = array( 'schema' => $schema );
+  }
+
   function make_schema($schema) {
     if (! is_object($schema)) {
       $schema_name = $schema;
@@ -66,16 +83,24 @@ class Rx {
       $schema->type = $schema_name;
     }
 
-    $type = $schema->type;
+    if (empty($schema->type))
+      throw new Exception("can't make a schema with no type");
 
-    if (! $type) throw new Exception("can't make a schema with no type");
+    $uri = $this->expand_uri($schema->type);
 
-    $uri = $this->expand_uri($type);
+    if (! isset($this->type_registry->$uri))
+      throw new Exception("unknown type: $uri");
 
     $type_class = $this->type_registry->$uri;
   
-    if ($type_class)
+    if (is_array($type_class)) {
+      foreach ($schema as $key => $entry)
+        if ($key != 'type')
+          throw new Exception('composed type does not take check arguments');
+      return $this->make_schema($type_class['schema']);
+    } elseif ($type_class) {
       return new $type_class($schema, $this);
+    }
 
     return false;
   }
@@ -91,8 +116,16 @@ class RxCoretypeAll {
     return true;
   }
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'of' and $key != 'type')
+        throw new Exception("unknown parameter $key for //all schema");
+  }
+
   function __construct($schema, $rx) {
-    if (! $schema->of)
+    RxCoretypeAll::_check_schema($schema);
+
+    if (empty($schema->of))
       throw new Exception("no alternatives given for //all of");
 
     $this->alts = Array();
@@ -112,8 +145,16 @@ class RxCoretypeAny {
     return false;
   }
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'of' and $key != 'type')
+        throw new Exception("unknown parameter $key for //any schema");
+  }
+
   function __construct($schema, $rx) {
-    if ($schema->of !== null) {
+    RxCoretypeAny::_check_schema($schema);
+
+    if (property_exists($schema, 'of')) {
       if (count($schema->of) == 0)
         throw new Exception("no alternatives given for //any of");
 
@@ -127,6 +168,16 @@ class RxCoretypeAny {
 class RxCoretypeBool {
   const uri = 'tag:codesimply.com,2008:rx/core/bool';
   function check($value) { return is_bool($value); }
+
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'type')
+        throw new Exception("unknown parameter $key for //bool schema");
+  }
+
+  function __construct($schema, $rx) {
+    RxCoretypeBool::_check_schema($schema);
+  }
 }
 
 class RxCoreTypeArr {
@@ -144,12 +195,12 @@ class RxCoreTypeArr {
   function __construct($schema, $rx) {
     RxCoretypeArr::_check_schema($schema);
 
-    if (! $schema->contents)
+    if (empty($schema->contents))
       throw new Exception('no contents entry for //arr schema');
 
     $this->content_schema = $rx->make_schema($schema->contents);
 
-    if ($schema->length) {
+    if (isset($schema->length)) {
       $this->length_checker = new RxRangeChecker( $schema->length );
     }
   }
@@ -197,14 +248,14 @@ class RxCoreTypeNum {
   function __construct ($schema) {
     RxCoretypeNum::_check_schema($schema, '//num');
 
-    if ($schema->value !== null) {
+    if (isset($schema->value)) {
       if (! (is_int($schema->value) || is_float($schema->value)))
         throw new Exception('invalid value for //num schema');
 
       $this->fixed_value = $schema->value;
     }
 
-    if ($schema->range) {
+    if (isset($schema->range)) {
       $this->range_checker = new RxRangeChecker( $schema->range );
     }
   }
@@ -234,7 +285,7 @@ class RxCoreTypeInt {
   function __construct ($schema) {
     RxCoretypeNum::_check_schema($schema, '//int');
 
-    if ($schema->value !== null) {
+    if (isset($schema->value)) {
       if (! (is_int($schema->value) || is_float($schema->value)))
         throw new Exception('invalid value for //int schema');
 
@@ -244,7 +295,7 @@ class RxCoreTypeInt {
       $this->fixed_value = $schema->value;
     }
 
-    if ($schema->range) {
+    if (isset($schema->range)) {
       $this->range_checker = new RxRangeChecker( $schema->range );
     }
   }
@@ -253,40 +304,95 @@ class RxCoreTypeInt {
 class RxCoretypeDef {
   const uri = 'tag:codesimply.com,2008:rx/core/def';
   function check($value) { return ! is_null($value); }
+
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'type')
+        throw new Exception("unknown parameter $key for //def schema");
+  }
+
+  function __construct($schema, $rx) {
+    RxCoretypeDef::_check_schema($schema);
+  }
 }
 
 class RxCoretypeFail {
   const uri = 'tag:codesimply.com,2008:rx/core/fail';
   function check($value) { return false; }
+
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'type')
+        throw new Exception("unknown parameter $key for //fail schema");
+  }
+
+  function __construct($schema, $rx) {
+    RxCoretypeFail::_check_schema($schema);
+  }
 }
 
 class RxCoretypeNil {
   const uri = 'tag:codesimply.com,2008:rx/core/nil';
   function check($value) { return is_null($value); }
+
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'type')
+        throw new Exception("unknown parameter $key for //nil schema");
+  }
+
+  function __construct($schema, $rx) {
+    RxCoretypeNil::_check_schema($schema);
+  }
 }
 
 class RxCoretypeOne {
   const uri = 'tag:codesimply.com,2008:rx/core/one';
   function check($value) { return is_scalar($value); }
+
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'type')
+        throw new Exception("unknown parameter $key for //one schema");
+  }
+
+  function __construct($schema, $rx) {
+    RxCoretypeOne::_check_schema($schema);
+  }
 }
 
 class RxCoretypeStr {
   const uri = 'tag:codesimply.com,2008:rx/core/str';
   var $fixed_value;
+  var $length_checker;
 
   function check($value) {
     if (! is_string($value)) return false;
+    if ($this->length_checker)
+      if (! $this->length_checker->check(strlen($value))) return false;
     if ($this->fixed_value !== null and $value != $this->fixed_value)
       return false;
     return true;
   }
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'value' and $key != 'type' and $key != 'length')
+        throw new Exception("unknown parameter $key for //str schema");
+  }
+
   function __construct($schema, $rx) {
-    if ($schema->value !== null) {
+    RxCoretypeStr::_check_schema($schema);
+
+    if (isset($schema->value)) {
       if (! is_string($schema->value))
         throw new Exception('invalid value for //str schema');
 
       $this->fixed_value = $schema->value;
+    }
+
+    if (isset($schema->length)) {
+      $this->length_checker = new RxRangeChecker( $schema->length );
     }
   }
 }
@@ -320,8 +426,16 @@ class RxCoretypeSeq {
     return true;
   }
 
+  function _check_schema($schema) {
+    foreach ($schema as $key => $entry)
+      if ($key != 'contents' and $key != 'tail' and $key != 'type')
+        throw new Exception("unknown parameter $key for //arr schema");
+  }
+
   function __construct($schema, $rx) {
-    if (! $schema->contents)
+    RxCoretypeSeq::_check_schema($schema);
+
+    if (! isset($schema->contents))
       throw new Exception('no contents entry for //seq schema');
   
     if (! is_array($schema->contents))
@@ -333,7 +447,8 @@ class RxCoretypeSeq {
       array_push($this->content_schemata, $rx->make_schema($entry));
     }
 
-    if ($schema->tail) $this->tail_schema = $rx->make_schema($schema->tail);
+    if (isset($schema->tail))
+      $this->tail_schema = $rx->make_schema($schema->tail);
   }
 }
 
@@ -343,7 +458,7 @@ class RxCoretypeMap {
   var $values_schema;
 
   function check($value) {
-    if (get_class($value) != 'stdClass') return false;
+    if (!is_object($value) || get_class($value) != 'stdClass') return false;
 
     if ($this->values_schema) {
       foreach ($value as $key => $entry) {
@@ -377,13 +492,13 @@ class RxCoretypeRec {
   var $rest_schema;
 
   function check($value) {
-    if (! is_object($value) or get_class($value) != 'stdClass') return false;
+    if (!is_object($value) || get_class($value) != 'stdClass') return false;
 
     $rest = new stdClass();
     $have_rest = false;
 
     foreach ($value as $key => $entry) {
-      if (! $this->known->$key) {
+      if (! isset($this->known->$key)) {
         $have_rest = true;
         $rest->$key = $entry;
       }
@@ -419,18 +534,19 @@ class RxCoretypeRec {
     $this->required = new stdClass();
     $this->optional = new stdClass();
 
-    if ($schema->rest) $this->rest_schema = $rx->make_schema($schema->rest);
+    if (isset($schema->rest))
+      $this->rest_schema = $rx->make_schema($schema->rest);
 
-    if ($schema->required) {
+    if (isset($schema->required)) {
       foreach ($schema->required as $key => $entry) {
         $this->known->$key = true;
         $this->required->$key = $rx->make_schema($entry);
       }
     }
 
-    if ($schema->optional) {
+    if (isset($schema->optional)) {
       foreach ($schema->optional as $key => $entry) {
-        if ($this->known->$key)
+        if (isset($this->known->$key))
           throw new Exception("$key is both required and optional in //map");
 
         $this->known->$key = true;

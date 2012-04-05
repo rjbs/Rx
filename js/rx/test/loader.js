@@ -56,7 +56,8 @@ var loadRxTests = (function (specRoot) {
     var schemaName = schemaToTest[i];
     var schema = testSchema[ schemaName ];
 
-    if (schema.invalid) {
+    if (schema.invalid ||
+        (schema.composedtype && schema.composedtype.invalid)) {
       totalTests++;
       if (schema.pass || schema.fail)
         throw 'invalid test: ' + schemaName + ' is invalid but has pass/fail';

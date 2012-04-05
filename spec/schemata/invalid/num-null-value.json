@@ -1,0 +1,8 @@
+{
+  "schema" : {
+    "type"    : "//num",
+    "value"   : null
+  },
+
+  "invalid": true
+}

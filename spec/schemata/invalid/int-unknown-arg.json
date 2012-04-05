@@ -1,4 +1,8 @@
 {
   "invalid": true,
-  "schema" : { "type": "//int", "unknown": "this will make things explode" }
+
+  "schema" : {
+    "type"    : "//int",
+    "unknown" : "this will cause to things explode"
+  }
 }

@@ -1,0 +1,8 @@
+{
+  "schema" : {
+    "type"    : "//map",
+    "values"  : null
+  },
+
+  "invalid": true
+}

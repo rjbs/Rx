@@ -21,8 +21,36 @@ for (schemaName in rxPlan.testSchema) schemaToTest.push(schemaName);
 schemaToTest = schemaToTest.sort();
 
 for (i in schemaToTest) {
+  var rx = new Rx({ defaultTypes: true });
+
+  for (coreType in Rx.CoreType) rx.registerType( Rx.CoreType[coreType] );
+
   var schemaName = schemaToTest[i];
   var schemaTest = rxPlan.testSchema[ schemaName ];
+
+  if (schemaTest.composedtype) {
+    try {
+      rx.learnType(schemaTest.composedtype.uri,
+                   schemaTest.composedtype.schema);
+    } catch (e) {
+      if (schemaTest.composedtype.invalid && (e instanceof Rx.Error)) {
+        pass('BAD COMPOSED TYPE: ' + schemaName);
+        continue;
+      }
+      diag("exception thrown when learning type " + schemaName + ": " + e.message);
+      throw e;
+    }
+
+    if (schemaTest.composedtype.invalid) {
+      fail('BAD COMPOSED TYPE: ' + schemaName);
+      continue;
+    }
+
+    if (schemaTest.composedtype.prefix) {
+      rx.addPrefix(schemaTest.composedtype.prefix[0],
+                   schemaTest.composedtype.prefix[1]);
+    }
+  }
 
   var rxChecker;
 

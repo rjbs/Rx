@@ -12,12 +12,12 @@ class Rx
     }
 
     if opt[:load_core] then
-      Type::Core.core_types.each { |t| learn_type(t) }
+      Type::Core.core_types.each { |t| register_type(t) }
     end
   end
 
 
-  def learn_type(type)
+  def register_type(type)
     uri = type.uri
 
     if @type_registry.has_key?(uri) then
@@ -27,6 +27,20 @@ class Rx
     end
 
     @type_registry[ uri ] = type
+  end
+
+  def learn_type(uri, schema)
+    if @type_registry.has_key?(uri) then
+      raise Rx::Exception.new(
+        "attempted to learn type for already-registered uri #{uri}"
+      )
+    end
+
+    # make sure schema is valid
+    # should this be in a begin/rescue?
+    make_schema(schema)
+
+    @type_registry[ uri ] = { 'schema' => schema }
   end
 
   def expand_uri(name)
@@ -44,6 +58,14 @@ class Rx
     return @prefix[ match[1] ] + match[2]
   end
 
+  def add_prefix(name, base)
+    if @prefix.has_key?(name) then
+      throw Rx::Exception.new("the prefix '#{name}' is already registered")
+    end
+
+    @prefix[name] = base
+  end
+
   def make_schema(schema)
     schema = { 'type' => schema } if schema.instance_of?(String)
 
@@ -59,7 +81,14 @@ class Rx
 
     type_class = @type_registry[uri]
 
-    return type_class.new(schema, self)
+    if type_class.instance_of?(Hash) then
+      if schema.keys != [ 'type' ] then
+        raise Rx::Exception.new('composed type does not take check arguments')
+      end
+      return make_schema(type_class['schema'])
+    else
+      return type_class.new(schema, self)
+    end
   end
   
   class Helper; end;
@@ -318,9 +347,11 @@ class Rx
         def initialize(param, rx)
           super
 
-          if param['values'] then
-            @value_schema = rx.make_schema(param['values'])
+          unless param['values'] then
+            raise Rx::Exception.new("no values schema given for #{uri}")
           end
+
+          @value_schema = rx.make_schema(param['values'])
         end
 
         def check!(value)
@@ -549,7 +580,7 @@ class Rx
 
       class Str < Type::Core
         class << self; def subname; return 'str'; end; end
-        @@allowed_param = { 'type' => true, 'value' => true }
+        @@allowed_param = { 'type' => true, 'value' => true, 'length' => true }
         def allowed_param?(p); return @@allowed_param[p]; end
 
         def initialize(param, rx)
@@ -562,11 +593,20 @@ class Rx
 
             @value = param['value']
           end
+
+          if param['length'] then
+            @length_range = Rx::Helper::Range.new( param['length'] )
+          end
         end
 
         def check!(value)
           unless value.instance_of?(String)
             raise ValidationError.new("expected String got #{value.inspect}", "/str")
+          end
+          if @length_range
+            unless @length_range.check(value.length)
+              raise ValidationError.new("expected String of length #{@length_range}, got #{value.length}", "/str")
+            end
           end
           if @value and value != @value
             raise ValidationError.new("expected #{@value.inspect} got #{value.inspect}", "/str")
