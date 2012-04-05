@@ -22,7 +22,7 @@ sub check {
   my ($self, $value) = @_;
   local $@;
 
-  return 1 if eval { $self->validate($value); };
+  return 1 if eval { $self->assert_valid($value); };
   my $failures = $@;
 
   if (eval { $failures->isa('Data::Rx::Failures') }) {
@@ -76,7 +76,7 @@ sub _subchecks {
 
     my ($value, $checker, $context) = @$subcheck;
 
-    next if eval { $checker->validate($value) };
+    next if eval { $checker->assert_valid($value) };
 
     my $failures = $@;
     Carp::confess($failures)

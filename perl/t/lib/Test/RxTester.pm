@@ -83,7 +83,7 @@ sub assert_pass {
   my $desc = "$schema_desc should ACCEPT $input_desc";
 
   try {
-    $schema->validate($input);
+    $schema->assert_valid($input);
     Test::More::pass("$desc");
   } catch {
     my $fails = $_;
@@ -102,7 +102,7 @@ sub assert_fail {
   my $desc = "$schema_desc should REJECT $input_desc";
 
   try {
-    $schema->validate($input);
+    $schema->assert_valid($input);
     Test::More::fail($desc);
     if ($want_struct) {
       Test::More::fail("$desc, failures struct");

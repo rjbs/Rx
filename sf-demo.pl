@@ -1,6 +1,7 @@
 #!perl
 use strict;
 use warnings;
+use 5.10.1;
 
 use lib 'perl/lib';
 use Data::Rx;
@@ -43,7 +44,7 @@ my $input = [
   },
 ];
 
-eval { $schema->validate($input); };
+eval { $schema->assert_valid($input); };
 my $fail = $@;
-print $fail;
+say $fail;
 

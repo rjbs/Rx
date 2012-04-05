@@ -36,7 +36,7 @@ sub new_checker {
   return $self;
 }
 
-sub validate {
+sub assert_valid {
   my ($self, $value) = @_;
 
   unless (defined $value) {

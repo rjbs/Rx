@@ -64,7 +64,7 @@ sub _value_is_of_type {
   return $value =~ $_NUM_RE;
 }
 
-sub validate {
+sub assert_valid {
   my ($self, $value) = @_;
 
   $self->__type_fail($value) unless defined $value and length $value;

@@ -4,7 +4,7 @@ package Data::Rx::CoreType::one;
 use base 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //one type
 
-sub validate {
+sub assert_valid {
   my ($self, $value) = @_;
 
   if (! defined $value) {

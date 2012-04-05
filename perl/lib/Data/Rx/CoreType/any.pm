@@ -24,7 +24,7 @@ sub new_checker {
   return $self;
 }
 
-sub validate {
+sub assert_valid {
   return 1 unless $_[0]->{of};
 
   my ($self, $value) = @_;
@@ -32,7 +32,7 @@ sub validate {
   my @failures;
   for my $i (0 .. $#{ $self->{of} }) {
     my $check = $self->{of}[ $i ];
-    return 1 if eval { $check->validate($value) };
+    return 1 if eval { $check->assert_valid($value) };
 
     my $failure = $@;
     $failure->contextualize({
