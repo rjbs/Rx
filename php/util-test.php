@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-require 'Test.php';
+require 'ext/Test.php';
 require 'Rx.php';
 
 $test_arrays = array(
