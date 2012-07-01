@@ -37,8 +37,7 @@ sub assert_valid {
     my $failure = $@;
     $failure->contextualize({
       type       => $self->type,
-      check      => ['of',  $i],
-      check_type => [ 'k', 'i'],
+      check_path => [ [ 'of', 'key'], [ $i, 'index' ] ],
     });
 
     push @failures, $failure;

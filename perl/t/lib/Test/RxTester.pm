@@ -176,18 +176,6 @@ sub compare_fail {
         push @diag, "want path to data: $want",
                     "have path to data: $have";
       };
-    my $ref_to_value =
-      test_path($input, [$fail->data_path], [$fail->data_path_type]);
-    if ($ref_to_value) {
-      eq_deeply($$ref_to_value, shallow($fail->value))
-        or do {
-          $ok = 0;
-          push @diag, "value at path to data does not match failure value";
-        };
-    } else {
-      $ok = 0;
-      push @diag, "invalid path to data: " . $fail->data_string;
-    }
   }
 
   if ($want->{check}) {
@@ -199,14 +187,6 @@ sub compare_fail {
         push @diag, "want path to check: $want",
                     "have path to check: $have";
       };
-
-    # path check doesn't work for composed types...  -- rjk, 2010-12-17
-    $schema_desc =~ /composed/
-      or test_path($schema_spec, [$fail->check_path], [$fail->check_path_type])
-        or do {
-          $ok = 0;
-          push @diag, "invalid path to check: " . $fail->check_string;
-        };
   }
 
   if ($want->{error}) {
@@ -225,33 +205,6 @@ sub compare_fail {
   }
 
   return ($ok, @diag);
-}
-
-sub test_path {
-  my ($data, $path, $type) = @_;
-
-  @$path == @$type or return;
-
-  for (my $i = 0; $i < @$path; ++$i) {
-    ref $data or return;
-
-    my $key = $path->[$i];
-
-    if ($type->[$i] eq 'i' && ref $data eq 'ARRAY') {
-      $key =~ /^\d+\z/ or return;
-      $key <= $#$data
-        or return;
-      $data = $data->[$key];
-    } elsif ($type->[$i] eq 'k' && ref $data eq 'HASH') {
-      exists $data->{$key}
-        or return;
-      $data = $data->{$key};
-    } else {
-      return;
-    }
-  }
-
-  return \$data;
 }
 
 sub run_tests {

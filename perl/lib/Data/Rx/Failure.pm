@@ -64,48 +64,41 @@ sub size {
 sub data_path {
   my ($self) = @_;
 
-  map @{ $_->{data} || [] }, reverse @{ $self->struct };
-}
-
-sub data_path_type {
-  my ($self) = @_;
-
-  map @{ $_->{data_type} || [] }, reverse @{ $self->struct };
+  map {; map { $_->[0] } @{ $_->{data_path} || [] } }
+    reverse @{ $self->struct };
 }
 
 sub data_string {
   my ($self) = @_;
 
-  return $self->path_string('$data', [$self->data_path], [$self->data_path_type]);
+  return $self->_path_string('$data', 'data_path');
 }
 
 sub check_path {
   my ($self) = @_;
 
-  map @{ $_->{check} || [] }, reverse @{ $self->struct };
-}
-
-sub check_path_type {
-  my ($self) = @_;
-
-  map @{ $_->{check_type} || [] }, reverse @{ $self->struct };
+  map {; map { $_->[0] } @{ $_->{check_path} || [] } }
+    reverse @{ $self->struct };
 }
 
 sub check_string {
   my ($self) = @_;
 
-  return $self->path_string('$schema', [$self->check_path], [$self->check_path_type]);
+  return $self->_path_string('$schema', 'check_path');
 }
 
-sub path_string {
-  my ($self, $base, $path, $type) = @_;
+sub _path_string {
+  my ($self, $base, $key) = @_;
 
-  my $str = $base;
+  my $str  = $base;
 
-  if (@$path) {
-    $str .= '->';
-    for (my $i = 0; $i < @$path; ++$i) {
-      $str .= $type->[$i] eq 'i' ? "[$path->[$i]]" : "{$path->[$i]}";
+  for my $frame (reverse @{ $self->struct || [] }) {
+    my $hunk = $frame->{ $key };
+    for my $entry (@$hunk) {
+      if    ($entry->[1] eq 'key')   { $str .= "->{$entry->[0]}"; }
+      elsif ($entry->[1] eq 'index') { $str .= "->[$entry->[0]]"; }
+      elsif ($entry->[2])            { $str = $entry->[2]->($str, @$entry) }
+      else                           { $str .= "->? $entry->[0] ?"; }
     }
   }
 
@@ -117,9 +110,11 @@ sub stringify {
 
   my $struct = $self->struct;
 
-  my $str = "Failed $struct->[0]{type}: $struct->[0]{message} " .
-            "(error: " . $self->error_string . " " .
-            "at " . $self->data_string . ")";
+  my $str = sprintf "Failed %s: %s (error: %s at %s)",
+    $self->error_types,
+    $struct->[0]{message},
+    $self->error_string,
+    $self->data_string;
 
   # also stringify failures under the current failure (as for //any),
   # with indentation

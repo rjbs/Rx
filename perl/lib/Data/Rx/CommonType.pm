@@ -66,17 +66,17 @@ sub _subchecks {
 
     next if eval { $checker->assert_valid($value) };
 
-    my $failures = $@;
-    Carp::confess($failures)
-      unless eval { $failures->isa('Data::Rx::FailureSet') ||
-                    $failures->isa('Data::Rx::Failure') };
+    my $failure = $@;
+    Carp::confess($failure)
+      unless eval { $failure->isa('Data::Rx::FailureSet') ||
+                    $failure->isa('Data::Rx::Failure') };
 
-    $failures->contextualize({
+    $failure->contextualize({
       type  => $self->type,
       %$context,
     });
 
-    push @fails, $failures;
+    push @fails, $failure;
   }
 
   if (@fails) {

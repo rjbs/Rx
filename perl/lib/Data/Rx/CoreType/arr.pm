@@ -56,14 +56,13 @@ sub assert_valid {
 
   for my $i ($self->{skip} .. $#$value) {
     push @subchecks, [
-                      $value->[$i],
-                      $self->{content_check},
-                      { data       => [$i ],
-                        data_type  => ['i'],
-                        check      => ['contents'],
-                        check_type => ['k'       ],
-                      },
-                     ];
+      $value->[$i],
+      $self->{content_check},
+      {
+        data_path   => [ [ $i, 'index' ] ],
+        check_path  => [ [ 'contents', 'key'] ],
+      },
+    ];
   }
 
   $self->_subchecks(\@subchecks);

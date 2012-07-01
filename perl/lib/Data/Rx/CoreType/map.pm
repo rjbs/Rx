@@ -35,10 +35,8 @@ sub assert_valid {
     push @subchecks, [
       $value->{ $key },
       $self->{value_constraint},
-      { data       => [$key],
-        data_type  => ['k' ],
-        check      => ['values'],
-        check_type => ['k'     ],
+      { data_path  => [ [$key, 'key'] ],
+        check_path => [ ['values', 'key' ] ],
       },
     ];
   }

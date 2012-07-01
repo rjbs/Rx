@@ -85,16 +85,15 @@ sub assert_valid {
 
     if (exists $value->{$key}) {
       push @subchecks, [
-                        $value->{$key},
-                        $check->{schema},
-                        { data       => [$key],
-                          data_type  => ['k' ],
-                          check      => [$check->{optional}
-                                           ? 'optional' : 'required',
-                                         $key],
-                          check_type => ['k', 'k'],
-                        },
-                       ];
+        $value->{$key},
+        $check->{schema},
+        { data_path  => [ [$key, 'key' ] ],
+          check_path => [
+            [ $check->{optional} ? 'optional' : 'required', 'key' ],
+            [ $key, 'key' ],
+          ],
+        },
+       ];
     }
   }
 
@@ -102,12 +101,11 @@ sub assert_valid {
     my %rest = map { $_ => $value->{$_} } @rest_keys;
 
     push @subchecks, [
-                      \%rest,
-                      $self->{rest_schema},
-                      { check      => ['rest'],
-                        check_type => ['k'],
-                      },
-                     ];
+      \%rest,
+      $self->{rest_schema},
+      { check_path => [ ['rest', 'key' ] ],
+      },
+    ];
   }
 
   $self->_subchecks(\@subchecks);

@@ -30,9 +30,9 @@ sub assert_valid {
     push @subchecks, [
       $value,
       $self->{of}[$i],
-      { check      => ['of', $i ],
-        check_type => ['k' , 'i'],
-      },
+      {
+        check_path => [ [ 'of', 'key'], [ $i, 'index' ] ],
+      }
     ];
   }
 

@@ -58,7 +58,6 @@ sub build_struct {
 
     @path == @type or die "bad path info in build_struct()";
 
-
     # go to the appropriate location in the struct, vivifying as necessary
 
     my $p = \$data;

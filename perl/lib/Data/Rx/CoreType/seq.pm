@@ -64,10 +64,11 @@ sub assert_valid {
     push @subchecks, [
                       $value->[ $i ],
                       $content_schemata->[ $i ],
-                      { data       => [$i ],
-                        data_type  => ['i'],
-                        check      => ['contents', $i ],
-                        check_type => ['k'       , 'i'],
+                      { data_path  => [ [$i, 'index' ] ],
+                        check_path => [
+                          [ 'contents', 'key' ],
+                          [ $i, 'index' ]
+                        ],
                       },
                      ];
   }
@@ -77,9 +78,7 @@ sub assert_valid {
       push @subchecks, [
                         $value,
                         $self->{tail_check},
-                        { check      => ['tail'],
-                          check_type => ['k'   ],
-                        },
+                        { check_path => [ ['tail', 'key' ] ] },
                        ];
     } else {
       push @subchecks,
@@ -94,7 +93,7 @@ sub assert_valid {
           ),
         });
     }
-  }   
+  }
 
   $self->_subchecks(\@subchecks);
 
