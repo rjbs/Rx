@@ -96,17 +96,14 @@ sub assert_pass {
 
 sub assert_fail {
   my ($self, $arg) = @_;
-  my ($schema, $schema_desc, $schema_spec, $input, $input_desc, $want, $want_struct)
-    = @$arg{ qw(schema schema_desc schema_spec input input_desc want want_struct) };
+  my ($schema, $schema_desc, $schema_spec, $input, $input_desc, $want)
+    = @$arg{ qw(schema schema_desc schema_spec input input_desc want) };
 
   my $desc = "$schema_desc should REJECT $input_desc";
 
   try {
     $schema->assert_valid($input);
     Test::More::fail($desc);
-    if ($want_struct) {
-      Test::More::fail("$desc, failures struct");
-    }
   } catch {
     my $fails = $_;
     my $ok   = 1;
@@ -159,20 +156,6 @@ sub assert_fail {
 
     Test::More::ok($ok, $desc);
     Test::More::diag "    $_" for @diag;
-
-    if ($want_struct) {
-      my ($ok, $stack) =
-        cmp_details($want_struct,$fails->build_struct);
-
-      my @diag;
-
-      if (!$ok) {
-        push @diag, "errors struct does not match", deep_diag($stack);
-      }
-
-      Test::More::ok($ok, "$desc, failures struct");
-      Test::More::diag "    $_" for @diag;
-    }
   }
 }
 
@@ -337,7 +320,6 @@ sub run_tests {
           input       => $input,
           input_desc  => $test_name,
           want        => $test_spec->{errors},
-          want_struct => $test_spec->{errors_struct},
         });
       }
     }
