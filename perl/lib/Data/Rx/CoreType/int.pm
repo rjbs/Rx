@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::int;
-use base 'Data::Rx::CoreType::num';
+use parent 'Data::Rx::CoreType::num';
 # ABSTRACT: the Rx //int type
 
 sub subname   { 'int' }

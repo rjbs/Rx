@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::one;
-use base 'Data::Rx::CoreType';
+use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //one type
 
 sub assert_valid {

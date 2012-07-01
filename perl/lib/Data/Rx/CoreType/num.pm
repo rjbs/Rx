@@ -1,18 +1,18 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::num;
-use base 'Data::Rx::CoreType';
+use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //num type
 
-sub new_checker {
+sub guts_from_arg {
   my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, { range => 1, value => 1});
 
-  my $self = $class->SUPER::new_checker({}, $rx, $type);
+  my $guts = {};
 
-  $self->{range_check} = Data::Rx::Util->_make_range_check($arg->{range})
+  $guts->{range_check} = Data::Rx::Util->_make_range_check($arg->{range})
     if $arg->{range};
 
   if (exists $arg->{value}) {
@@ -30,9 +30,9 @@ sub new_checker {
     }
   }
 
-  $self->{value} = $arg->{value} if defined $arg->{value};
+  $guts->{value} = $arg->{value} if defined $arg->{value};
 
-  return $self;
+  return $guts;
 }
 
 sub __type_fail {

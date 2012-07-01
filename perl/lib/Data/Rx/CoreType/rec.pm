@@ -1,14 +1,14 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::rec;
-use base 'Data::Rx::CoreType';
+use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //rec type
 
 use Scalar::Util ();
 
 sub subname   { 'rec' }
 
-sub new_checker {
+sub guts_from_arg {
   my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new") unless
@@ -18,11 +18,11 @@ sub new_checker {
       optional => 1,
     });
 
-  my $self = $class->SUPER::new_checker({}, $rx, $type);
+  my $guts = {};
 
   my $content_schema = {};
 
-  $self->{rest_schema} = $rx->make_schema($arg->{rest}) if $arg->{rest};
+  $guts->{rest_schema} = $rx->make_schema($arg->{rest}) if $arg->{rest};
 
   TYPE: for my $type (qw(required optional)) {
     next TYPE unless my $entries = $arg->{$type};
@@ -38,8 +38,8 @@ sub new_checker {
     }
   };
 
-  $self->{content_schema} = $content_schema;
-  return $self;
+  $guts->{content_schema} = $content_schema;
+  return $guts;
 }
 
 sub assert_valid {

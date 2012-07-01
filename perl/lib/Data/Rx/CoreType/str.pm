@@ -1,12 +1,12 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::str;
-use base 'Data::Rx::CoreType';
+use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //str type
 
 use Data::Rx::Util;
 
-sub new_checker {
+sub guts_from_arg {
   my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new")
@@ -26,14 +26,14 @@ sub new_checker {
     }
   }
 
-  my $self = $class->SUPER::new_checker({}, $rx, $type);
+  my $guts = {};
 
-  $self->{length_check} = Data::Rx::Util->_make_range_check($arg->{length})
+  $guts->{length_check} = Data::Rx::Util->_make_range_check($arg->{length})
     if $arg->{length};
 
-  $self->{value} = $arg->{value} if defined $arg->{value};
+  $guts->{value} = $arg->{value} if defined $arg->{value};
 
-  return $self;
+  return $guts;
 }
 
 sub assert_valid {

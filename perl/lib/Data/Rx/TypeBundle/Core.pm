@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Data::Rx::TypeBundle::Core;
-use base 'Data::Rx::TypeBundle';
+use parent 'Data::Rx::TypeBundle';
 # ABSTRACT: the bundle of core Rx types
 
 use Module::Pluggable::Object;

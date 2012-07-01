@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::nil;
-use base 'Data::Rx::CoreType';
+use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //nil type
 
 sub assert_valid {

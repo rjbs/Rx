@@ -1,14 +1,14 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::seq;
-use base 'Data::Rx::CoreType';
+use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //seq type
 
 use Scalar::Util ();
 
 sub subname   { 'seq' }
 
-sub new_checker {
+sub guts_from_arg {
   my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new")
@@ -17,18 +17,18 @@ sub new_checker {
   Carp::croak("no contents array given")
     unless $arg->{contents} and (ref $arg->{contents} eq 'ARRAY');
 
-  my $self = $class->SUPER::new_checker({}, $rx, $type);
+  my $guts = {};
 
   my @content_schemata = map { $rx->make_schema($_) }
                          @{ $arg->{contents} };
 
-  $self->{content_schemata} = \@content_schemata;
-  $self->{tail_check} = $arg->{tail}
+  $guts->{content_schemata} = \@content_schemata;
+  $guts->{tail_check} = $arg->{tail}
                       ? $rx->make_schema({ %{$arg->{tail}},
                                            skip => 0+@{$arg->{contents}}})
                       : undef;
 
-  return $self;
+  return $guts;
 }
 
 sub assert_valid {

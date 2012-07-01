@@ -1,27 +1,27 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::any;
-use base 'Data::Rx::CoreType';
+use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //any type
 
 use Scalar::Util ();
 
-sub new_checker {
+sub guts_from_arg {
   my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new")
     unless Data::Rx::Util->_x_subset_keys_y($arg, { of  => 1});
 
-  my $self = $class->SUPER::new_checker({}, $rx, $type);
+  my $guts = {};
 
   if (my $of = $arg->{of}) {
     Carp::croak("invalid 'of' argument to //any") unless
       Scalar::Util::reftype $of eq 'ARRAY' and @$of;
 
-    $self->{of} = [ map {; $rx->make_schema($_) } @$of ];
+    $guts->{of} = [ map {; $rx->make_schema($_) } @$of ];
   }
 
-  return $self;
+  return $guts;
 }
 
 sub assert_valid {

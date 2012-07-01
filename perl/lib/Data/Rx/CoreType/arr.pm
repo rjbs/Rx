@@ -1,14 +1,14 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::arr;
-use base 'Data::Rx::CoreType';
+use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //arr type
 
 use Scalar::Util ();
 
-sub subname   { 'arr' }
+sub subname { 'arr' }
 
-sub new_checker {
+sub guts_from_arg {
   my ($class, $arg, $rx, $type) = @_;
 
   Carp::croak("unknown arguments to new")
@@ -18,18 +18,16 @@ sub new_checker {
   Carp::croak("no contents schema given")
     unless $arg->{contents} and (ref $arg->{contents} || 'HASH' eq 'HASH');
 
-  my $self = $class->SUPER::new_checker({}, $rx, $type);
+  my $guts = {
+    content_check => $rx->make_schema($arg->{contents}),
+  };
 
-  my $content_check = $rx->make_schema($arg->{contents});
-
-  $self->{content_check} = $content_check;
-
-  $self->{length_check} = Data::Rx::Util->_make_range_check($arg->{length})
+  $guts->{length_check} = Data::Rx::Util->_make_range_check($arg->{length})
     if $arg->{length};
 
-  $self->{skip} = $arg->{skip} || 0;
+  $guts->{skip} = $arg->{skip} || 0;
 
-  return $self;
+  return $guts;
 }
 
 sub assert_valid {
@@ -55,7 +53,7 @@ sub assert_valid {
         value   => $value,
       });
   }
-  
+
   for my $i ($self->{skip} .. $#$value) {
     push @subchecks, [
                       $value->[$i],
