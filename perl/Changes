@@ -1,8 +1,14 @@
 Revision history for Data-Rx
 
 {{$NEXT}}
+          major changes to how structured failures report; still experimental
+
+          introduces CommonType abstract base class
 
 0.200000  2012-04-01 14:33:26 Europe/Paris
+
+          first pass at merging in Ronald J Kimball (and rjbs's) work on
+          structured failures; still experimental
 
 0.100110  2010-01-11 22:42:19 America/New_York
           do not require JSON::XS
