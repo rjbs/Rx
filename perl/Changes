@@ -1,6 +1,8 @@
 Revision history for Data-Rx
 
 {{$NEXT}}
+
+0.200001  2012-07-01 17:11:55 America/New_York
           major changes to how structured failures report; still experimental
 
           introduces CommonType abstract base class
