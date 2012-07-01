@@ -20,8 +20,7 @@
           [
            { "data": [ ], "check": [ "of", 0 ], "error": [ "value" ] },
            { "data": [ ], "check": [ "of", 1 ], "error": [ "range" ] }
-          ],
-        "errors_struct": "value,range"
+          ]
       }
     },
     "str": {
@@ -30,8 +29,7 @@
           [
            { "data": [ ], "check": [ "of", 0 ], "error": [ "type" ] },
            { "data": [ ], "check": [ "of", 1 ], "error": [ "type" ] }
-          ],
-        "errors_struct": "type,type"
+          ]
       }
     }
   }

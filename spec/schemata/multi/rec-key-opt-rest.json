@@ -33,9 +33,7 @@
             "check": [ "rest", "values" ],
             "error": [ "type" ]
            }
-          ],
-        "errors_struct":
-          { "key": "missing", "opt": "type", "rest": "type" }
+          ]
       }
     }
   }

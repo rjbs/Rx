@@ -13,9 +13,7 @@
           [
            { "data": [ "opt"  ], "check": [ "values" ], "error": [ "type" ] },
            { "data": [ "rest" ], "check": [ "values" ], "error": [ "type" ] }
-          ],
-        "errors_struct":
-          { "opt": "type", "rest": "type" }
+          ]
       }
     }
   }
