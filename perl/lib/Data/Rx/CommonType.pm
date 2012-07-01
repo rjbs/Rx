@@ -51,8 +51,8 @@ sub fail {
   die $self->new_fail($struct);
 }
 
-sub _subchecks {
-  my ($self, $subchecks, $fails) = @_;
+sub perform_subchecks {
+  my ($self, $subchecks) = @_;
 
   my @fails;
 

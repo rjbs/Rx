@@ -108,7 +108,7 @@ sub assert_valid {
     ];
   }
 
-  $self->_subchecks(\@subchecks);
+  $self->perform_subchecks(\@subchecks);
 
   return 1;
 }
