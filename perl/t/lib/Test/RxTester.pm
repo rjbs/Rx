@@ -114,7 +114,7 @@ sub assert_fail {
 
   FAILS:
     {
-      if (try { $fails->isa('Data::Rx::Failures') }) {
+      if (try { $fails->isa('Data::Rx::FailureSet') }) {
         my $fail = $fails->failures;
         $want ||= [];
 
@@ -152,7 +152,7 @@ sub assert_fail {
                        ? "unblessed " . ref($fails)
                        : "non-ref: $fails";
 
-        push @diag, 'want $@: Data::Rx::Failures',
+        push @diag, 'want $@: Data::Rx::FailureSet',
                     'have $@: ' . $desc;
       }
     }

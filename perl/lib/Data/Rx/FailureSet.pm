@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package Data::Rx::Failures;
+package Data::Rx::FailureSet;
 # ABSTRACT: multiple structured failure reports from an Rx checker
 
 
@@ -12,7 +12,7 @@ sub new {
   my $failures;
 
   my $guts = {
-    failures => [ map $_->isa('Data::Rx::Failures')
+    failures => [ map $_->isa('Data::Rx::FailureSet')
                         ? @{ $_->{failures} }
                         : $_,
                       @{ $arg->{failures} || [] },
