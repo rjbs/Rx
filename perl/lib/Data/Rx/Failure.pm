@@ -111,7 +111,7 @@ sub stringify {
   my $struct = $self->struct;
 
   my $str = sprintf "Failed %s: %s (error: %s at %s)",
-    $self->error_types,
+    $struct->[0]{type},
     $struct->[0]{message},
     $self->error_string,
     $self->data_string;
