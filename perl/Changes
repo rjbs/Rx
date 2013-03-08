@@ -2,6 +2,10 @@ Revision history for Data-Rx
 
 {{$NEXT}}
 
+0.200003  2013-03-08 09:23:30 America/New_York
+          correct the type that failed in error stringification (Thanks, Ronald
+          J Kimball!)
+
 0.200002  2012-09-18 10:53:28 America/New_York
           structured failures, now for real
 
