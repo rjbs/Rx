@@ -1,3 +1,4 @@
+import numbers
 import collections
 import re
 
@@ -6,34 +7,32 @@ class Error(Exception):
     pass
 
 
-class Util(object):
-    @staticmethod
-    def make_range_check(opt):
-        range = {}
-        for entry in opt.keys():
-            if entry not in ('min', 'max', 'min-ex', 'max-ex'):
-                raise ValueError("illegal argument to make_range_check")
+def make_range_check(opt):
+    range = {}
+    for entry in opt.keys():
+        if entry not in ('min', 'max', 'min-ex', 'max-ex'):
+            raise ValueError("illegal argument to make_range_check")
 
-            range[entry] = opt[entry]
+        range[entry] = opt[entry]
 
-        def check_range(value):
-            if range.get('min') is None and value < range['min']:
-                return False
-            if range.get('min-ex') is None and value <= range['min-ex']:
-                return False
-            if range.get('max-ex') is None and value >= range['max-ex']:
-                return False
-            if range.get('max') is None and value > range['max']:
-                return False
-            return True
+    def check_range(value):
+        if range.get('min') is not None and value < range['min']:
+            return False
+        if range.get('min-ex') is not None and value <= range['min-ex']:
+            return False
+        if range.get('max-ex') is not None and value >= range['max-ex']:
+            return False
+        if range.get('max') is not None and value > range['max']:
+            return False
+        return True
 
-        return check_range
+    return check_range
 
 
 class Factory(object):
     def __init__(self, opt={}):
         self.prefix_registry = {
-            '':         'tag:codesimply.com,2008:rx/core/',
+            '': 'tag:codesimply.com,2008:rx/core/',
             '.meta': 'tag:codesimply.com,2008:rx/meta/',
         }
 
@@ -41,10 +40,6 @@ class Factory(object):
         if opt.get("register_core_types", False):
             for t in core_types:
                 self.register_type(t)
-
-    @staticmethod
-    def _default_prefixes():
-        pass
 
     def expand_uri(self, type_name):
         if re.match('^\w+:', type_name):
@@ -87,10 +82,10 @@ class Factory(object):
         self.type_registry[uri] = {"schema": schema}
 
     def make_schema(self, schema):
-        if type(schema) in (str, unicode):
+        if isinstance(schema, (str, unicode)):
             schema = {"type": schema}
 
-        if not type(schema) is dict:
+        if not isinstance(schema, collections.Mapping):
             raise Error('invalid schema argument to make_schema')
 
         uri = self.expand_uri(schema["type"])
@@ -100,7 +95,7 @@ class Factory(object):
 
         type_class = self.type_registry[uri]
 
-        if type(type_class) is dict:
+        if isinstance(type_class, collections.Mapping):
             if not set(schema.keys()).issubset(set(['type'])):
                 raise Error('composed type does not take check arguments')
             return self.make_schema(type_class["schema"])
@@ -111,20 +106,18 @@ class Factory(object):
 class _CoreType(object):
     @classmethod
     def uri(self):
-        return 'tag:codesimply.com,2008:rx/core/' + self.subname()
+        return 'tag:codesimply.com,2008:rx/core/' + self.subname
 
     def __init__(self, schema, rx):
         if not set(schema.keys()).issubset(set(['type'])):
-            raise Error('unknown parameter for //%s' % self.subname())
+            raise Error('unknown parameter for //%s' % self.subname)
 
     def check(self, value):
         return False
 
 
 class AllType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'all'
+    subname = 'all'
 
     def __init__(self, schema, rx):
         if not set(schema.keys()).issubset(set(('type', 'of'))):
@@ -143,9 +136,7 @@ class AllType(_CoreType):
 
 
 class AnyType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'any'
+    subname = 'any'
 
     def __init__(self, schema, rx):
         self.alts = None
@@ -170,9 +161,7 @@ class AnyType(_CoreType):
 
 
 class ArrType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'arr'
+    subname = 'arr'
 
     def __init__(self, schema, rx):
         self.length = None
@@ -186,10 +175,10 @@ class ArrType(_CoreType):
         self.content_schema = rx.make_schema(schema['contents'])
 
         if schema.get('length'):
-            self.length = Util.make_range_check(schema["length"])
+            self.length = make_range_check(schema["length"])
 
     def check(self, value):
-        if not(type(value) in [type([]), type(())]):
+        if not isinstance(value, collections.Sequence) or isinstance(value, basestring):
             return False
         if self.length and not self.length(len(value)):
             return False
@@ -202,9 +191,7 @@ class ArrType(_CoreType):
 
 
 class BoolType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'bool'
+    subname = 'bool'
 
     def check(self, value):
         if value is True or value is False:
@@ -213,27 +200,21 @@ class BoolType(_CoreType):
 
 
 class DefType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'def'
+    subname = 'def'
 
     def check(self, value):
         return not(value is None)
 
 
 class FailType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'fail'
+    subname = 'fail'
 
     def check(self, value):
         return False
 
 
 class IntType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'int'
+    subname = 'int'
 
     def __init__(self, schema, rx):
         if not set(schema.keys()).issubset(set(('type', 'range', 'value'))):
@@ -241,7 +222,7 @@ class IntType(_CoreType):
 
         self.value = None
         if 'value' in schema:
-            if not type(schema['value']) in (float, int, long):
+            if not isinstance(schema['value'], numbers.Number):
                 raise Error('invalid value parameter for //int')
             if schema['value'] % 1 != 0:
                 raise Error('invalid value parameter for //int')
@@ -249,10 +230,10 @@ class IntType(_CoreType):
 
         self.range = None
         if 'range' in schema:
-            self.range = Util.make_range_check(schema["range"])
+            self.range = make_range_check(schema["range"])
 
     def check(self, value):
-        if not(type(value) in (float, int, long)):
+        if not isinstance(value, numbers.Number) or isinstance(value, bool):
             return False
         if value % 1 != 0:
             return False
@@ -264,9 +245,7 @@ class IntType(_CoreType):
 
 
 class MapType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'map'
+    subname = 'map'
 
     def __init__(self, schema, rx):
         self.allowed = set()
@@ -281,7 +260,6 @@ class MapType(_CoreType):
 
     def check(self, value):
         if not isinstance(value, collections.Mapping):
-        #if not(type(value) is type({})):
             return False
 
         for v in value.values():
@@ -292,18 +270,14 @@ class MapType(_CoreType):
 
 
 class NilType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'nil'
+    subname = 'nil'
 
     def check(self, value):
         return value is None
 
 
 class NumType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'num'
+    subname = 'num'
 
     def __init__(self, schema, rx):
         if not set(schema.keys()).issubset(set(('type', 'range', 'value'))):
@@ -318,10 +292,10 @@ class NumType(_CoreType):
         self.range = None
 
         if schema.get('range'):
-            self.range = Util.make_range_check(schema["range"])
+            self.range = make_range_check(schema["range"])
 
     def check(self, value):
-        if not(type(value) in (float, int, long)):
+        if not isinstance(value, numbers.Number) or isinstance(value, bool):
             return False
         if self.range and not self.range(value):
             return False
@@ -331,21 +305,14 @@ class NumType(_CoreType):
 
 
 class OneType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'one'
+    subname = 'one'
 
     def check(self, value):
-        if type(value) in (int, float, long, bool, str, unicode):
-            return True
-
-        return False
+        return isinstance(value, (numbers.Number, basestring))
 
 
 class RecType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'rec'
+    subname = 'rec'
 
     def __init__(self, schema, rx):
         if not set(schema.keys()).issubset(set(('type', 'rest', 'required', 'optional'))):
@@ -403,9 +370,7 @@ class RecType(_CoreType):
 
 
 class SeqType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'seq'
+    subname = 'seq'
 
     def __init__(self, schema, rx):
         if not set(schema.keys()).issubset(set(('type', 'contents', 'tail'))):
@@ -421,7 +386,7 @@ class SeqType(_CoreType):
             self.tail_schema = rx.make_schema(schema['tail'])
 
     def check(self, value):
-        if not(type(value) in [type([]), type(())]):
+        if not isinstance(value, collections.Sequence) or isinstance(value, basestring):
             return False
 
         if len(value) < len(self.content_schema):
@@ -442,9 +407,7 @@ class SeqType(_CoreType):
 
 
 class StrType(_CoreType):
-    @staticmethod
-    def subname():
-        return 'str'
+    subname = 'str'
 
     def __init__(self, schema, rx):
         if not set(schema.keys()).issubset(set(('type', 'value', 'length'))):
@@ -458,10 +421,10 @@ class StrType(_CoreType):
 
         self.length = None
         if 'length' in schema:
-            self.length = Util.make_range_check(schema["length"])
+            self.length = make_range_check(schema["length"])
 
     def check(self, value):
-        if not type(value) in (str, unicode):
+        if not isinstance(value, basestring):
             return False
         if (not self.value is None) and value != self.value:
             return False
