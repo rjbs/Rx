@@ -1,118 +1,130 @@
-from TAP.Simple import *
-import Rx
+
+import collections
 import json
 import re
 
+import Rx
+
+from TAP.Simple import isa_ok
+from TAP.Simple import ok
+from TAP.Simple import plan
+
 plan(None)
 
-rx = Rx.Factory({ "register_core_types": True });
+rx = Rx.Factory({"register_core_types": True})
 
 isa_ok(rx, Rx.Factory)
 
 index = json.loads(file('spec/index.json').read())
 
-test_data     = {}
+test_data = {}
 test_schemata = {}
 
+
 def normalize(entries, test_data):
-  if entries == '*':
-    entries = { "*": None }
+    if entries == '*':
+        entries = {"*": None}
 
-  if type(entries) is type([]):
-    new_entries = { }
-    for n in entries: new_entries[n] = None
-    entries = new_entries
+    if isinstance(entries, collections.Sequence):
+        new_entries = {}
+        for n in entries:
+            new_entries[n] = None
+        entries = new_entries
 
-  if len(entries) == 1 and entries.has_key('*'):
-    value = entries["*"]
-    entries = { }
-    for k in test_data.keys(): entries[k] = value
+    if len(entries) == 1 and '*' in entries:
+        value = entries["*"]
+        entries = {}
+        for k in test_data.keys():
+            entries[k] = value
 
-  return entries
+    return entries
+
 
 for filename in index:
-  if filename == 'spec/index.json': continue
-  payload = json.loads(file(filename).read())
+    if filename == 'spec/index.json':
+        continue
+    payload = json.loads(file(filename).read())
 
-  parts = filename.split('/')
-  parts.pop(0)
+    parts = filename.split('/')
+    parts.pop(0)
 
-  leaf_name = '/'.join(parts[1:])
-  leaf_name = re.sub('\.json$', '', leaf_name)
+    leaf_name = '/'.join(parts[1:])
+    leaf_name = re.sub('\.json$', '', leaf_name)
 
-  filetype = parts.pop(0)
+    filetype = parts.pop(0)
 
-  if filetype == 'schemata':
-    test_schemata[ leaf_name ] = payload
-  elif filetype == 'data':
-    test_data[ leaf_name ] = {}
+    if filetype == 'schemata':
+        test_schemata[leaf_name] = payload
+    elif filetype == 'data':
+        test_data[leaf_name] = {}
 
-    if type(payload) is type([]):
-      for data_str in payload:
-        boxed_data = json.loads("[ %s ]" % data_str)
-        test_data[ leaf_name ][ data_str ] = boxed_data[0]
+        if isinstance(payload, collections.Sequence):
+            for data_str in payload:
+                boxed_data = json.loads("[ %s ]" % data_str)
+                test_data[leaf_name][data_str] = boxed_data[0]
 
+        else:
+            for entry in payload.keys():
+                boxed_data = json.loads("[ %s ]" % payload[entry])
+                test_data[leaf_name][entry] = boxed_data[0]
     else:
-      for entry in payload.keys():
-        boxed_data = json.loads("[ %s ]" % payload[entry])
-        test_data[ leaf_name ][ entry ] = boxed_data[0]
-  else:
-    raise StandardError("weird file in data dir: %s" % filename)
+        raise StandardError("weird file in data dir: %s" % filename)
 
 schema_names = test_schemata.keys()
 schema_names.sort()
 
 for schema_name in schema_names:
-  rx = Rx.Factory({ "register_core_types": True });
+    rx = Rx.Factory({"register_core_types": True})
 
-  schema_test_spec = test_schemata[ schema_name ]
+    schema_test_spec = test_schemata[schema_name]
 
-  if schema_test_spec.get("composedtype", False):
+    if schema_test_spec.get("composedtype", False):
+        try:
+            rx.learn_type(schema_test_spec['composedtype']['uri'],
+                          schema_test_spec['composedtype']['schema'])
+        except Rx.Error, e:
+            if schema_test_spec['composedtype'].get("invalid", False):
+                ok(1, "BAD COMPOSED TYPE: schemata %s" % schema_name)
+                continue
+            else:
+                raise
+
+        if schema_test_spec['composedtype'].get("invalid", False):
+            ok(0, "BAD COMPOSED TYPE: schemata %s" % schema_name)
+
+        if schema_test_spec['composedtype'].get("prefix", False):
+            rx.add_prefix(schema_test_spec['composedtype']['prefix'][0],
+                          schema_test_spec['composedtype']['prefix'][1])
+
     try:
-      rx.learn_type(schema_test_spec['composedtype']['uri'],
-                    schema_test_spec['composedtype']['schema'])
+        schema = rx.make_schema(schema_test_spec["schema"])
     except Rx.Error, e:
-      if schema_test_spec['composedtype'].get("invalid", False):
-        ok(1, "BAD COMPOSED TYPE: schemata %s" % schema_name)
-        continue
-      else:
-        raise
-
-    if schema_test_spec['composedtype'].get("invalid", False):
-      ok(0, "BAD COMPOSED TYPE: schemata %s" % schema_name)
-
-    if schema_test_spec['composedtype'].get("prefix", False):
-       rx.add_prefix(schema_test_spec['composedtype']['prefix'][0],
-                     schema_test_spec['composedtype']['prefix'][1])
-
-  try:
-    schema = rx.make_schema(schema_test_spec["schema"])
-  except Rx.Error, e:
-    if schema_test_spec.get("invalid", False):
-      ok(1, "BAD SCHEMA: schemata %s" % schema_name)
-      continue
-    else:
-      raise
-
-  if schema_test_spec.get("invalid", False):
-    ok(0, "BAD SCHEMA: schemata %s" % schema_name)
-    continue
-
-  if not schema: raise StandardError("got no schema obj for valid input")
-
-  for pf in [ 'pass', 'fail' ]:
-    for source in schema_test_spec.get(pf, []):
-      to_test = schema_test_spec[pf][ source ]
-
-      to_test = normalize(to_test, test_data[ source ])
-      # if to_test == '*': to_test = test_data[ source ].keys()
-
-      for entry in to_test:
-        result = schema.check( test_data[source][entry] )
-
-        desc = "%s/%s against %s" % (source, entry, schema_name)
-
-        if pf == 'pass':
-          ok(result, "VALID  : %s" % desc)
+        if schema_test_spec.get("invalid", False):
+            ok(1, "BAD SCHEMA: schemata %s" % schema_name)
+            continue
         else:
-          ok(not(result), "INVALID: %s" % desc)
+            raise
+
+    if schema_test_spec.get("invalid", False):
+        ok(0, "BAD SCHEMA: schemata %s" % schema_name)
+        continue
+
+    if not schema:
+        raise StandardError("got no schema obj for valid input")
+
+    for pf in ('pass', 'fail'):
+        for source in schema_test_spec.get(pf, []):
+            to_test = schema_test_spec[pf][source]
+
+            to_test = normalize(to_test, test_data[source])
+            # if to_test == '*': to_test = test_data[ source ].keys()
+
+            for entry in to_test:
+                result = schema.check(test_data[source][entry])
+
+                desc = "%s/%s against %s" % (source, entry, schema_name)
+
+                if pf == 'pass':
+                    ok(result, "VALID  : %s" % desc)
+                else:
+                    ok(not(result), "INVALID: %s" % desc)
