@@ -1,5 +1,5 @@
-import numbers
 import collections
+import numbers
 import re
 
 
@@ -52,7 +52,8 @@ class Factory(object):
 
         if not self.prefix_registry.get(m.group(1)):
             raise ValueError(
-                "unknown prefix '%s' in type name '%s'" % (m.group(1), type_name)
+                "unknown prefix '%s' in type name '%s'" % (m.group(1),
+                                                           type_name)
             )
 
         return '%s%s' % (self.prefix_registry[m.group(1)], m.group(2))
@@ -73,7 +74,8 @@ class Factory(object):
 
     def learn_type(self, uri, schema):
         if self.type_registry.get(uri, None):
-            raise Error("tried to learn type for already-registered uri %s" % uri)
+            raise Error(
+                "tried to learn type for already-registered uri %s" % uri)
 
         # make sure schema is valid
         # should this be in a try/except?
@@ -166,7 +168,9 @@ class ArrType(_CoreType):
     def __init__(self, schema, rx):
         self.length = None
 
-        if not set(schema.keys()).issubset(set(('type', 'contents', 'length'))):
+        if not set(schema.keys()).issubset(set(('type',
+                                                'contents',
+                                                'length'))):
             raise Error('unknown parameter for //arr')
 
         if not schema.get('contents'):
@@ -178,7 +182,8 @@ class ArrType(_CoreType):
             self.length = make_range_check(schema["length"])
 
     def check(self, value):
-        if not isinstance(value, collections.Sequence) or isinstance(value, basestring):
+        if (not isinstance(value, collections.Sequence)
+                or isinstance(value, basestring)):
             return False
         if self.length and not self.length(len(value)):
             return False
@@ -315,7 +320,10 @@ class RecType(_CoreType):
     subname = 'rec'
 
     def __init__(self, schema, rx):
-        if not set(schema.keys()).issubset(set(('type', 'rest', 'required', 'optional'))):
+        if not set(schema.keys()).issubset(set(('type',
+                                                'rest',
+                                                'required',
+                                                'optional'))):
             raise Error('unknown parameter for //rec')
 
         self.known = set()
@@ -327,7 +335,8 @@ class RecType(_CoreType):
             self.__setattr__(which, {})
             for field in schema.get(which, {}).keys():
                 if field in self.known:
-                    raise Error('%s appears in both required and optional' % field)
+                    raise Error(
+                        '%s appears in both required and optional' % field)
 
                 self.known.add(field)
 
@@ -386,7 +395,8 @@ class SeqType(_CoreType):
             self.tail_schema = rx.make_schema(schema['tail'])
 
     def check(self, value):
-        if not isinstance(value, collections.Sequence) or isinstance(value, basestring):
+        if (not isinstance(value, collections.Sequence)
+                or isinstance(value, basestring)):
             return False
 
         if len(value) < len(self.content_schema):
@@ -433,7 +443,7 @@ class StrType(_CoreType):
         return True
 
 core_types = [
-    AllType,    AnyType, ArrType, BoolType, DefType,
-    FailType, IntType, MapType, NilType,    NumType,
-    OneType,    RecType, SeqType, StrType
+    AllType, AnyType, ArrType, BoolType, DefType,
+    FailType, IntType, MapType, NilType, NumType,
+    OneType, RecType, SeqType, StrType
 ]
