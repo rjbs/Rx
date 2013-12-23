@@ -1,6 +1,8 @@
 Revision history for Data-Rx
 
 {{$NEXT}}
+
+0.200005  2013-12-22 21:46:53-0500 America/New_York
           replace Module::Pluggable with a hard-coded list
 
 0.200004  2013-07-05 22:02:12 America/New_York
