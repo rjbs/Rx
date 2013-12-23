@@ -1,6 +1,7 @@
 Revision history for Data-Rx
 
 {{$NEXT}}
+          replace Module::Pluggable with a hard-coded list
 
 0.200004  2013-07-05 22:02:12 America/New_York
           repackage for new bug tracker
