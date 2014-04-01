@@ -30,4 +30,12 @@ sub type { $_[0]->{_type} }
 
 sub rx { $_[0]->{_rx} }
 
+=pod
+
+=head1 NOTE
+
+For examples on how to subclass this, see L<Data::Rx::Manual::CustomTypes>.
+
+=cut
+
 1;
