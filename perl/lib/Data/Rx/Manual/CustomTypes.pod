@@ -1,3 +1,6 @@
+
+=pod
+
 =cut
 
 # PODNAME:  Data::Rx::Manual::CustomTypes
