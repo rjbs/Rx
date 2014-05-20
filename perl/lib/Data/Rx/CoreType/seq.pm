@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::seq;
-use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //seq type
+
+use parent 'Data::Rx::CoreType';
 
 use Scalar::Util ();
 

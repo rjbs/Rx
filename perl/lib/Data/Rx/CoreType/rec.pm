@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::rec;
-use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //rec type
+
+use parent 'Data::Rx::CoreType';
 
 use Scalar::Util ();
 

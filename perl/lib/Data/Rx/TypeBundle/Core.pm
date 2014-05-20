@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 package Data::Rx::TypeBundle::Core;
-use parent 'Data::Rx::TypeBundle';
 # ABSTRACT: the bundle of core Rx types
+
+use parent 'Data::Rx::TypeBundle';
 
 sub _prefix_pairs {
   return (

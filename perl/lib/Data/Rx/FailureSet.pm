@@ -3,7 +3,6 @@ use warnings;
 package Data::Rx::FailureSet;
 # ABSTRACT: multiple structured failure reports from an Rx checker
 
-
 use overload '""' => \&stringify;
 
 sub new {

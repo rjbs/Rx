@@ -2,6 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CommonType::EasyNew;
 # ABSTRACT: base class for core Rx types, with some defaults
+
 use parent 'Data::Rx::CommonType';
 
 use Carp ();

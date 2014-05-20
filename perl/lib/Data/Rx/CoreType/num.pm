@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::num;
-use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //num type
+
+use parent 'Data::Rx::CoreType';
 
 sub guts_from_arg {
   my ($class, $arg, $rx, $type) = @_;
