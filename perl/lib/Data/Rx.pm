@@ -42,9 +42,41 @@ for how to teach your Rx schema object about the new types you create.
 When required, see L<Data::Rx::Manual::CustomTypes> for details on creating a
 custom type plugin as a Perl module.
 
+=head1 SCHEMA METHODS
+
+The objects returned by C<make_schema> should provide the methods detailed in
+this section.
+
+=head2 check
+
+  my $ok = $schema->check($input);
+
+This method just returns true if the input is valid under the given schema, and
+false otherwise.  For more information, see C<assert_valid>.
+
+=head2 assert_valid
+
+  $schema->assert_valid($input);
+
+This method will throw an exception if the input is not valid under the schema.
+The exception will be a L<Data::Rx::FailureSet>.  This has two important
+methods: C<stringify> and C<failures>.  The first provides a string form of the
+failure.  C<failures> returns a list of L<Data::Rx::Failure> objects.
+
+Failure objects have a few methods of note:
+
+  error_string - a human-friendly description of what went wrong
+  stringify    - a stringification of the error, data, and check string
+  error_types  - a list of types for the error; like tags
+
+  data_string  - a string describing where in the input the error occured
+  value        - the value found at the data path
+
+  check_string - a string describing which part of the schema found the error
+
 =head1 SEE ALSO
 
-L<http://rjbs.manxome.org/rx>
+L<http://rx.codesimply.com/>
 
 =cut
 
