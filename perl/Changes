@@ -2,6 +2,9 @@ Revision history for Data-Rx
 
 {{$NEXT}}
 
+0.200007  2015-04-10 18:23:08-04:00 America/New_York
+        - add some basic docs for how failures and failuresets work
+
 0.200006  2014-05-20 19:06:44-04:00 America/New_York
         - big ol' pile of examples and docs! thanks, Hakim Cassimally!
 
