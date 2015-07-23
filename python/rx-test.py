@@ -2,6 +2,7 @@ from TAP.Simple import *
 import Rx
 import json
 import re
+import pdb
 
 plan(None)
 
@@ -9,7 +10,7 @@ rx = Rx.Factory({ "register_core_types": True });
 
 isa_ok(rx, Rx.Factory)
 
-index = json.loads(file('spec/index.json').read())
+index = json.loads(open('spec/index.json').read())
 
 test_data     = {}
 test_schemata = {}
@@ -23,7 +24,7 @@ def normalize(entries, test_data):
     for n in entries: new_entries[n] = None
     entries = new_entries
 
-  if len(entries) == 1 and entries.has_key('*'):
+  if len(entries) == 1 and '*' in entries:
     value = entries["*"]
     entries = { }
     for k in test_data.keys(): entries[k] = value
@@ -32,7 +33,7 @@ def normalize(entries, test_data):
 
 for filename in index:
   if filename == 'spec/index.json': continue
-  payload = json.loads(file(filename).read())
+  payload = json.loads(open(filename).read())
 
   parts = filename.split('/')
   parts.pop(0)
@@ -59,8 +60,7 @@ for filename in index:
   else:
     raise StandardError("weird file in data dir: %s" % filename)
 
-schema_names = test_schemata.keys()
-schema_names.sort()
+schema_names = list(sorted(test_schemata.keys()))
 
 for schema_name in schema_names:
   rx = Rx.Factory({ "register_core_types": True });
@@ -71,7 +71,7 @@ for schema_name in schema_names:
     try:
       rx.learn_type(schema_test_spec['composedtype']['uri'],
                     schema_test_spec['composedtype']['schema'])
-    except Rx.Error, e:
+    except Rx.SchemaError as e:
       if schema_test_spec['composedtype'].get("invalid", False):
         ok(1, "BAD COMPOSED TYPE: schemata %s" % schema_name)
         continue
@@ -87,7 +87,7 @@ for schema_name in schema_names:
 
   try:
     schema = rx.make_schema(schema_test_spec["schema"])
-  except Rx.Error, e:
+  except Rx.SchemaError as e:
     if schema_test_spec.get("invalid", False):
       ok(1, "BAD SCHEMA: schemata %s" % schema_name)
       continue
@@ -111,6 +111,9 @@ for schema_name in schema_names:
         result = schema.check( test_data[source][entry] )
 
         desc = "%s/%s against %s" % (source, entry, schema_name)
+
+        if ('pass' if result else 'fail') != pf:
+          pdb.set_trace()
 
         if pf == 'pass':
           ok(result, "VALID  : %s" % desc)
