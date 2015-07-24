@@ -8,9 +8,6 @@ core_types = [ ]
 class SchemaError(Exception):
   pass
 
-class DataError(Exception):
-  pass
-
 class Util(object):
   @staticmethod
   def make_range_check(opt):
@@ -276,7 +273,6 @@ class NumType(_CoreType):
       (self.range is None or self.range(value)) and \
       (self.value is None or value == self.value)
       )
-      
 
 class OneType(_CoreType):
   @staticmethod
@@ -298,7 +294,7 @@ class RecType(_CoreType):
     if schema.get('rest'): self.rest_schema = rx.make_schema(schema['rest'])
 
     for which in ('required', 'optional'):
-      self.__setattr__(which, { })
+      setattr(self, which, {})
       for field in schema.get(which, {}).keys():
         if field in self.known:
           raise SchemaError('%s appears in both required and optional' % field)
