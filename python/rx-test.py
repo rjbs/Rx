@@ -3,9 +3,10 @@ import Rx
 import json
 import re
 import pdb
+import os
 
 plan(None)
-
+os.chdir('..')
 rx = Rx.Factory({ "register_core_types": True });
 
 isa_ok(rx, Rx.Factory)
@@ -88,6 +89,7 @@ for schema_name in schema_names:
   try:
     schema = rx.make_schema(schema_test_spec["schema"])
   except Rx.SchemaError as e:
+    #pdb.set_trace()
     if schema_test_spec.get("invalid", False):
       ok(1, "BAD SCHEMA: schemata %s" % schema_name)
       continue
@@ -112,10 +114,9 @@ for schema_name in schema_names:
 
         desc = "%s/%s against %s" % (source, entry, schema_name)
 
-        if ('pass' if result else 'fail') != pf:
-          pdb.set_trace()
-
         if pf == 'pass':
           ok(result, "VALID  : %s" % desc)
+          if not result: pdb.set_trace()
         else:
-          ok(not(result), "INVALID: %s" % desc)
+          ok(not result, "INVALID: %s" % desc)
+          if result: pdb.set_trace()

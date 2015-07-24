@@ -168,6 +168,8 @@ class AnyType(_CoreType):
       self.alts = [ rx.make_schema(alt) for alt in schema['of'] ]
 
   def validate(self, value, name='object'):
+    if self.alts is None:
+      return
     error_messages = []
     for schema in self.alts:
       try:
@@ -273,7 +275,7 @@ class IntType(_CoreType):
     if self.range and not self.range(value):
       raise SchemaMismatch(name+' not in range')
 
-    if self.value and value != self.value:
+    if self.value is not None and value != self.value:
       raise SchemaMismatch(name+' must be '+str(self.value))
 
 class MapType(_CoreType):
@@ -294,6 +296,8 @@ class MapType(_CoreType):
   def validate(self, value, name='object'):
     if not isinstance(value, dict):
       raise SchemaMismatch(name+' must be a map')
+
+    error_messages = []
 
     for key, val in value.items():
       try:
@@ -344,7 +348,7 @@ class NumType(_CoreType):
     if self.range and not self.range(value):
       raise SchemaMismatch(name+' not in range')
 
-    if self.value and value != self.value:
+    if self.value is not None and value != self.value:
       raise SchemaMismatch(name+' must be '+str(self.value))
 
 class OneType(_CoreType):
@@ -409,7 +413,7 @@ class RecType(_CoreType):
     if unknown:
       rest = {key: value[key] for key in unknown}
       try:
-        if not self.rest_schema.check(rest): return False
+        self.rest_schema.validate(rest, name)
       except SchemaMismatch as e:
         error_messages.append(str(e))
 
@@ -449,7 +453,7 @@ class SeqType(_CoreType):
 
     error_messages = []
 
-    for i, (schema, item) in enumerate(zip(self.content.schema, value)):
+    for i, (schema, item) in enumerate(zip(self.content_schema, value)):
       try:
         schema.validate(item, 'item '+str(i))
       except SchemaMismatch as e:
