@@ -146,9 +146,10 @@ class AnyType(_CoreType):
       self.alts = [ rx.make_schema(alt) for alt in schema['of'] ]
 
   def check(self, value):
-    if self.alts is None: return True
-
-    return any(schema.check(value) for schema in self.alts)
+    return (
+      self.alts is None or \
+      any(schema.check(value) for schema in self.alts)
+      )
 
 class ArrType(_CoreType):
   @staticmethod
@@ -169,10 +170,11 @@ class ArrType(_CoreType):
       self.length = Util.make_range_check(schema['length'])
 
   def check(self, value):
-    if not isinstance(value, (list, tuple)): return False
-    if self.length and not self.length(len(value)): return False
-
-    return all(self.content_schema.check(item) for item in value)
+    return(
+      isinstance(value, (list, tuple))             and \
+      (not self.length or self.length(len(value))) and \
+      all(self.content_schema.check(item) for item in value)
+      )
 
 class BoolType(_CoreType):
   @staticmethod
@@ -213,9 +215,9 @@ class IntType(_CoreType):
 
   def check(self, value):
     return (
-      isinstance(value, Number) and \
-      not isinstance(value, bool) and \
-      value%1 == 0 and \
+      isinstance(value, Number)                 and \
+      not isinstance(value, bool)               and \
+      value%1 == 0                              and \
       (self.range is None or self.range(value)) and \
       (self.value is None or value == self.value)
       )
@@ -237,9 +239,10 @@ class MapType(_CoreType):
     self.value_schema = rx.make_schema(schema['values'])
 
   def check(self, value):
-    if not isinstance(value, dict): return False
-
-    return all(self.value_schema.check(v) for v in value.values())
+    return(
+      isinstance(value, dict) and \
+      all(self.value_schema.check(v) for v in value.values())
+      )
 
 class NilType(_CoreType):
   @staticmethod
@@ -268,8 +271,8 @@ class NumType(_CoreType):
 
   def check(self, value):
     return (
-      isinstance(value, Number) and \
-      not isinstance(value, bool) and \
+      isinstance(value, Number)                 and \
+      not isinstance(value, bool)               and \
       (self.range is None or self.range(value)) and \
       (self.value is None or value == self.value)
       )
@@ -313,13 +316,14 @@ class RecType(_CoreType):
 
     if unknown and not self.rest_schema: return False
 
-    if not all(
-        k in value and self.required[k].check(value[k]) for k in self.required):
-      return False
+    for field in self.required:
+      if field not in value or not self.required[field].check(value[field]):
+        return False
 
-    if not all(
-        self.optional[k].check(value[k]) for k in self.optional if k in value):
-      return False
+    for field in self.optional:
+      if field not in value: continue
+      if not self.optional[field].check(value[field]): 
+        return False
 
     if unknown:
       rest = {key: value[key] for key in unknown}
@@ -350,7 +354,7 @@ class SeqType(_CoreType):
     if len(value) < len(self.content_schema):
       return False
 
-    for i in range(0, len(self.content_schema)):
+    for i in range(len(self.content_schema)):
       if not self.content_schema[i].check(value[i]):
         return False
 
@@ -381,10 +385,11 @@ class StrType(_CoreType):
       self.length = Util.make_range_check( schema['length'] )
 
   def check(self, value):
-    if not isinstance(value, str): return False
-    if (not self.value is None) and value != self.value: return False
-    if self.length and not self.length(len(value)): return False
-    return True
+    return (
+      isinstance(value, str) and \
+      (self.value  is None or value == self.value) and \
+      (self.length is None or self.length(len(value)))
+      )
 
 core_types = [
   AllType,  AnyType, ArrType, BoolType, DefType,
