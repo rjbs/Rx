@@ -8,6 +8,12 @@ core_types = [ ]
 class SchemaError(Exception):
   pass
 
+class SchemaMismatch(Exception):
+  pass
+
+def indent(text, level=1, whitespace='  '):
+    return '\n'.join(whitespace*level+line for line in text.split('\n'))
+
 class Util(object):
   @staticmethod
   def make_range_check(opt):
@@ -110,7 +116,15 @@ class _CoreType(object):
     if not {'type'}.issuperset(schema.keys()):
       raise SchemaError('unknown parameter for //%s' % self.subname())
 
-  def check(self, value): return False
+  def check(self, value):
+    try:
+      self.validate(value)
+    except SchemaMismatch:
+      return False
+    return True
+
+  def validate(self, value, name='object'):
+    raise SchemaMismatch('Tried to validate abstract base schema class')
 
 class AllType(_CoreType):
   @staticmethod
@@ -125,8 +139,19 @@ class AllType(_CoreType):
 
     self.alts = [rx.make_schema(s) for s in schema['of']]
 
-  def check(self, value):
-    return all(schema.check(value) for schema in self.alts)
+  def validate(self, value, name='object'):
+    error_messages = []
+    for schema in self.alts:
+      try:
+        schema.validate(value, name)
+      except SchemaMismatch as e:
+        error_messages.append(str(e))
+
+    if error_messages:
+      messages = indent('\n'.join(error_messages))
+      message = '{0} failed to meet all schema requirements:\n{1}'
+      message = message.format(name, messages)
+      raise SchemaMismatch(message)
 
 class AnyType(_CoreType):
   @staticmethod
@@ -142,11 +167,20 @@ class AnyType(_CoreType):
       if not schema['of']: raise SchemaError('no alternatives given in //any of')
       self.alts = [ rx.make_schema(alt) for alt in schema['of'] ]
 
-  def check(self, value):
-    return (
-      self.alts is None or \
-      any(schema.check(value) for schema in self.alts)
-      )
+  def validate(self, value, name='object'):
+    error_messages = []
+    for schema in self.alts:
+      try:
+        schema.validate(value, name)
+        break
+      except SchemaMismatch as e:
+        error_messages.append(str(e))
+
+    if len(error_messages) == len(self.alts):
+      messages = indent('\n'.join(error_messages))
+      message = '{0} failed to meet any schema requirements:\n{1}'
+      message = message.format(name, messages)
+      raise SchemaMismatch(message)
 
 class ArrType(_CoreType):
   @staticmethod
@@ -166,31 +200,53 @@ class ArrType(_CoreType):
     if schema.get('length'):
       self.length = Util.make_range_check(schema['length'])
 
-  def check(self, value):
-    return(
-      isinstance(value, (list, tuple))             and \
-      (not self.length or self.length(len(value))) and \
-      all(self.content_schema.check(item) for item in value)
-      )
+  def validate(self, value, name='object'):
+    if not isinstance(value, (list, tuple)):
+      raise SchemaMismatch(name+' must be an array.')
+
+    if self.length and not self.length(len(value)):
+      # TODO: report how it is out of range
+      raise SchemaMismatch(name+' length out of range')
+
+    error_messages = []
+
+    for i, item in enumerate(value):
+      try:
+        self.content_schema.validate(item, 'item '+str(i))
+      except SchemaMismatch as e:
+        error_messages.append(str(e))
+
+    if error_messages:
+      messages = indent('\n'.join(error_messages))
+      message = '{0} sequence contains invalid elements:\n{1}'
+      message = message.format(name, messages)
+      raise SchemaMismatch(message)
 
 class BoolType(_CoreType):
   @staticmethod
   def subname(): return 'bool'
 
-  def check(self, value):
-    return isinstance(value, bool)
+  def validate(self, value, name='object'):
+    if not (isinstance(value, bool)):
+      raise SchemaMismatch(name+' must be a boolean')
 
 class DefType(_CoreType):
   @staticmethod
   def subname(): return 'def'
 
-  def check(self, value): return value is not None
+
+  def validate(self, value, name='object'):
+    if value is None:
+      raise SchemaMismatch(name+' must be non-null')
 
 class FailType(_CoreType):
   @staticmethod
   def subname(): return 'fail'
 
   def check(self, value): return False
+
+  def validate(self, value, name='object'):
+    raise SchemaMismatch(name+' is of fail type, automatically invalid.')
 
 class IntType(_CoreType):
   @staticmethod
@@ -210,15 +266,15 @@ class IntType(_CoreType):
     if 'range' in schema:
       self.range = Util.make_range_check(schema['range'])
 
-  def check(self, value):
-    return (
-      isinstance(value, Number)                 and \
-      not isinstance(value, bool)               and \
-      value%1 == 0                              and \
-      (self.range is None or self.range(value)) and \
-      (self.value is None or value == self.value)
-      )
-      
+  def validate(self, value, name='object'):
+    if not isinstance(value, Number) or isinstance(value, bool) or value%1:
+      raise SchemaMismatch(name+' must be an integer')
+
+    if self.range and not self.range(value):
+      raise SchemaMismatch(name+' not in range')
+
+    if self.value and value != self.value:
+      raise SchemaMismatch(name+' must be '+str(self.value))
 
 class MapType(_CoreType):
   @staticmethod
@@ -235,17 +291,32 @@ class MapType(_CoreType):
 
     self.value_schema = rx.make_schema(schema['values'])
 
-  def check(self, value):
-    return(
-      isinstance(value, dict) and \
-      all(self.value_schema.check(v) for v in value.values())
-      )
+  def validate(self, value, name='object'):
+    if not isinstance(value, dict):
+      raise SchemaMismatch(name+' must be a map')
+
+    for key, val in value.items():
+      try:
+        self.value_schema.validate(val, key)
+      except SchemaMismatch as e:
+        error_messages.append(str(e))
+
+    if error_messages:
+      messages = indent('\n'.join(error_messages))
+      message = '{0} map contains invalid entries:\n{1}'
+      message = message.format(name, messages)
+      raise SchemaMismatch(message)
+
 
 class NilType(_CoreType):
   @staticmethod
   def subname(): return 'nil'
 
   def check(self, value): return value is None
+
+  def validate(self, value, name='object'):
+    if value is not None:
+      raise SchemaMismatch(name+' must be null')
 
 class NumType(_CoreType):
   @staticmethod
@@ -266,20 +337,23 @@ class NumType(_CoreType):
     if schema.get('range'):
       self.range = Util.make_range_check( schema['range'] )
 
-  def check(self, value):
-    return (
-      isinstance(value, Number)                 and \
-      not isinstance(value, bool)               and \
-      (self.range is None or self.range(value)) and \
-      (self.value is None or value == self.value)
-      )
+  def validate(self, value, name='object'):
+    if not isinstance(value, Number) or isinstance(value, bool):
+      raise SchemaMismatch(name+' must be a number')
+
+    if self.range and not self.range(value):
+      raise SchemaMismatch(name+' not in range')
+
+    if self.value and value != self.value:
+      raise SchemaMismatch(name+' must be '+str(self.value))
 
 class OneType(_CoreType):
   @staticmethod
   def subname(): return 'one'
 
-  def check(self, value):
-    return isinstance(value, (Number, str))
+  def validate(self, value, name='object'):
+    if not isinstance(value, (Number, str)):
+      raise SchemaMismatch(name+' must be a number or string')
 
 class RecType(_CoreType):
   @staticmethod
@@ -305,27 +379,46 @@ class RecType(_CoreType):
           schema[which][field]
         )
 
-  def check(self, value):
-    if not isinstance(value, dict): return False
+  def validate(self, value, name='object'):
+    if not isinstance(value, dict):
+      raise SchemaMismatch(name+' must be a record (dictionary/associative array)')
 
     unknown = [k for k in value.keys() if k not in self.known]
 
-    if unknown and not self.rest_schema: return False
+    if unknown and not self.rest_schema:
+      fields = indent('\n'.join(unknown))
+      raise SchemaMismatch(name+' contains unknown fields:\n'+fields)
+
+    error_messages = []
 
     for field in self.required:
-      if field not in value or not self.required[field].check(value[field]):
-        return False
+      try:
+        if field not in value:
+          raise SchemaMismatch('missing required field: '+field)
+        self.required[field].validate(value[field], field)
+      except SchemaMismatch as e:
+        error_messages.append(str(e))
 
     for field in self.optional:
       if field not in value: continue
-      if not self.optional[field].check(value[field]): 
-        return False
+      try:
+        self.optional[field].validate(value[field], field) 
+      except SchemaMismatch as e:
+        error_messages.append(str(e))
 
     if unknown:
       rest = {key: value[key] for key in unknown}
-      if not self.rest_schema.check(rest): return False
+      try:
+        if not self.rest_schema.check(rest): return False
+      except SchemaMismatch as e:
+        error_messages.append(str(e))
 
-    return True
+    if error_messages:
+      messages = indent('\n'.join(error_messages))
+      message = '{0} record is invalid:\n{1}'
+      message = message.format(name, messages)
+      raise SchemaMismatch(message)
+
 
 class SeqType(_CoreType):
   @staticmethod
@@ -344,23 +437,32 @@ class SeqType(_CoreType):
     if (schema.get('tail')):
       self.tail_schema = rx.make_schema(schema['tail'])
 
-  def check(self, value):
-    if not isinstance(value, (list, tuple)): return False
+  def validate(self, value, name='object'):
+    if not isinstance(value, (list, tuple)):
+      raise SchemaMismatch(name+' must be a sequence')
 
     if len(value) < len(self.content_schema):
-      return False
+      return SchemaMismatch(name+' is less than expected length')
 
-    for i in range(len(self.content_schema)):
-      if not self.content_schema[i].check(value[i]):
-        return False
+    if len(value) > len(self.content_schema) and not self.tail_schema:
+      return SchemaMismatch(name+' exceeds expected length')
+
+    error_messages = []
+
+    for i, (schema, item) in enumerate(zip(self.content.schema, value)):
+      try:
+        schema.validate(item, 'item '+str(i))
+      except SchemaMismatch as e:
+        error_messages.append(str(e))   
+
+    if error_messages:
+      messages = indent('\n'.join(error_messages))
+      message = '{0} sequence is invalid:\n{1}'
+      message = message.format(name, messages)
+      raise SchemaMismatch(message)     
 
     if len(value) > len(self.content_schema):
-      if not self.tail_schema: return False
-
-      if not self.tail_schema.check(value[ len(self.content_schema) :  ]):
-        return False
-
-    return True;
+      self.tail_schema.validate(value[len(self.content_schema):], name)
 
 class StrType(_CoreType):
   @staticmethod
@@ -380,12 +482,13 @@ class StrType(_CoreType):
     if 'length' in schema:
       self.length = Util.make_range_check( schema['length'] )
 
-  def check(self, value):
-    return (
-      isinstance(value, str) and \
-      (self.value  is None or value == self.value) and \
-      (self.length is None or self.length(len(value)))
-      )
+  def validate(self, value, name='object'):
+    if not isinstance(value, str):
+      raise SchemaMismatch(name+' must be a string')
+    if self.value is not None and value != self.value:
+      raise SchemaMismatch(name+" must be '{0}'".format(self.value))
+    if self.length is not None and not self.length(len(value)):
+      raise SchemaMismatch(name+' is not in expected length range')
 
 core_types = [
   AllType,  AnyType, ArrType, BoolType, DefType,
