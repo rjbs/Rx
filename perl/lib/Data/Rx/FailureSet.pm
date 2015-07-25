@@ -3,6 +3,13 @@ use warnings;
 package Data::Rx::FailureSet;
 # ABSTRACT: multiple structured failure reports from an Rx checker
 
+=head1 SYNOPSIS
+
+This is what is thrown when a schema's C<assert_valid> method finds a problem
+with the input.  For more information on it, look at the documentation for
+L<Data::Rx>.
+
+=cut
 
 use overload '""' => \&stringify;
 

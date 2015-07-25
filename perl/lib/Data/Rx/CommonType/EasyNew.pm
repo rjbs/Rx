@@ -2,6 +2,7 @@ use strict;
 use warnings;
 package Data::Rx::CommonType::EasyNew;
 # ABSTRACT: base class for core Rx types, with some defaults
+
 use parent 'Data::Rx::CommonType';
 
 use Carp ();
@@ -29,5 +30,13 @@ sub new_checker {
 sub type { $_[0]->{_type} }
 
 sub rx { $_[0]->{_rx} }
+
+=pod
+
+=head1 NOTE
+
+For examples on how to subclass this, see L<Data::Rx::Manual::CustomTypes>.
+
+=cut
 
 1;

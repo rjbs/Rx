@@ -30,9 +30,53 @@ use Data::Rx::TypeBundle::Core;
 
   die "invalid reply" unless $schema->check($reply);
 
+=head1 COMPLEX CHECKS
+
+Note that a "schema" can be represented either as a name or as a definition.
+In the L</SYNOPSIS> above, note that we have both, '//str' and 
+C<{ type =E<gt> '//int', value =E<gt> 201 }>.  
+With the L<collection types|http://rx.codesimply.com/coretypes.html#collect>
+provided by Rx, you can validate many complex structures.  See L</learn_types>
+for how to teach your Rx schema object about the new types you create.
+
+When required, see L<Data::Rx::Manual::CustomTypes> for details on creating a
+custom type plugin as a Perl module.
+
+=head1 SCHEMA METHODS
+
+The objects returned by C<make_schema> should provide the methods detailed in
+this section.
+
+=head2 check
+
+  my $ok = $schema->check($input);
+
+This method just returns true if the input is valid under the given schema, and
+false otherwise.  For more information, see C<assert_valid>.
+
+=head2 assert_valid
+
+  $schema->assert_valid($input);
+
+This method will throw an exception if the input is not valid under the schema.
+The exception will be a L<Data::Rx::FailureSet>.  This has two important
+methods: C<stringify> and C<failures>.  The first provides a string form of the
+failure.  C<failures> returns a list of L<Data::Rx::Failure> objects.
+
+Failure objects have a few methods of note:
+
+  error_string - a human-friendly description of what went wrong
+  stringify    - a stringification of the error, data, and check string
+  error_types  - a list of types for the error; like tags
+
+  data_string  - a string describing where in the input the error occured
+  value        - the value found at the data path
+
+  check_string - a string describing which part of the schema found the error
+
 =head1 SEE ALSO
 
-L<http://rjbs.manxome.org/rx>
+L<http://rx.codesimply.com/>
 
 =cut
 
@@ -64,7 +108,7 @@ Valid arguments are:
   prefix        - optional; a hashref of prefix pairs for type shorthand
   type_plugins  - optional; an arrayref of type or type bundle plugins
   no_core_types - optional; if true, core type bundle is not loaded
-  sort_keys     - optional; see L</sort_keys>
+  sort_keys     - optional; see the sort_keys section.
 
 The prefix hashref should look something like this:
 
@@ -102,8 +146,8 @@ sub new {
 
   my $schema = $rx->make_schema($schema);
 
-This returns a new schema checker (something with a C<check> method) for the
-given Rx input.
+This returns a new schema checker method for the given Rx input. This object
+will have C<check> and C<assert_valid> methods to test data with.
 
 =cut
 
@@ -142,7 +186,9 @@ sub make_schema {
 
 Given a type plugin, this registers the plugin with the Data::Rx object.
 Bundles are expanded recursively and all their plugins are registered.
+
 Type plugins must have a C<type_uri> method and a C<new_checker> method.
+See L<Data::Rx::Manual::CustomTypes> for details.
 
 =cut
 

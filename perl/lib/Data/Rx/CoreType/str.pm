@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::str;
-use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //str type
+
+use parent 'Data::Rx::CoreType';
 
 use Data::Rx::Util;
 

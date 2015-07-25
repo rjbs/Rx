@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::bool;
-use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //bool type
+
+use parent 'Data::Rx::CoreType';
 
 sub assert_valid {
   my ($self, $value) = @_;

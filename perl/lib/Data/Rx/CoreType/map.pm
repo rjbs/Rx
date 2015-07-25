@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::map;
-use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //map type
+
+use parent 'Data::Rx::CoreType';
 
 use Scalar::Util ();
 

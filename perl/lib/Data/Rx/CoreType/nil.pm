@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 package Data::Rx::CoreType::nil;
-use parent 'Data::Rx::CoreType';
 # ABSTRACT: the Rx //nil type
+
+use parent 'Data::Rx::CoreType';
 
 sub assert_valid {
   my ($self, $value) = @_;

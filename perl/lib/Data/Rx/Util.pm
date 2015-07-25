@@ -1,10 +1,11 @@
 use strict;
 use warnings;
 package Data::Rx::Util;
+# ABSTRACT: helper routines for Data::Rx
+
 use Carp ();
 use List::Util ();
 use Number::Tolerant ();
-# ABSTRACT: helper routines for Data::Rx
 
 sub _x_subset_keys_y {
   my ($self, $x, $y) = @_;

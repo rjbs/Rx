@@ -2,6 +2,18 @@ Revision history for Data-Rx
 
 {{$NEXT}}
 
+0.200007  2015-04-10 18:23:08-04:00 America/New_York
+        - add some basic docs for how failures and failuresets work
+
+0.200006  2014-05-20 19:06:44-04:00 America/New_York
+        - big ol' pile of examples and docs! thanks, Hakim Cassimally!
+
+0.200005  2013-12-22 21:46:53-0500 America/New_York
+          replace Module::Pluggable with a hard-coded list
+
+0.200004  2013-07-05 22:02:12 America/New_York
+          repackage for new bug tracker
+
 0.200003  2013-03-08 09:23:30 America/New_York
           correct the type that failed in error stringification (Thanks, Ronald
           J Kimball!)
