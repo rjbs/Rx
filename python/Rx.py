@@ -25,9 +25,8 @@ class Util(object):
       raise ValueError("Cannot define both exclusive and inclusive max")      
 
     r = opt.copy()
-
+    inf = float('inf')
     def check_range(value):
-      inf = float('inf')
       return(
         r.get('min',    -inf) <= value and \
         r.get('max',     inf) >= value and \
@@ -41,9 +40,13 @@ class Util(object):
     check_range = make_range_check(opt)
 
     r = opt.copy()
+    nan = float('nan')
     def validate_range(value, name='value'):
       if not check_range(value):
         range_str = ''
+        if r.get('min', nan) == r.get('max', nan):
+          raise SchemaMismatch(name+' must equal '+r['min'])
+
         if 'min' in r:
           range_str = '[{0}, '.format(r['min'])
         elif 'min-ex' in r:
@@ -227,14 +230,14 @@ class ArrType(_CoreType):
     self.content_schema = rx.make_schema(schema['contents'])
 
     if schema.get('length'):
-      self.length = Util.make_range_validator(schema['length'], 'length')
+      self.length = Util.make_range_validator(schema['length'])
 
   def validate(self, value, name='object'):
     if not isinstance(value, (list, tuple)):
       raise SchemaMismatch(name+' must be an array.')
 
     if self.length:
-      self.length(len(value))
+      self.length(len(value), 'length of '+name)
 
     error_messages = []
 
@@ -299,7 +302,7 @@ class IntType(_CoreType):
       raise SchemaMismatch(name+' must be an integer')
 
     if self.range:
-      self.range(value)
+      self.range(value, 'name')
 
     if self.value is not None and value != self.value:
       raise SchemaMismatch(name+' must equal '+str(self.value))
@@ -372,7 +375,7 @@ class NumType(_CoreType):
       raise SchemaMismatch(name+' must be a number')
 
     if self.range:
-      self.range(value)
+      self.range(value, name)
 
     if self.value is not None and value != self.value:
       raise SchemaMismatch(name+' must equal '+str(self.value))
@@ -510,7 +513,7 @@ class StrType(_CoreType):
 
     self.length = None
     if 'length' in schema:
-      self.length = Util.make_range_validator(schema['length'], 'length')
+      self.length = Util.make_range_validator(schema['length'])
 
   def validate(self, value, name='object'):
     if not isinstance(value, str):
@@ -518,7 +521,7 @@ class StrType(_CoreType):
     if self.value is not None and value != self.value:
       raise SchemaMismatch(name+" must have value '{0}'".format(self.value))
     if self.length:
-      self.length(len(value))
+      self.length(len(value), 'length of '+name)
 
 core_types = [
   AllType,  AnyType, ArrType, BoolType, DefType,
