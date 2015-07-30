@@ -276,7 +276,7 @@ class IntType(_CoreType):
       raise SchemaMismatch(name+' not in range')
 
     if self.value is not None and value != self.value:
-      raise SchemaMismatch(name+' must be '+str(self.value))
+      raise SchemaMismatch(name+' must equal '+str(self.value))
 
 class MapType(_CoreType):
   @staticmethod
@@ -349,7 +349,7 @@ class NumType(_CoreType):
       raise SchemaMismatch(name+' not in range')
 
     if self.value is not None and value != self.value:
-      raise SchemaMismatch(name+' must be '+str(self.value))
+      raise SchemaMismatch(name+' must equal '+str(self.value))
 
 class OneType(_CoreType):
   @staticmethod
@@ -385,7 +385,7 @@ class RecType(_CoreType):
 
   def validate(self, value, name='object'):
     if not isinstance(value, dict):
-      raise SchemaMismatch(name+' must be a record (dictionary/associative array)')
+      raise SchemaMismatch(name+' must be a record')
 
     unknown = [k for k in value.keys() if k not in self.known]
 
@@ -446,10 +446,10 @@ class SeqType(_CoreType):
       raise SchemaMismatch(name+' must be a sequence')
 
     if len(value) < len(self.content_schema):
-      return SchemaMismatch(name+' is less than expected length')
+      raise SchemaMismatch(name+' is less than expected length')
 
     if len(value) > len(self.content_schema) and not self.tail_schema:
-      return SchemaMismatch(name+' exceeds expected length')
+      raise SchemaMismatch(name+' exceeds expected length')
 
     error_messages = []
 
@@ -490,7 +490,7 @@ class StrType(_CoreType):
     if not isinstance(value, str):
       raise SchemaMismatch(name+' must be a string')
     if self.value is not None and value != self.value:
-      raise SchemaMismatch(name+" must be '{0}'".format(self.value))
+      raise SchemaMismatch(name+" must have value '{0}'".format(self.value))
     if self.length is not None and not self.length(len(value)):
       raise SchemaMismatch(name+' is not in expected length range')
 
