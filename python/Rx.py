@@ -1,4 +1,3 @@
-
 import re
 import types
 from numbers import Number
@@ -35,14 +34,14 @@ class Util(object):
     return check_range
 
 class Factory(object):
-  def __init__(self, opt={}):
+  def __init__(self, register_core_types=True):
     self.prefix_registry = {
       '':      'tag:codesimply.com,2008:rx/core/',
       '.meta': 'tag:codesimply.com,2008:rx/meta/',
     }
 
     self.type_registry = {}
-    if opt.get('register_core_types', False):
+    if register_core_types:
       for t in core_types: self.register_type(t)
 
   @staticmethod
