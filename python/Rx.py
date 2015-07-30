@@ -17,8 +17,12 @@ class Util(object):
   @staticmethod
   def make_range_check(opt):
 
-    if not {'min', 'max', 'min-ex', 'max-ex'}.issuperset(opt.keys()):
+    if not {'min', 'max', 'min-ex', 'max-ex'}.issuperset(opt):
       raise ValueError("illegal argument to make_range_check")
+    if {'min', 'min-ex'}.issubset(opt):
+      raise ValueError("Cannot define both exclusive and inclusive min")
+    if {'max', 'max-ex'}.issubset(opt):
+      raise ValueError("Cannot define both exclusive and inclusive max")      
 
     r = opt.copy()
 
@@ -32,6 +36,30 @@ class Util(object):
         )
 
     return check_range
+
+  def make_range_validator(opt):
+    check_range = make_range_check(opt)
+
+    r = opt.copy()
+    def validate_range(value, name='value'):
+      if not check_range(value):
+        range_str = ''
+        if 'min' in r:
+          range_str = '[{0}, '.format(r['min'])
+        elif 'min-ex' in r:
+          range_str = '({0}, '.format(r['min-ex'])
+        else:
+          range_str = '(-inf, '
+
+        if 'max' in r:
+          range_str += '{0}]'.format(r['max'])
+        elif 'max-ex' in r:
+          range_str += '{0})'.format(r['max-ex'])
+        else:
+          range_str += 'inf)'
+
+        raise SchemaMismatch(name+' must be in range '+range_str)
+
 
 class Factory(object):
   def __init__(self, register_core_types=True):
@@ -199,15 +227,14 @@ class ArrType(_CoreType):
     self.content_schema = rx.make_schema(schema['contents'])
 
     if schema.get('length'):
-      self.length = Util.make_range_check(schema['length'])
+      self.length = Util.make_range_validator(schema['length'], 'length')
 
   def validate(self, value, name='object'):
     if not isinstance(value, (list, tuple)):
       raise SchemaMismatch(name+' must be an array.')
 
-    if self.length and not self.length(len(value)):
-      # TODO: report how it is out of range
-      raise SchemaMismatch(name+' length out of range')
+    if self.length:
+      self.length(len(value))
 
     error_messages = []
 
@@ -265,14 +292,14 @@ class IntType(_CoreType):
 
     self.range = None
     if 'range' in schema:
-      self.range = Util.make_range_check(schema['range'])
+      self.range = Util.make_range_validator(schema['range'])
 
   def validate(self, value, name='object'):
     if not isinstance(value, Number) or isinstance(value, bool) or value%1:
       raise SchemaMismatch(name+' must be an integer')
 
-    if self.range and not self.range(value):
-      raise SchemaMismatch(name+' not in range')
+    if self.range:
+      self.range(value)
 
     if self.value is not None and value != self.value:
       raise SchemaMismatch(name+' must equal '+str(self.value))
@@ -338,14 +365,14 @@ class NumType(_CoreType):
     self.range = None
 
     if schema.get('range'):
-      self.range = Util.make_range_check( schema['range'] )
+      self.range = Util.make_range_validator(schema['range'])
 
   def validate(self, value, name='object'):
     if not isinstance(value, Number) or isinstance(value, bool):
       raise SchemaMismatch(name+' must be a number')
 
-    if self.range and not self.range(value):
-      raise SchemaMismatch(name+' not in range')
+    if self.range:
+      self.range(value)
 
     if self.value is not None and value != self.value:
       raise SchemaMismatch(name+' must equal '+str(self.value))
@@ -483,15 +510,15 @@ class StrType(_CoreType):
 
     self.length = None
     if 'length' in schema:
-      self.length = Util.make_range_check( schema['length'] )
+      self.length = Util.make_range_validator(schema['length'], 'length')
 
   def validate(self, value, name='object'):
     if not isinstance(value, str):
       raise SchemaMismatch(name+' must be a string')
     if self.value is not None and value != self.value:
       raise SchemaMismatch(name+" must have value '{0}'".format(self.value))
-    if self.length is not None and not self.length(len(value)):
-      raise SchemaMismatch(name+' is not in expected length range')
+    if self.length:
+      self.length(len(value))
 
 core_types = [
   AllType,  AnyType, ArrType, BoolType, DefType,
