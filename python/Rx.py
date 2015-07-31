@@ -26,6 +26,7 @@ class Util(object):
 
     r = opt.copy()
     inf = float('inf')
+
     def check_range(value):
       return(
         r.get('min',    -inf) <= value and \
@@ -41,6 +42,7 @@ class Util(object):
 
     r = opt.copy()
     nan = float('nan')
+
     def validate_range(value, name='value'):
       if not check_range(value):
         range_str = ''
@@ -177,11 +179,13 @@ class AllType(_CoreType):
       except SchemaMismatch as e:
         error_messages.append(str(e))
 
-    if error_messages:
+    if len(error_messages) > 1:
       messages = indent('\n'.join(error_messages))
       message = '{0} failed to meet all schema requirements:\n{1}'
       message = message.format(name, messages)
       raise SchemaMismatch(message)
+    elif len(error_messages) == 1:
+      raise SchemaMismatch(error_messages[0])
 
 class AnyType(_CoreType):
   @staticmethod
@@ -237,7 +241,7 @@ class ArrType(_CoreType):
       raise SchemaMismatch(name+' must be an array.')
 
     if self.length:
-      self.length(len(value), 'length of '+name)
+      self.length(len(value), name+' length')
 
     error_messages = []
 
@@ -247,11 +251,13 @@ class ArrType(_CoreType):
       except SchemaMismatch as e:
         error_messages.append(str(e))
 
-    if error_messages:
+    if len(error_messages) > 1:
       messages = indent('\n'.join(error_messages))
       message = '{0} sequence contains invalid elements:\n{1}'
       message = message.format(name, messages)
       raise SchemaMismatch(message)
+    elif len(error_messages) == 1:
+      raise SchemaMismatch(name+': '+error_messages[0])
 
 class BoolType(_CoreType):
   @staticmethod
@@ -334,12 +340,13 @@ class MapType(_CoreType):
       except SchemaMismatch as e:
         error_messages.append(str(e))
 
-    if error_messages:
+    if len(error_messages) > 1:
       messages = indent('\n'.join(error_messages))
       message = '{0} map contains invalid entries:\n{1}'
       message = message.format(name, messages)
       raise SchemaMismatch(message)
-
+    elif len(error_messages) == 1:
+      raise SchemaMismatch(name+': '+error_messages[0])
 
 class NilType(_CoreType):
   @staticmethod
@@ -446,11 +453,13 @@ class RecType(_CoreType):
       except SchemaMismatch as e:
         error_messages.append(str(e))
 
-    if error_messages:
+    if len(error_messages) > 1:
       messages = indent('\n'.join(error_messages))
       message = '{0} record is invalid:\n{1}'
       message = message.format(name, messages)
       raise SchemaMismatch(message)
+    elif len(error_messages) == 1:
+      raise SchemaMismatch(name+': '+error_messages[0])
 
 
 class SeqType(_CoreType):
@@ -488,11 +497,13 @@ class SeqType(_CoreType):
       except SchemaMismatch as e:
         error_messages.append(str(e))   
 
-    if error_messages:
+    if len(error_messages) > 1:
       messages = indent('\n'.join(error_messages))
       message = '{0} sequence is invalid:\n{1}'
       message = message.format(name, messages)
-      raise SchemaMismatch(message)     
+      raise SchemaMismatch(message)
+    elif len(error_messages) == 1:
+      raise SchemaMismatch(name+': '+error_messages[0])
 
     if len(value) > len(self.content_schema):
       self.tail_schema.validate(value[len(self.content_schema):], name)
@@ -521,7 +532,7 @@ class StrType(_CoreType):
     if self.value is not None and value != self.value:
       raise SchemaMismatch(name+" must have value '{0}'".format(self.value))
     if self.length:
-      self.length(len(value), 'length of '+name)
+      self.length(len(value), name+' length')
 
 core_types = [
   AllType,  AnyType, ArrType, BoolType, DefType,
