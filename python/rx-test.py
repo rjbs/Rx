@@ -110,13 +110,23 @@ for schema_name in schema_names:
       # if to_test == '*': to_test = test_data[ source ].keys()
 
       for entry in to_test:
-        result = schema.check( test_data[source][entry] )
+        result = None
+        try:
+          schema.validate(test_data[source][entry])
+          result = True
+        except Rx.SchemaMismatch as e:
+          print(str(e))
+          result = False
 
         desc = "%s/%s against %s" % (source, entry, schema_name)
 
         if pf == 'pass':
           ok(result, "VALID  : %s" % desc)
-          if not result: pdb.set_trace()
+          #if not result:
+          #  pdb.set_trace()
+          #  result = schema.check( test_data[source][entry] )
         else:
           ok(not result, "INVALID: %s" % desc)
-          if result: pdb.set_trace()
+          #if result:
+          #  pdb.set_trace()
+          #  result = schema.check( test_data[source][entry] )
