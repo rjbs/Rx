@@ -37,8 +37,9 @@ class Util(object):
 
     return check_range
 
+  @staticmethod
   def make_range_validator(opt):
-    check_range = make_range_check(opt)
+    check_range = Util.make_range_check(opt)
 
     r = opt.copy()
     nan = float('nan')
@@ -47,7 +48,8 @@ class Util(object):
       if not check_range(value):
         range_str = ''
         if r.get('min', nan) == r.get('max', nan):
-          raise SchemaMismatch(name+' must equal '+r['min'])
+          msg = '{0} must equal {1}'.format(name, r['min'])
+          raise SchemaMismatch(msg)
 
         if 'min' in r:
           range_str = '[{0}, '.format(r['min'])
@@ -64,6 +66,8 @@ class Util(object):
           range_str += 'inf)'
 
         raise SchemaMismatch(name+' must be in range '+range_str)
+
+    return validate_range
 
 
 class Factory(object):
