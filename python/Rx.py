@@ -88,12 +88,14 @@ class Factory(object):
     if not m:
       raise ValueError("couldn't understand type name '%s'" % type_name)
 
-    if not self.prefix_registry.get(m.group(1)):
-      raise ValueError(
-        "unknown prefix '%s' in type name '%s'" % (m.group(1), type_name)
+    prefix, suffix = m.groups()
+
+    if prefix not in self.prefix_registry:
+      raise KeyError(
+        "unknown prefix '%s' in type name '%s'" % (prefix, type_name)
       )
 
-    return '%s%s' % (self.prefix_registry[ m.group(1) ], m.group(2))
+    return self.prefix_registry[ prefix ] + suffix
 
   def add_prefix(self, name, base):
     if self.prefix_registry.get(name):
@@ -104,8 +106,8 @@ class Factory(object):
   def register_type(self, t):
     t_uri = t.uri()
 
-    if self.type_registry.get(t_uri):
-      raise ValueError("type already registered for %s" % t_uri)
+    if t_uri in self.type_registry:
+      raise ValueError("type already registered for " + t_uri)
 
     self.type_registry[t_uri] = t
 
