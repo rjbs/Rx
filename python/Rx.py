@@ -101,20 +101,20 @@ class Factory(object):
     m = re.match('^/([-._a-z0-9]*)/([-._a-z0-9]+)$', type_name)
 
     if not m:
-      raise ValueError("couldn't understand type name '%s'" % type_name)
+      raise ValueError("couldn't understand type name '{0}'".format(type_name))
 
     prefix, suffix = m.groups()
 
     if prefix not in self.prefix_registry:
       raise KeyError(
-        "unknown prefix '%s' in type name '%s'" % (prefix, type_name)
+        "unknown prefix '{0}' in type name '{1}'".format(prefix, type_name)
       )
 
     return self.prefix_registry[ prefix ] + suffix
 
   def add_prefix(self, name, base):
     if self.prefix_registry.get(name):
-      raise SchemaError("the prefix '%s' is already registered" % name)
+      raise SchemaError("the prefix '{0}' is already registered".format(name))
 
     self.prefix_registry[name] = base;
 
@@ -122,13 +122,13 @@ class Factory(object):
     t_uri = t.uri()
 
     if t_uri in self.type_registry:
-      raise ValueError("type already registered for " + t_uri)
+      raise ValueError("type already registered for {0}".format(t_uri))
 
     self.type_registry[t_uri] = t
 
   def learn_type(self, uri, schema):
     if self.type_registry.get(uri):
-      raise SchemaError("tried to learn type for already-registered uri %s" % uri)
+      raise SchemaError("tried to learn type for already-registered uri {0}".format(uri))
 
     # make sure schema is valid
     # should this be in a try/except?
@@ -145,7 +145,7 @@ class Factory(object):
 
     uri = self.expand_uri(schema['type'])
 
-    if not self.type_registry.get(uri): raise SchemaError("unknown type %s" % uri)
+    if not self.type_registry.get(uri): raise SchemaError("unknown type {0}".format(uri))
 
     type_class = self.type_registry[uri]
 
@@ -163,7 +163,7 @@ class _CoreType(object):
 
   def __init__(self, schema, rx):
     if not {'type'}.issuperset(schema.keys()):
-      raise SchemaError('unknown parameter for //%s' % self.subname())
+      raise SchemaError('unknown parameter for //{0}'.format(self.subname()))
 
   def check(self, value):
     try:
