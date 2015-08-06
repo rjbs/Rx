@@ -1,6 +1,8 @@
 import re
+from six import string_types # for 2-3 compatibility
 import types
 from numbers import Number
+
 
 core_types = [ ]
 
@@ -12,11 +14,11 @@ class SchemaMismatch(Exception):
 
 class SchemaTypeMismatch(SchemaMismatch):
   def __init__(self, name, desired_type):
-    super().__init__('{0} must be {1}'.format(name, desired_type))
+    SchemaMismatch.__init__(self, '{0} must be {1}'.format(name, desired_type))
 
 class SchemaValueMismatch(SchemaMismatch):
   def __init__(self, name, value):
-    super().__init__('{0} must equal {1}'.format(name, value))
+    SchemaMismatch.__init__(self, '{0} must equal {1}'.format(name, value))
 
 class SchemaRangeMismatch(SchemaMismatch):
   pass
@@ -137,7 +139,7 @@ class Factory(object):
     self.type_registry[uri] = { 'schema': schema }
 
   def make_schema(self, schema):
-    if isinstance(schema, str):
+    if isinstance(schema, string_types):
       schema = { 'type': schema }
 
     if not isinstance(schema, dict):
@@ -409,7 +411,7 @@ class OneType(_CoreType):
   def subname(): return 'one'
 
   def validate(self, value, name='value'):
-    if not isinstance(value, (Number, str)):
+    if not isinstance(value, (Number, string_types)):
       raise SchemaTypeMismatch(name, 'number or string')
 
 class RecType(_CoreType):
@@ -535,7 +537,7 @@ class StrType(_CoreType):
 
     self.value = None
     if 'value' in schema:
-      if not isinstance(schema['value'], str):
+      if not isinstance(schema['value'], string_types):
         raise SchemaError('invalid value parameter for //str')
       self.value = schema['value']
 
@@ -544,7 +546,7 @@ class StrType(_CoreType):
       self.length = Util.make_range_validator(schema['length'])
 
   def validate(self, value, name='value'):
-    if not isinstance(value, str):
+    if not isinstance(value, string_types):
       raise SchemaTypeMismatch(name, 'string')
     if self.value is not None and value != self.value:
       raise SchemaValueMismatch(name, '"{0}"'.format(self.value))

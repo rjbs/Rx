@@ -6,7 +6,6 @@ import pdb
 import os
 
 plan(None)
-os.chdir('..')
 rx = Rx.Factory({ "register_core_types": True });
 
 isa_ok(rx, Rx.Factory)
