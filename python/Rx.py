@@ -150,7 +150,7 @@ class Factory(object):
     type_class = self.type_registry[uri]
 
     if isinstance(type_class, dict):
-      if not {'type'}.issuperset(schema.keys()):
+      if not {'type'}.issuperset(schema):
         raise SchemaError('composed type does not take check arguments');
       return self.make_schema(type_class['schema'])
     else:
@@ -162,7 +162,7 @@ class _CoreType(object):
     return 'tag:codesimply.com,2008:rx/core/' + self.subname()
 
   def __init__(self, schema, rx):
-    if not {'type'}.issuperset(schema.keys()):
+    if not {'type'}.issuperset(schema):
       raise SchemaError('unknown parameter for //{0}'.format(self.subname()))
 
   def check(self, value):
@@ -180,7 +180,7 @@ class AllType(_CoreType):
   def subname(): return 'all'
 
   def __init__(self, schema, rx):
-    if not {'type', 'of'}.issuperset(schema.keys()):
+    if not {'type', 'of'}.issuperset(schema):
       raise SchemaError('unknown parameter for //all')
     
     if not(schema.get('of') and len(schema.get('of'))):
@@ -211,7 +211,7 @@ class AnyType(_CoreType):
   def __init__(self, schema, rx):
     self.alts = None
 
-    if not {'type', 'of'}.issuperset(schema.keys()):
+    if not {'type', 'of'}.issuperset(schema):
       raise SchemaError('unknown parameter for //any')
     
     if schema.get('of') is not None:
@@ -242,7 +242,7 @@ class ArrType(_CoreType):
   def __init__(self, schema, rx):
     self.length = None
 
-    if not {'type', 'contents', 'length'}.issuperset(schema.keys()):
+    if not {'type', 'contents', 'length'}.issuperset(schema):
       raise SchemaError('unknown parameter for //arr')
 
     if not schema.get('contents'):
@@ -307,7 +307,7 @@ class IntType(_CoreType):
   def subname(): return 'int'
 
   def __init__(self, schema, rx):
-    if not {'type', 'range', 'value'}.issuperset(schema.keys()):
+    if not {'type', 'range', 'value'}.issuperset(schema):
       raise SchemaError('unknown parameter for //int')
 
     self.value = None
@@ -337,7 +337,7 @@ class MapType(_CoreType):
   def __init__(self, schema, rx):
     self.allowed = set()
 
-    if not {'type', 'values'}.issuperset(schema.keys()):
+    if not {'type', 'values'}.issuperset(schema):
       raise SchemaError('unknown parameter for //map')
 
     if not schema.get('values'):
@@ -380,7 +380,7 @@ class NumType(_CoreType):
   def subname(): return 'num'
 
   def __init__(self, schema, rx):
-    if not {'type', 'range', 'value'}.issuperset(schema.keys()):
+    if not {'type', 'range', 'value'}.issuperset(schema):
       raise SchemaError('unknown parameter for //num')
 
     self.value = None
@@ -417,7 +417,7 @@ class RecType(_CoreType):
   def subname(): return 'rec'
 
   def __init__(self, schema, rx):
-    if not {'type', 'rest', 'required', 'optional'}.issuperset(schema.keys()):
+    if not {'type', 'rest', 'required', 'optional'}.issuperset(schema):
       raise SchemaError('unknown parameter for //rec')
 
     self.known = set()
@@ -484,7 +484,7 @@ class SeqType(_CoreType):
   def subname(): return 'seq'
 
   def __init__(self, schema, rx):
-    if not {'type', 'contents', 'tail'}.issuperset(schema.keys()):
+    if not {'type', 'contents', 'tail'}.issuperset(schema):
       raise SchemaError('unknown parameter for //seq')
 
     if not schema.get('contents'):
@@ -530,7 +530,7 @@ class StrType(_CoreType):
   def subname(): return 'str'
 
   def __init__(self, schema, rx):
-    if not {'type', 'value', 'length'}.issuperset(schema.keys()):
+    if not {'type', 'value', 'length'}.issuperset(schema):
       raise SchemaError('unknown parameter for //str')
 
     self.value = None
