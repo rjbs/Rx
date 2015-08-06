@@ -114,7 +114,6 @@ for schema_name in schema_names:
           schema.validate(test_data[source][entry])
           result = True
         except Rx.SchemaMismatch as e:
-          print(str(e))
           result = False
 
         desc = "%s/%s against %s" % (source, entry, schema_name)
