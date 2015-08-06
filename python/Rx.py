@@ -18,6 +18,9 @@ class SchemaValueMismatch(SchemaMismatch):
   def __init__(self, name, value):
     super().__init__('{0} must equal {1}'.format(name, value))
 
+class SchemaRangeMismatch(SchemaMismatch):
+  pass
+
 def indent(text, level=1, whitespace='  '):
     return '\n'.join(whitespace*level+line for line in text.split('\n'))
 
@@ -57,7 +60,7 @@ class Util(object):
         range_str = ''
         if r.get('min', nan) == r.get('max', nan):
           msg = '{0} must equal {1}'.format(name, r['min'])
-          raise SchemaMismatch(msg)
+          raise SchemaRangeMismatch(msg)
 
         if 'min' in r:
           range_str = '[{0}, '.format(r['min'])
@@ -73,7 +76,7 @@ class Util(object):
         else:
           range_str += 'inf)'
 
-        raise SchemaMismatch(name+' must be in range '+range_str)
+        raise SchemaRangeMismatch(name+' must be in range '+range_str)
 
     return validate_range
 
