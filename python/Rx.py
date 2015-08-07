@@ -59,11 +59,11 @@ class Util(object):
 
     def validate_range(value, name='value'):
       if not check_range(value):
-        range_str = ''
         if r.get('min', nan) == r.get('max', nan):
           msg = '{0} must equal {1}'.format(name, r['min'])
           raise SchemaRangeMismatch(msg)
-
+        
+        range_str = ''
         if 'min' in r:
           range_str = '[{0}, '.format(r['min'])
         elif 'min-ex' in r:
