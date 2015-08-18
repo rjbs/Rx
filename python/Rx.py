@@ -283,7 +283,7 @@ class BoolType(_CoreType):
   def subname(): return 'bool'
 
   def validate(self, value, name='value'):
-    if not (isinstance(value, bool)):
+    if not isinstance(value, bool):
       raise SchemaTypeMismatch(name, 'boolean')
 
 class DefType(_CoreType):
