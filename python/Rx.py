@@ -216,7 +216,7 @@ class AnyType(_CoreType):
     if not {'type', 'of'}.issuperset(schema):
       raise SchemaError('unknown parameter for //any')
     
-    if schema.get('of') is not None:
+    if 'of' in schema:
       if not schema['of']: raise SchemaError('no alternatives given in //any of')
       self.alts = [ rx.make_schema(alt) for alt in schema['of'] ]
 
