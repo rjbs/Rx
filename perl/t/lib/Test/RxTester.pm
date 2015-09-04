@@ -109,8 +109,7 @@ sub assert_fail {
     my $ok   = 1;
     my @diag;
 
-  FAILS:
-    {
+    FAILS: {
       if (try { $fails->isa('Data::Rx::FailureSet') }) {
         my $fail = $fails->failures;
         $want ||= [];
