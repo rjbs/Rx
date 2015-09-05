@@ -327,7 +327,7 @@ class IntType(_CoreType):
       raise SchemaTypeMismatch(name,'integer')
 
     if self.range:
-      self.range(value, 'name')
+      self.range(value, name)
 
     if self.value is not None and value != self.value:
       raise SchemaValueMismatch(name, self.value)
