@@ -42,7 +42,8 @@ my @testfiles = qw(
 );
 
 if (@ARGV) {
-  @testfiles = grep { my ($lang) = m{^(\w+)/}; $lang ~~ @ARGV } @testfiles;
+  my %want_lang = map {; $_ => 1 } @ARGV;
+  @testfiles = grep { my ($lang) = m{^(\w+)/}; $want_lang{$lang} } @testfiles;
 }
 
 $harness->runtests(@testfiles);

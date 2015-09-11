@@ -221,7 +221,7 @@ sub run_tests {
 
     Test::More::diag "testing $spec_name";
 
-    my $rx     = Data::Rx->new({ sort_keys => 1 });
+    my $rx = Data::Rx->new({ sort_keys => 1 });
 
     if ($spec->{'composedtype'}) {
       my $rc =
