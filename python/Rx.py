@@ -3,10 +3,9 @@ from six import string_types # for 2-3 compatibility
 import types
 from numbers import Number
 
-import pdb # debug only
+#import pdb # debug only
 
-# TODO: test the new updates to this system
-# TODO: write a whole new goddamn test suite for these structured errors
+# possible TODO: write a whole new test suite for these structured errors
 core_types = [ ]
 
 ### Exception Classes --------------------------------------------------------
