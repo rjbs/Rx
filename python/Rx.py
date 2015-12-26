@@ -211,7 +211,7 @@ class Factory(object):
     else:
       return type_class(schema, self)
 
-### Core Type Abstract Class -------------------------------------------------
+### Core Type Base Class -------------------------------------------------
 
 class _CoreType(object):
   @classmethod
