@@ -15,31 +15,47 @@ class SchemaError(Exception):
 
 
 class SchemaMismatch(Exception):
-  pass
-
+  def __init__(self, message = None, schema_type = None):
+    self.schema_type = schema_type
+    Exception.__init__(self, message)
 
 class SchemaTypeMismatch(SchemaMismatch):
-  def __init__(self, desired_type):
+  def __init__(self, desired_type, *args, **kwargs):
     vowels = 'aeiou'
     article = 'a'+'n'*(desired_type[0] in vowels)
-    msg = 'must be {} {}'.format(article, desired_type)
-    SchemaMismatch.__init__(self, msg)
+    SchemaMismatch.__init__(
+      self,
+      'must be {} {}'.format(article, desired_type),
+      *args,
+      **kwargs
+      )
 
 
 class SchemaValueMismatch(SchemaMismatch):
-  def __init__(self, value):
-    SchemaMismatch.__init__(self, 'must equal {}'.format(value))
+  def __init__(self, value, *args, **kwargs):
+    SchemaMismatch.__init__(
+      self,
+      'must equal {}'.format(value),
+      *args,
+      **kwargs
+      )
 
 
 class SchemaRangeMismatch(SchemaMismatch):
   pass
 
 
-class MultiSchemaMismatch(SchemaMismatch):
-  def __init__(self, message = None):
+class SchemaTreeMismatch(SchemaMismatch):
+  def __init__(self, message = None, *args, **kwargs):
     self.errors = []
     self.child_errors = {}
     self.message = message
+    SchemaMismatch.__init__(
+      self,
+      None,
+      *args,
+      **kwargs
+      )
 
   def __str__(self):
     error_messages = []
@@ -62,7 +78,7 @@ class MultiSchemaMismatch(SchemaMismatch):
   def __bool__(self):
     return bool(self.errors or self.child_errors)
 
-  def __nonzero__(self):
+  def __nonzero__(self): # python 2 compatibility
     return self.__bool__()
 
 
@@ -103,11 +119,11 @@ class Util(object):
     r = opt.copy()
     nan = float('nan')
 
-    def validate_range(value, name=''):
+    def validate_range(value, name='', schema_type = None):
       if not check_range(value):
         if r.get('min', nan) == r.get('max', nan):
           msg = '{} must equal {}'.format(r['min'])
-          raise SchemaRangeMismatch(msg)
+          raise SchemaRangeMismatch(msg, schema_type)
         
         range_str = ''
         if 'min' in r:
@@ -127,7 +143,9 @@ class Util(object):
         if name:
           name += ' ' # put a space between name and message
 
-        raise SchemaRangeMismatch(name+'must be in range '+range_str)
+        raise SchemaRangeMismatch(
+          name+'must be in range '+range_str, schema_type
+          )
 
     return validate_range
 
@@ -248,7 +266,7 @@ class AllType(_CoreType):
     self.alts = [rx.make_schema(s) for s in schema['of']]
 
   def validate(self, value):
-    mismatch = MultiSchemaMismatch()
+    mismatch = SchemaTreeMismatch(schema_type='//all')
     for schema in self.alts:
       try:
         schema.validate(value)
@@ -279,7 +297,7 @@ class AnyType(_CoreType):
     if self.alts is None:
       return
     
-    mismatch = MultiSchemaMismatch()
+    mismatch = SchemaTreeMismatch(schema_type='//any')
 
     for schema in self.alts:
       try:
@@ -315,11 +333,11 @@ class ArrType(_CoreType):
     if not isinstance(value, (list, tuple)):
       raise SchemaTypeMismatch('array')
 
-    mismatch = MultiSchemaMismatch()
+    mismatch = SchemaTreeMismatch(schema_type='//arr')
 
     if self.length:
       try:
-        self.length(len(value), 'length')
+        self.length(len(value), 'length', '//arr')
       except SchemaRangeMismatch as e:
         mismatch.errors.append(e)
 
@@ -339,17 +357,16 @@ class BoolType(_CoreType):
 
   def validate(self, value,):
     if not isinstance(value, bool):
-      raise SchemaTypeMismatch('boolean')
+      raise SchemaTypeMismatch('boolean', '//bool')
 
 
 class DefType(_CoreType):
   @staticmethod
   def subname(): return 'def'
 
-
   def validate(self, value):
     if value is None:
-      raise SchemaMismatch('must be non-null')
+      raise SchemaMismatch('must be non-null', '//def')
 
 
 class FailType(_CoreType):
@@ -359,7 +376,7 @@ class FailType(_CoreType):
   def check(self, value): return False
 
   def validate(self, value):
-    raise SchemaMismatch('is of fail type, automatically invalid.')
+    raise SchemaMismatch('is of fail type, automatically invalid.', '//fail')
 
 
 class IntType(_CoreType):
@@ -382,13 +399,13 @@ class IntType(_CoreType):
 
   def validate(self, value):
     if not isinstance(value, Number) or isinstance(value, bool) or value%1:
-      raise SchemaTypeMismatch('integer')
+      raise SchemaTypeMismatch('integer', '//int')
 
     if self.range:
-      self.range(value)
+      self.range(value, schema_type = '//int')
 
     if self.value is not None and value != self.value:
-      raise SchemaValueMismatch(self.value)
+      raise SchemaValueMismatch(self.value, '//int')
 
 
 class MapType(_CoreType):
@@ -408,9 +425,9 @@ class MapType(_CoreType):
 
   def validate(self, value):
     if not isinstance(value, dict):
-      raise SchemaTypeMismatch('map')
+      raise SchemaTypeMismatch('map', '//map')
 
-    mismatch = MultiSchemaMismatch()
+    mismatch = SchemaTreeMismatch(schema_type='//map')
 
     for key, val in value.items():
       try:
@@ -430,7 +447,7 @@ class NilType(_CoreType):
 
   def validate(self, value):
     if value is not None:
-      raise SchemaTypeMismatch('null')
+      raise SchemaTypeMismatch('null', '//nil')
 
 
 class NumType(_CoreType):
@@ -454,13 +471,13 @@ class NumType(_CoreType):
 
   def validate(self, value):
     if not isinstance(value, Number) or isinstance(value, bool):
-      raise SchemaTypeMismatch('number')
+      raise SchemaTypeMismatch('number', '//num')
 
     if self.range:
-      self.range(value)
+      self.range(value, schema_type = '/num')
 
     if self.value is not None and value != self.value:
-      raise SchemaValueMismatch(self.value)
+      raise SchemaValueMismatch(self.value, '//num')
 
 
 class OneType(_CoreType):
@@ -469,7 +486,7 @@ class OneType(_CoreType):
 
   def validate(self, value):
     if not isinstance(value, (Number, string_types)):
-      raise SchemaTypeMismatch('number or string')
+      raise SchemaTypeMismatch('number or string', '//one')
 
 
 class RecType(_CoreType):
@@ -500,14 +517,14 @@ class RecType(_CoreType):
 
   def validate(self, value):
     if not isinstance(value, dict):
-      raise SchemaTypeMismatch('record')
+      raise SchemaTypeMismatch('record', '//rec')
 
-    mismatch = MultiSchemaMismatch()
+    mismatch = SchemaTreeMismatch(schema_type='//rec')
 
     for field in self.required:
 
       if field not in value:
-        err = SchemaMismatch('missing required field: '+field)
+        err = SchemaMismatch('missing required field: '+field, '//rec')
         mismatch.errors.append(err)
       else:
         try:
@@ -534,7 +551,7 @@ class RecType(_CoreType):
           mismatch.errors.append(e)
       else:
         fields = Util.indent('\n'.join(unknown))
-        error = SchemaMismatch('contains unknown fields:\n'+fields)
+        error = SchemaMismatch('contains unknown fields:\n'+fields, '//rec')
         mismatch.errors.append(error)
       
     if bool(mismatch):
@@ -560,9 +577,9 @@ class SeqType(_CoreType):
 
   def validate(self, value):
     if not isinstance(value, (list, tuple)):
-      raise SchemaTypeMismatch('sequence')
+      raise SchemaTypeMismatch('sequence', '//seq')
 
-    mismatch = MultiSchemaMismatch()
+    mismatch = SchemaTreeMismatch(schema_type='//seq')
 
     if len(value) > len(self.content_schema):
       if self.tail_schema:
@@ -571,10 +588,14 @@ class SeqType(_CoreType):
         except SchemaMismatch as e:
           mismatch.errors.append(e)  
       else:
-        mismatch.errors.append(SchemaMismatch('exceeds expected length'))
+        mismatch.errors.append(
+          SchemaMismatch('exceeds expected length', '//seq')
+          )
 
     if len(value) < len(self.content_schema):
-      mismatch.errors.append(SchemaMismatch('less than expected length'))
+      mismatch.errors.append(
+        SchemaMismatch('less than expected length', '//seq')
+        )
 
     for index, (schema, item) in enumerate(zip(self.content_schema, value)):
       try:
@@ -606,11 +627,11 @@ class StrType(_CoreType):
 
   def validate(self, value):
     if not isinstance(value, string_types):
-      raise SchemaTypeMismatch('string')
+      raise SchemaTypeMismatch('string', '//str')
     if self.value is not None and value != self.value:
-      raise SchemaValueMismatch(repr(self.value))
+      raise SchemaValueMismatch(repr(self.value), '//str')
     if self.length:
-      self.length(len(value), 'length')
+      self.length(len(value), 'length', '//str')
 
 core_types = [
   AllType,  AnyType, ArrType, BoolType, DefType,
