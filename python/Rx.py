@@ -12,9 +12,10 @@ class SchemaError(Exception):
 
 class SchemaMismatch(Exception):
 
-  def __init__(self, message, schema):
+  def __init__(self, message, schema, error=None):
     Exception.__init__(self, message)
     self.type = schema.subname() 
+    self.error = error
 
 class TypeMismatch(SchemaMismatch):
   
@@ -24,7 +25,7 @@ class TypeMismatch(SchemaMismatch):
       type(data).__name__
       )
 
-    SchemaMismatch.__init__(self, message, schema)
+    SchemaMismatch.__init__(self, message, schema, 'type')
     self.expected_type = schema.subname()
     self.value = type(data).__name__
 
@@ -38,9 +39,10 @@ class ValueMismatch(SchemaMismatch):
       repr(data)
       )
 
-    SchemaMismatch.__init__(self, message, schema)
+    SchemaMismatch.__init__(self, message, schema, 'value')
     self.expected_value = schema.value
     self.value = data
+
  
 
 class RangeMismatch(SchemaMismatch):
@@ -52,7 +54,7 @@ class RangeMismatch(SchemaMismatch):
       data
       )
 
-    SchemaMismatch.__init__(self, message, schema)
+    SchemaMismatch.__init__(self, message, schema, 'range')
     self.range = schema.range
     self.value = data
 
@@ -71,7 +73,7 @@ class LengthRangeMismatch(SchemaMismatch):
       len(data)
       )
 
-    SchemaMismatch.__init__(self, message, schema)
+    SchemaMismatch.__init__(self, message, schema, 'range')
     self.range = schema.length
     self.value = len(data)
 
@@ -93,7 +95,7 @@ class MissingFieldMismatch(SchemaMismatch):
           _indent('\n'.join(fields))
           )
 
-    SchemaMismatch.__init__(self, message, schema)
+    SchemaMismatch.__init__(self, message, schema, 'missing')
     self.fields = fields
 
 
@@ -114,8 +116,23 @@ class UnknownFieldMismatch(SchemaMismatch):
           _indent('\n'.join(fields))
           )
 
-    SchemaMismatch.__init__(self, message, schema)
+    SchemaMismatch.__init__(self, message, schema, 'unexpected')
     self.fields = fields
+
+
+class SeqLengthMismatch(SchemaMismatch):
+  def __init__(self, schema, data):
+
+    expected_length = len(schema.content_schema)
+    message = 'sequence must have {} element{} (had {})'.format(
+      expected_length,
+      's'*(expected_length != 1), # plural
+      len(data)
+      )
+
+    SchemaMismatch.__init__(self, message, schema, 'size')
+    self.expected_length = expected_length
+    self.value = len(data)
 
 
 class TreeMismatch(SchemaMismatch):
@@ -159,7 +176,7 @@ class TreeMismatch(SchemaMismatch):
         _indent('\n'.join(error_messages))
         )
 
-    SchemaMismatch.__init__(self, msg, schema)
+    SchemaMismatch.__init__(self, msg, schema, 'multiple')
     self.errors = errors
     self.child_errors = child_errors
 
@@ -303,6 +320,13 @@ class Factory(object):
     else:
       return type_class(schema, self)
 
+std_factory = None
+def make_schema(schema):
+  global std_factory
+  if std_factory is None:
+    std_factory = Factory()
+  return std_factory.make_schema(schema)
+
 ### Core Type Base Class -------------------------------------------------
 
 class _CoreType(object):
@@ -438,7 +462,7 @@ class DefType(_CoreType):
 
   def validate(self, value):
     if value is None:
-      raise SchemaMismatch('must be non-null', self)
+      raise TypeMismatch(self, value)
 
 
 class FailType(_CoreType):
@@ -448,7 +472,11 @@ class FailType(_CoreType):
   def check(self, value): return False
 
   def validate(self, value):
-    raise SchemaMismatch('is of fail type, automatically invalid.', self)
+    raise SchemaMismatch(
+      'is of fail type, automatically invalid.',
+      self,
+      'fail'
+      )
 
 
 class IntType(_CoreType):
@@ -659,21 +687,15 @@ class SeqType(_CoreType):
 
     errors = []
 
-    if len(value) > len(self.content_schema):
-      if self.tail_schema:
+    if len(value) != len(self.content_schema):
+      if len(value) > len(self.content_schema) and self.tail_schema:
         try:
           self.tail_schema.validate(value[len(self.content_schema):])
         except SchemaMismatch as e:
-          errors.append(e)  
+          errors.append(e)
       else:
-        errors.append(
-          SchemaMismatch('exceeds expected length', self)
-          )
-
-    elif len(value) < len(self.content_schema):
-      errors.append(
-        SchemaMismatch('less than expected length', self)
-        )
+        err = SeqLengthMismatch(self, value)
+        errors.append(err)
 
     child_errors = {}
 
