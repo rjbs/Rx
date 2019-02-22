@@ -578,8 +578,10 @@ class Rx
       end
 
       class Str < Type::Core
+        @rexExpValue = nil
+        @tipValue = nil
         class << self; def subname; return 'str'; end; end
-        @@allowed_param = { 'type' => true, 'value' => true, 'length' => true }
+        @@allowed_param = { 'type' => true, 'value' => true, 'length' => true,  'tip' => true, 'regexp' => true }
         def allowed_param?(p); return @@allowed_param[p]; end
 
         def initialize(param, rx)
@@ -596,9 +598,31 @@ class Rx
 
             @value = param['value']
           end
+          
+          if param['regexp'] then
+            @rexExpValue = param['regexp']
+            else
+            @rexExpValue = nil
+          end
+          if param['tip'] then
+            @tipValue = param['tip']
+            else
+            @tipValue = nil
+          end          
         end
 
         def check!(value)
+          if @rexExpValue != nil then
+            if !value.match(@rexExpValue) 
+              if @tipValue != nil
+                exceptionMessage = "value '#{value}' does not match with regular expression #{@rexExpValue.inspect} tip: #{@tipValue.inspect}"
+              else
+                exceptionMessage = "value '#{value}' does not match with regular expression #{@rexExpValue.inspect} "
+              end      
+             raise ValidationError.new(exceptionMessage, "/str")
+            end
+
+          end
           unless value.instance_of?(String)
             raise ValidationError.new("expected String got #{value.inspect}", "/str")
           end
