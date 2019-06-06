@@ -1,0 +1,21 @@
+{
+    "name": "shaggy8871/rx",
+    "description": "The Rx schema and validation system",
+    "type": "library",
+    "license": "GPL",
+    "minimum-stability": "stable",
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rx\\": "src/Rx/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "test/"
+        }
+    }
+}
