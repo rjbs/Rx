@@ -3,14 +3,22 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
-use Rx\{Rx, RangeChecker, Util};
-use Rx\Exception\MissingParamException;
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface, 
+};
+use Rx\{
+    Rx, 
+    RangeChecker, 
+    Util
+};
+use Rx\Exception\{
+    MissingParamException, 
+    CheckFailedException
+};
 
-class Arr implements TypeInterface
+class Arr extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/arr';
     const TYPE = '//arr';
@@ -23,13 +31,13 @@ class Arr implements TypeInterface
     private $contentSchema;
     private $lengthChecker;
 
-    public function __construct(\stdClass $schema, Rx $rx)
+    public function __construct(\stdClass $schema, Rx $rx, ?string $propName = null)
     {
 
-        $this->checkSchema($schema, static::TYPE);
+        parent::__construct($schema, $rx, $propName);
 
         if (empty($schema->contents)) {
-            throw new MissingParamException('No `contents` param for //arr schema');
+            throw new MissingParamException(sprintf('No `contents` param found for %s %s schema.', $this->propName, static::TYPE));
         }
 
         $this->contentSchema = $rx->makeSchema($schema->contents);
@@ -44,19 +52,17 @@ class Arr implements TypeInterface
     {
 
         if (! Util::isSeqIntArray($value)) {
-            return false;
+            throw new CheckFailedException(sprintf('Numeric keys not found in %s %s.', $this->propName, static::TYPE));
         }
 
         if ($this->lengthChecker) {
             if (! $this->lengthChecker->check(count($value))) {
-                return false;
+                throw new CheckFailedException(sprintf('Array length check fails in %s %s.', $this->propName, static::TYPE));
             }
         }
 
         foreach ($value as $i => $entry) {
-            if (! $this->contentSchema->check($entry)) {
-                return false;
-            }
+            $this->contentSchema->check($entry);
         }
 
         return true;

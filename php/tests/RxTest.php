@@ -2,9 +2,9 @@
 <?php
 include_once("vendor/autoload.php");
 
-require 'ext/Test.php';
+require 'tests/Test.php';
 
-$index_json = file_get_contents('spec/index.json');
+$index_json = file_get_contents('../spec/index.json');
 $index = json_decode($index_json);
 
 $test_data = array();
@@ -23,12 +23,12 @@ foreach ($index as $file) {
   if ($type == 'schemata') {
     $file = join("/", $parts);
     $test_schemata[ $leaf ] = json_decode(
-      file_get_contents("spec/schemata/$file")
+      file_get_contents("../spec/schemata/$file")
     );
   } else if ($type == 'data') {
     $file = join("/", $parts);
     $test_data[ $leaf ] = json_decode(
-      file_get_contents("spec/data/$file")
+      file_get_contents("../spec/data/$file")
     );
   } else {
     die("unknown entries in index.json");
@@ -145,8 +145,12 @@ foreach ($test_schemata as $schema_name => $test) {
       foreach ($entries as $name => $want) {
         $value = $test_data[$source]->$name;
 
-        $result = $schema->check($value);
-        if ($pf == 'fail') $result = ! $result;
+        try {
+            $result = $schema->check($value);
+        } catch (Exception $e) {
+            $result = false;
+            if ($pf == 'fail') $result = ! $result;
+        }
 
         if ("$source/$entry" == "num/0e0")
           todo_start("PHP's json_decode can't handle 0e0 as number");

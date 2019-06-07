@@ -3,14 +3,21 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
-use Rx\{Rx, RangeChecker};
-use Rx\Exception\InvalidParamTypeException;
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface
+};
+use Rx\{
+    Rx, 
+    RangeChecker
+};
+use Rx\Exception\{
+    InvalidParamTypeException, 
+    CheckFailedException
+};
 
-class Str implements TypeInterface
+class Str extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/str';
     const TYPE = '//str';
@@ -21,16 +28,16 @@ class Str implements TypeInterface
     ];
 
     private $fixedValue;
-    private $lengthChecker;  
+    private $lengthChecker;
 
-    public function __construct(\stdClass $schema, Rx $rx)
+    public function __construct(\stdClass $schema, Rx $rx, ?string $propName = null)
     {
 
-        $this->checkSchema($schema, static::TYPE);
+        parent::__construct($schema, $rx, $propName);
 
         if (isset($schema->value)) {
             if (! is_string($schema->value)) {
-                throw new InvalidParamTypeException('The `value` param for //str schema is not a string');
+                throw new InvalidParamTypeException(sprintf('The `value` param for %s %s schema is not a string', $this->propName, static::TYPE));
             }
 
             $this->fixedValue = $schema->value;
@@ -46,16 +53,14 @@ class Str implements TypeInterface
     {
 
         if (! is_string($value)) {
-            return false;
+            throw new CheckFailedException(sprintf('Key `%s` is not of type %s.', $this->propName, static::TYPE));
         }
         if ($this->fixedValue !== null && $value != $this->fixedValue) {
-            return false;
+            throw new CheckFailedException(sprintf('\'%s\' does not equal value \'%s\' in %s %s.', strval($value), strval($this->fixedValue), $this->propName, static::TYPE));
         }
     
-        if ($this->lengthChecker) {
-            if (! $this->lengthChecker->check(strlen($value))) {
-                return false;
-            }
+        if ($this->lengthChecker && ! $this->lengthChecker->check(strlen($value))) {
+            throw new CheckFailedException(sprintf('\'%s\' length check fails in `%s` %s.', strval($value), $this->propName, static::TYPE));
         }
 
         return true;

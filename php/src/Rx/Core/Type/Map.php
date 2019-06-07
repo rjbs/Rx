@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface
+};
 use Rx\Rx;
+use Rx\Exception\CheckFailedException;
 
-class Map implements TypeInterface
+class Map extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/map';
     const TYPE = '//map';
@@ -20,13 +22,13 @@ class Map implements TypeInterface
 
     private $valuesSchema;
 
-    public function __construct(\stdClass $schema, Rx $rx)
+    public function __construct(\stdClass $schema, Rx $rx, ?string $propName = null)
     {
 
-        $this->checkSchema($schema, static::TYPE);
+        parent::__construct($schema, $rx, $propName);
 
-        if ($schema->values) {
-            $this->valuesSchema = $rx->makeSchema($schema->values);
+        if (isset($schema->values)) {
+            $this->valuesSchema = $rx->makeSchema($schema->values, $propName);
         }
 
     }
@@ -35,14 +37,12 @@ class Map implements TypeInterface
     {
 
         if (!is_object($value) || get_class($value) != 'stdClass') {
-            return false;
+            throw new CheckFailedException(sprintf('Expected object, got %s in %s %s.', gettype($value), $this->propName, static::TYPE));
         }
 
         if ($this->valuesSchema) {
             foreach ($value as $key => $entry) {
-                if (! $this->valuesSchema->check($entry)) {
-                    return false;
-                }
+                $this->valuesSchema->check($entry);
             }
         }
 

@@ -3,14 +3,18 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface
+};
 use Rx\Rx;
-use Rx\Exception\RequiredAndOptionalException;
+use Rx\Exception\{
+    RequiredAndOptionalException, 
+    CheckFailedException
+};
 
-class Rec implements TypeInterface
+class Rec extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/rec';
     const TYPE = '//rec';
@@ -26,34 +30,33 @@ class Rec implements TypeInterface
     private $known;
     private $restSchema;
   
-    public function __construct(\stdClass $schema, Rx $rx)
+    public function __construct(\stdClass $schema, Rx $rx, ?string $propName = null)
     {
 
-        $this->checkSchema($schema, static::TYPE);
+        parent::__construct($schema, $rx, $propName);
 
         $this->required = new \stdClass();
         $this->optional = new \stdClass();
         $this->known  = new \stdClass();
     
         if (isset($schema->rest)) {
-            $this->restSchema = $rx->makeSchema($schema->rest);
+            $this->restSchema = $rx->makeSchema($schema->rest, $propName);
         }
     
         if (isset($schema->required)) {
             foreach ($schema->required as $key => $entry) {
                 $this->known->$key = true;
-                $this->required->$key = $rx->makeSchema($entry);
+                $this->required->$key = $rx->makeSchema($entry, $key);
             }
         }
     
         if (isset($schema->optional)) {
             foreach ($schema->optional as $key => $entry) {
                 if (isset($this->known->$key)) {
-                    throw new RequiredAndOptionalException("`$key` is both required and optional in //rec");
+                    throw new RequiredAndOptionalException(sprintf('`%s` is both required and optional in %s %s', $key, $this->propName ?? 'top', static::TYPE));
                 }
-        
                 $this->known->$key = true;
-                $this->optional->$key = $rx->makeSchema($entry);
+                $this->optional->$key = $rx->makeSchema($entry, $key);
             }
         }
 
@@ -63,12 +66,12 @@ class Rec implements TypeInterface
     {
 
         if (!is_object($value) || get_class($value) != 'stdClass') {
-            return false;
+            throw new CheckFailedException(sprintf('Expected object, got %s in %s %s.', gettype($value), $this->propName ?? 'top', static::TYPE));
         }
 
         $rest = new \stdClass();
         $haveRest = false;
-    
+   
         foreach ($value as $key => $entry) {
             if (! isset($this->known->$key)) {
                 $haveRest = true;
@@ -77,29 +80,25 @@ class Rec implements TypeInterface
         }
     
         if ($haveRest && ! $this->restSchema) {
-            return false;
+            throw new CheckFailedException(sprintf('Invalid keys [%s] found in %s %s.', implode(', ', array_keys(get_object_vars($rest))), $this->propName ?? 'top', static::TYPE));
         }
     
         foreach ($this->required as $key => $schema) {
             if (! property_exists($value, $key)) {
-                return false;
+                throw new CheckFailedException(sprintf('Key `%s` not found in `required` %s %s.', strval($key), $this->propName ?? 'top', static::TYPE));
             }
-            if (! $schema->check($value->$key)) {
-                return false;
-            }
+            $schema->check($value->$key);
         }
     
         foreach ($this->optional as $key => $schema) {
             if (! property_exists($value, $key)) {
                 continue;
             }
-            if (! $schema->check($value->$key)) {
-                return false;
-            }
+            $schema->check($value->$key);
         }
     
-        if ($haveRest && ! $this->restSchema->check($rest)) {
-            return false;
+        if ($haveRest) {
+            $this->restSchema->check($rest);
         }
     
         return true;

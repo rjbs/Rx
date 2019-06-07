@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface
+};
 use Rx\Rx;
+use Rx\Exception\CheckFailedException;
 
-class Fail implements TypeInterface
+class Fail extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/fail';
     const TYPE = '//fail';
@@ -17,17 +19,10 @@ class Fail implements TypeInterface
         'type',
     ];
 
-    public function __construct(\stdClass $schema, Rx $rx)
-    {
-
-        $this->checkSchema($schema, static::TYPE);
-
-    }
-
     public function check($value): bool
     {
 
-        return false;
+        throw new CheckFailedException('Failed as per //fail.');
 
     }
 

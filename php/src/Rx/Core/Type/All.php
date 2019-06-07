@@ -3,14 +3,18 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface, 
+};
 use Rx\Rx;
-use Rx\Exception\NoAlternativesGivenException;
+use Rx\Exception\{
+    NoAlternativesGivenException, 
+    CheckFailedException
+};
 
-class All implements TypeInterface
+class All extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/all';
     const TYPE = '//all';
@@ -21,17 +25,17 @@ class All implements TypeInterface
 
     private $alts = [];
 
-    public function __construct(\stdClass $schema, Rx $rx)
+    public function __construct(\stdClass $schema, Rx $rx, ?string $propName = null)
     {
 
-        $this->checkSchema($schema, static::TYPE);
+        parent::__construct($schema, $rx, $propName);
 
         if (empty($schema->of)) {
-            throw new NoAlternativesGivenException("No alternatives given for //all `of`");
+            throw new NoAlternativesGivenException(sprintf("No `of` given in `%s` %s schema.", $this->propName, static::TYPE));
         }
 
         foreach ($schema->of as $alt) {
-            $this->alts[] = $rx->makeSchema($alt);
+            $this->alts[] = $rx->makeSchema($alt, $propName);
         }
 
     }
@@ -40,10 +44,9 @@ class All implements TypeInterface
     {
 
         foreach ($this->alts as $alt) {
-            if (! $alt->check($value)) {
-                return false;
-            }
+            $alt->check($value);
         }
+
         return true;
 
     }

@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface, 
+};
 use Rx\Rx;
+use Rx\Exception\CheckFailedException;
 
-class Def implements TypeInterface
+class Def extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/def';
     const TYPE = '//def';
@@ -17,17 +19,14 @@ class Def implements TypeInterface
         'type',
     ];
 
-    public function __construct(\stdClass $schema, Rx $rx)
-    {
-
-        $this->checkSchema($schema, static::TYPE);
-
-    }
-
     public function check($value): bool
     {
 
-        return ! is_null($value);
+        if (is_null($value)) {
+            throw new CheckFailedException('Value missing or not set in //def.');
+        }
+
+        return true;
 
     }
 

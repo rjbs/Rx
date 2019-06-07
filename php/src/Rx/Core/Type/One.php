@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface
+};
 use Rx\Rx;
+use Rx\Exception\CheckFailedException;
 
-class One implements TypeInterface
+class One extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/one';
     const TYPE = '//one';
@@ -17,17 +19,14 @@ class One implements TypeInterface
         'type',
     ];
 
-    public function __construct(\stdClass $schema, Rx $rx)
-    {
-
-        $this->checkSchema($schema, static::TYPE);
-
-    }
-
     public function check($value): bool
     {
 
-        return is_scalar($value);
+        if (! is_scalar($value)) {
+            throw new CheckFailedException(sprintf('Key `%s` is not of type %s.', $this->propName, static::TYPE));
+        }
+
+        return true;
 
     }
 

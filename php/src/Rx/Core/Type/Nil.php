@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface
+};
 use Rx\Rx;
+use Rx\Exception\CheckFailedException;
 
-class Nil implements TypeInterface
+class Nil extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/nil';
     const TYPE = '//nil';
@@ -17,17 +19,14 @@ class Nil implements TypeInterface
         'type',
     ];
 
-    public function __construct(\stdClass $schema, Rx $rx)
-    {
-
-        $this->checkSchema($schema, static::TYPE);
-
-    }
-
     public function check($value): bool
     {
 
-        return is_null($value);
+        if (! is_null($value)) {
+            throw new CheckFailedException(sprintf('Key `%s` is not of type %s.', $this->propName, static::TYPE));
+        }
+
+        return true;
 
     }
 

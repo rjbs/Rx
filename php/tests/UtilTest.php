@@ -1,16 +1,17 @@
 #!/usr/bin/php
 <?php
-require 'ext/Test.php';
-require 'Rx.php';
+include_once("vendor/autoload.php");
 
-$test_arrays = array(
+require 'tests/Test.php';
+
+$testArrays = array(
   'foobarbaz' => array('foo', 'bar', 'baz'),
   'noelems'   => array()
 );
 
-foreach ($test_arrays as $name => $value) {
+foreach ($testArrays as $name => $value) {
   ok(
-    RxUtil::is_seq_int_array($value),
+    Rx\Util::isSeqIntArray($value),
     "test array $name is a seq_int_array"
   );
 }
@@ -22,7 +23,7 @@ $test_nonarrays = array(
 
 foreach ($test_nonarrays as $name => $value) {
   ok(
-    ! RxUtil::is_seq_int_array($value),
+    ! Rx\Util::isSeqIntArray($value),
     "test array $name is not a seq_int_array"
   );
 }

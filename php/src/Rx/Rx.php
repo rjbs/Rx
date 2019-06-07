@@ -67,14 +67,14 @@ final class Rx
             throw new RxException("Tried to learn type for already-registered uri $uri");
         }
 
-        # make sure schema is valid
+        // Make sure schema is valid
         $this->makeSchema($schema);
 
         $this->typeRegistry->$uri = ['schema' => $schema];
 
     }
 
-    public function makeSchema($schema)
+    public function makeSchema($schema, ?string $propName = null)
     {
 
         if (! is_object($schema)) {
@@ -84,7 +84,7 @@ final class Rx
         }
 
         if (empty($schema->type)) {
-            throw new RxException("Can't make a schema with no type");
+            throw new RxException("Can't make a schema with no `type` key.");
         }
 
         $uri = $this->expandUri($schema->type);
@@ -96,15 +96,14 @@ final class Rx
         $typeClass = $this->typeRegistry->$uri;
   
         if (is_array($typeClass) && isset($typeClass['schema'])) {
-            // @todo: debug this!
             foreach ($schema as $key => $entry) {
                 if ($key != 'type') {
-                    throw new RxException('Composed type does not take check arguments');
+                    throw new RxException('Composed type does not take check arguments.');
                 }
             }
             return $this->makeSchema($typeClass['schema']);
         } elseif ($typeClass) {
-            return new $typeClass($schema, $this);
+            return new $typeClass($schema, $this, $propName);
         }
 
         return false;

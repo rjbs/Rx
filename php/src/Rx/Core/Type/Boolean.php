@@ -3,16 +3,15 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface
+};
 use Rx\Rx;
+use Rx\Exception\CheckFailedException;
 
-/**
- * Can't use Bool as class name
- */
-class Boolean implements TypeInterface
+class Boolean extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/bool';
     const TYPE = '//bool';
@@ -20,17 +19,14 @@ class Boolean implements TypeInterface
         'type',
     ];
 
-    public function __construct(\stdClass $schema, Rx $rx)
-    {
-
-        $this->checkSchema($schema, static::TYPE);
-
-    }
-
     function check($value): bool
     {
 
-        return is_bool($value);
+        if (! is_bool($value)) {
+            throw new CheckFailedException(sprintf('Key `%s` is not of type %s.', $this->propName, static::TYPE));
+        }
+
+        return true;
 
     }
 

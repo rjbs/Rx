@@ -3,14 +3,21 @@ declare(strict_types=1);
 
 namespace Rx\Core\Type;
 
-use Rx\Core\{TypeInterface, CheckSchemaTrait};
-use Rx\{Rx, RangeChecker};
-use Rx\Exception\InvalidParamTypeException;
+use Rx\Core\{
+    TypeAbstract,
+    TypeInterface
+};
+use Rx\{
+    Rx, 
+    RangeChecker
+};
+use Rx\Exception\{
+    InvalidParamTypeException, 
+    CheckFailedException
+};
 
-class Num implements TypeInterface
+class Num extends TypeAbstract implements TypeInterface
 {
-
-    use CheckSchemaTrait;
 
     const URI = 'tag:codesimply.com,2008:rx/core/num';
     const TYPE = '//num';
@@ -23,17 +30,17 @@ class Num implements TypeInterface
     private $rangeChecker;
     private $fixedValue;
 
-    public function __construct(\stdClass $schema, Rx $rx)
+    public function __construct(\stdClass $schema, Rx $rx, ?string $propName = null)
     {
 
-        $this->checkSchema($schema, static::TYPE);
+        parent::__construct($schema, $rx, $propName);
 
         if (isset($schema->value)) {
             if (! (is_int($schema->value) || is_float($schema->value))) {
-                throw new InvalidParamTypeException('The `value` param for ' . static::TYPE . ' schema is not an int or float');
+                throw new InvalidParamTypeException(sprintf('The `value` param for %s schema is not an int or float.', static::TYPE));
             }
             if (static::TYPE == '//int' && is_float($schema->value) && $schema->value != floor($schema->value)) {
-                throw new InvalidParamTypeException('The `value` param for ' . static::TYPE . ' schema is not an int');
+                throw new InvalidParamTypeException(sprintf('The `value` param for %s schema is not an int', static::TYPE));
             }
             $this->fixedValue = $schema->value;
         }
@@ -48,20 +55,20 @@ class Num implements TypeInterface
     {
 
         if (! (is_int($value) || is_float($value))) {
-            return false;
+            throw new CheckFailedException(sprintf('Expected int/float, got %s in %s.', gettype($value), static::TYPE));
         }
         if (static::TYPE == '//int' && is_float($value) && $value != floor($value)) {
-            return false;
+            throw new CheckFailedException(sprintf('Key `%s` is not of type %s.', $this->propName, static::TYPE));
         }
 
         if ($this->fixedValue !== null) {
             if ($value != $this->fixedValue) {
-                return false;
+                throw new CheckFailedException(sprintf('Value does not equal value \'%s\' in %s.', strval($this->fixedValue), static::TYPE));
             }
         }
 
         if ($this->rangeChecker && ! $this->rangeChecker->check($value)) {
-            return false;
+            throw new CheckFailedException(sprintf('Range check fails in %s.', static::TYPE));
         }
 
         return true;
