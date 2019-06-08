@@ -52,7 +52,7 @@ try {
 
 try {
     $schema->check($credentialsFile);
-    echo "  ✅  File is according to schema.\n";
+    echo "  ✅  File is correct according to the schema.\n";
 } catch (Exception $e) {
     echo "  ❌  An error occurred validating the file against the schema.\n";
     echo "      {$e->getMessage()}\n";

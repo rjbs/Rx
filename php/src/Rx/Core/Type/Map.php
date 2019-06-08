@@ -7,7 +7,10 @@ use Rx\Core\{
     TypeAbstract,
     TypeInterface
 };
-use Rx\Rx;
+use Rx\{
+    Rx,
+    Util
+};
 use Rx\Exception\CheckFailedException;
 
 class Map extends TypeAbstract implements TypeInterface
@@ -37,7 +40,7 @@ class Map extends TypeAbstract implements TypeInterface
     {
 
         if (!is_object($value) || get_class($value) != 'stdClass') {
-            throw new CheckFailedException(sprintf('Expected object, got %s in %s %s.', gettype($value), $this->propName, static::TYPE));
+            throw new CheckFailedException(sprintf('Expected object, got %s in %s %s.', gettype($value), Util::formatPropName($this->propName), static::TYPE));
         }
 
         if ($this->valuesSchema) {

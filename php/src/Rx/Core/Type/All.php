@@ -7,7 +7,10 @@ use Rx\Core\{
     TypeAbstract,
     TypeInterface, 
 };
-use Rx\Rx;
+use Rx\{
+    Rx,
+    Util
+};
 use Rx\Exception\{
     NoAlternativesGivenException, 
     CheckFailedException
@@ -31,7 +34,7 @@ class All extends TypeAbstract implements TypeInterface
         parent::__construct($schema, $rx, $propName);
 
         if (empty($schema->of)) {
-            throw new NoAlternativesGivenException(sprintf("No `of` given in `%s` %s schema.", $this->propName, static::TYPE));
+            throw new NoAlternativesGivenException(sprintf("No `of` given in %s %s.", Util::formatPropName($this->propName), static::TYPE));
         }
 
         foreach ($schema->of as $alt) {

@@ -9,7 +9,8 @@ use Rx\Core\{
 };
 use Rx\{
     Rx, 
-    RangeChecker
+    RangeChecker,
+    Util
 };
 use Rx\Exception\{
     InvalidParamTypeException, 
@@ -55,20 +56,20 @@ class Num extends TypeAbstract implements TypeInterface
     {
 
         if (! (is_int($value) || is_float($value))) {
-            throw new CheckFailedException(sprintf('Expected int/float, got %s in %s.', gettype($value), static::TYPE));
+            throw new CheckFailedException(sprintf('Expected int/float, got %s in %s %s.', gettype($value), Util::formatPropName($this->propName), static::TYPE));
         }
         if (static::TYPE == '//int' && is_float($value) && $value != floor($value)) {
-            throw new CheckFailedException(sprintf('Key `%s` is not of type %s.', $this->propName, static::TYPE));
+            throw new CheckFailedException(sprintf('Key %s is not of type %s.', Util::formatPropName($this->propName), static::TYPE));
         }
 
         if ($this->fixedValue !== null) {
             if ($value != $this->fixedValue) {
-                throw new CheckFailedException(sprintf('Value does not equal value \'%s\' in %s.', strval($this->fixedValue), static::TYPE));
+                throw new CheckFailedException(sprintf('Value \'%s\' does not equal \'%s\' in %s %s.', strval($value), strval($this->fixedValue), Util::formatPropName($this->propName), static::TYPE));
             }
         }
 
         if ($this->rangeChecker && ! $this->rangeChecker->check($value)) {
-            throw new CheckFailedException(sprintf('Range check fails in %s.', static::TYPE));
+            throw new CheckFailedException(sprintf('Range check fails in %s %s.', Util::formatPropName($this->propName), static::TYPE));
         }
 
         return true;

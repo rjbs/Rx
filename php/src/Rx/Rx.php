@@ -39,13 +39,13 @@ final class Rx
 
         if (preg_match('/^\\/(.*?)\\/(.+)$/', $name, $matches)) {
             if (! array_key_exists($matches[1], $this->prefixRegistry)) {
-                throw new RxException("Unknown type prefix '$matches[1]' in '$name'");
+                throw new RxException("Unknown type prefix '$matches[1]' in '$name'.");
             }
             $uri = $this->prefixRegistry[ $matches[1] ] . $matches[2];
             return $uri;
         }
 
-        throw new RxException("Couldn't understand type name $name");
+        throw new RxException("Couldn't understand type name '$name'.");
 
     }
 
@@ -53,7 +53,7 @@ final class Rx
     {
 
         if (isset($this->prefixRegistry[$name])) {
-            throw new RxException("The prefix '$name' is already registered");
+            throw new RxException("The prefix '$name' is already registered.");
         }
 
         $this->prefixRegistry[$name] = $base;
@@ -64,7 +64,7 @@ final class Rx
     {
 
         if (isset($this->typeRegistry->$uri)) {
-            throw new RxException("Tried to learn type for already-registered uri $uri");
+            throw new RxException("Failed to learn type for already-registered uri $uri.");
         }
 
         // Make sure schema is valid
@@ -84,13 +84,13 @@ final class Rx
         }
 
         if (empty($schema->type)) {
-            throw new RxException("Can't make a schema with no `type` key.");
+            throw new RxException(sprintf('Can\'t make a schema without a `type` key in %s.', Util::formatPropName($propName)));
         }
 
         $uri = $this->expandUri($schema->type);
 
         if (! isset($this->typeRegistry->$uri)) {
-            throw new RxException("Unknown type: $uri");
+            throw new RxException(sprintf('Unknown type \'%s\' in %s.', $uri, Util::formatPropName($propName)));
         }
 
         $typeClass = $this->typeRegistry->$uri;
@@ -98,7 +98,7 @@ final class Rx
         if (is_array($typeClass) && isset($typeClass['schema'])) {
             foreach ($schema as $key => $entry) {
                 if ($key != 'type') {
-                    throw new RxException('Composed type does not take check arguments.');
+                    throw new RxException(sprintf('Composed type does not take additional arguments in %s.', Util::formatPropName($propName)));
                 }
             }
             return $this->makeSchema($typeClass['schema']);

@@ -7,7 +7,10 @@ use Rx\Core\{
     TypeAbstract,
     TypeInterface
 };
-use Rx\Rx;
+use Rx\{
+    Rx,
+    Util
+};
 use Rx\Exception\CheckFailedException;
 
 class Boolean extends TypeAbstract implements TypeInterface
@@ -23,7 +26,7 @@ class Boolean extends TypeAbstract implements TypeInterface
     {
 
         if (! is_bool($value)) {
-            throw new CheckFailedException(sprintf('Key `%s` is not of type %s.', $this->propName, static::TYPE));
+            throw new CheckFailedException(sprintf('Key %s is not of type %s.', Util::formatPropName($this->propName), static::TYPE));
         }
 
         return true;

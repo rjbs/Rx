@@ -7,7 +7,10 @@ use Rx\Core\{
     TypeAbstract,
     TypeInterface
 };
-use Rx\Rx;
+use Rx\{
+    Rx,
+    Util
+};
 use Rx\Exception\{
     NoAlternativesGivenException, 
     CheckFailedException
@@ -32,7 +35,7 @@ class Any extends TypeAbstract implements TypeInterface
 
         if (property_exists($schema, 'of')) {
             if (empty($schema->of)) {
-                throw new NoAlternativesGivenException(sprintf("No `of` given in `%s` %s schema.", $this->propName, static::TYPE));
+                throw new NoAlternativesGivenException(sprintf("No `of` given in %s %s.", Util::formatPropName($this->propName), static::TYPE));
             }
             foreach ($schema->of as $alt) {
                 $this->alts[] = $rx->makeSchema($alt, $propName);
@@ -57,7 +60,7 @@ class Any extends TypeAbstract implements TypeInterface
             }
         }
 
-        throw new CheckFailedException(sprintf('Values in %s %s do not match any `of`.', $this->propName, static::TYPE));
+        throw new CheckFailedException(sprintf('Values in %s %s do not match any `of`.', Util::formatPropName($this->propName), static::TYPE));
 
     }
 

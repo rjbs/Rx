@@ -9,7 +9,8 @@ use Rx\Core\{
 };
 use Rx\{
     Rx, 
-    RangeChecker
+    RangeChecker,
+    Util
 };
 use Rx\Exception\{
     InvalidParamTypeException, 
@@ -37,7 +38,7 @@ class Str extends TypeAbstract implements TypeInterface
 
         if (isset($schema->value)) {
             if (! is_string($schema->value)) {
-                throw new InvalidParamTypeException(sprintf('The `value` param for %s %s schema is not a string', $this->propName, static::TYPE));
+                throw new InvalidParamTypeException(sprintf('The `value` for %s %s is not a string.', Util::formatPropName($this->propName), static::TYPE));
             }
 
             $this->fixedValue = $schema->value;
@@ -56,7 +57,7 @@ class Str extends TypeAbstract implements TypeInterface
             throw new CheckFailedException(sprintf('Key `%s` is not of type %s.', $this->propName, static::TYPE));
         }
         if ($this->fixedValue !== null && $value != $this->fixedValue) {
-            throw new CheckFailedException(sprintf('\'%s\' does not equal value \'%s\' in %s %s.', strval($value), strval($this->fixedValue), $this->propName, static::TYPE));
+            throw new CheckFailedException(sprintf('\'%s\' does not equal value \'%s\' in `%s` %s.', strval($value), strval($this->fixedValue), $this->propName, static::TYPE));
         }
     
         if ($this->lengthChecker && ! $this->lengthChecker->check(strlen($value))) {

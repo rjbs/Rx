@@ -37,21 +37,21 @@ class Seq extends TypeAbstract implements TypeInterface
         parent::__construct($schema, $rx, $propName);
 
         if (! isset($schema->contents)) {
-            throw new MissingParamException(sprintf('No `contents` param for %s %s schema', $propName, static::TYPE));
+            throw new MissingParamException(sprintf('No `contents` key for %s %s.', Util::formatPropName($this->propName), static::TYPE));
         }
     
         if (! is_array($schema->contents)) {
-            throw new InvalidParamTypeException(sprintf('The `contents` param for %s %s schema is not an array', $propName, static::TYPE));
+            throw new InvalidParamTypeException(sprintf('The `contents` for %s %s is not an array.', Util::formatPropName($this->propName), static::TYPE));
         }
   
         $this->contentSchemata = [];
   
         foreach ($schema->contents as $i => $entry) {
-            $this->contentSchemata[] = $rx->makeSchema($entry, 'seq#' . $i);
+            $this->contentSchemata[] = $rx->makeSchema($entry, $propName . '->seq#' . $i);
         }
   
         if (isset($schema->tail)) {
-            $this->tailSchema = $rx->makeSchema($schema->tail);
+            $this->tailSchema = $rx->makeSchema($schema->tail, $propName . '->tail');
         }
   
     }
@@ -60,19 +60,19 @@ class Seq extends TypeAbstract implements TypeInterface
     {
 
         if (! Util::isSeqIntArray($value)) {
-            throw new CheckFailedException(sprintf('Numeric keys not found in %s %s.', $this->propName, static::TYPE));
+            throw new CheckFailedException(sprintf('Numeric keys not found in %s %s.', Util::formatPropName($this->propName), static::TYPE));
         }
   
         foreach ($this->contentSchemata as $i => $schema) {
             if (! array_key_exists($i, $value)) {
-                throw new CheckFailedException(sprintf('Key `%s` not found in `contents` of %s %s', strval($i), $this->propName, static::TYPE));
+                throw new CheckFailedException(sprintf('Value for `%s` not found in `contents` of %s %s.', strval($i), Util::formatPropName($this->propName), static::TYPE));
             }
             $schema->check($value[$i]);
         }
     
         if (count($value) > count($this->contentSchemata)) {
             if (! $this->tailSchema) {
-                throw new CheckFailedException(sprintf('`tail` missing from, or invalid length of %s', static::TYPE));
+                throw new CheckFailedException(sprintf('Key `tail` missing, or invalid length of %s %s.', Util::formatPropName($this->propName), static::TYPE));
             }
     
             $tail = array_slice(

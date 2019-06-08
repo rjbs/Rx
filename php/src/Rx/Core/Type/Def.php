@@ -7,7 +7,10 @@ use Rx\Core\{
     TypeAbstract,
     TypeInterface, 
 };
-use Rx\Rx;
+use Rx\{
+    Rx,
+    Util
+};
 use Rx\Exception\CheckFailedException;
 
 class Def extends TypeAbstract implements TypeInterface
@@ -23,7 +26,7 @@ class Def extends TypeAbstract implements TypeInterface
     {
 
         if (is_null($value)) {
-            throw new CheckFailedException('Value missing or not set in //def.');
+            throw new CheckFailedException(sprintf('Value missing or not set in %s %s.', Util::formatPropName($this->propName), static::TYPE));
         }
 
         return true;

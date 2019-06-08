@@ -8,6 +8,7 @@ final class Util
 
     public static function isSeqIntArray($value): bool
     {
+
         if (! is_array($value)) {
             return false;
         }
@@ -19,6 +20,14 @@ final class Util
         }
 
         return true;
+
+    }
+
+    public static function formatPropName(?string $propName = null): string
+    {
+
+        return $propName ? sprintf('`%s`', $propName) : '_TOP_';
+
     }
 
 }

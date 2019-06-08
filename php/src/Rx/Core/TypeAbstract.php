@@ -17,7 +17,7 @@ abstract class TypeAbstract
 
         $this->propName = $propName;
 
-        $this->checkSchema($schema, static::TYPE);
+        $this->checkSchema($schema);
 
     }
 

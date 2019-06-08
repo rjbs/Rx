@@ -7,7 +7,10 @@ use Rx\Core\{
     TypeAbstract,
     TypeInterface
 };
-use Rx\Rx;
+use Rx\{
+    Rx,
+    Util
+};
 use Rx\Exception\{
     RequiredAndOptionalException, 
     CheckFailedException
@@ -46,17 +49,17 @@ class Rec extends TypeAbstract implements TypeInterface
         if (isset($schema->required)) {
             foreach ($schema->required as $key => $entry) {
                 $this->known->$key = true;
-                $this->required->$key = $rx->makeSchema($entry, $key);
+                $this->required->$key = $rx->makeSchema($entry, ($propName ? $propName . '->' : '') . $key);
             }
         }
     
         if (isset($schema->optional)) {
             foreach ($schema->optional as $key => $entry) {
                 if (isset($this->known->$key)) {
-                    throw new RequiredAndOptionalException(sprintf('`%s` is both required and optional in %s %s', $key, $this->propName ?? 'top', static::TYPE));
+                    throw new RequiredAndOptionalException(sprintf('`%s` is both required and optional in %s %s', $key, Util::formatPropName($this->propName), static::TYPE));
                 }
                 $this->known->$key = true;
-                $this->optional->$key = $rx->makeSchema($entry, $key);
+                $this->optional->$key = $rx->makeSchema($entry, ($propName ? $propName . '->' : '') . $key);
             }
         }
 
@@ -66,7 +69,7 @@ class Rec extends TypeAbstract implements TypeInterface
     {
 
         if (!is_object($value) || get_class($value) != 'stdClass') {
-            throw new CheckFailedException(sprintf('Expected object, got %s in %s %s.', gettype($value), $this->propName ?? 'top', static::TYPE));
+            throw new CheckFailedException(sprintf('Expected object, got %s in %s %s.', gettype($value), Util::formatPropName($this->propName), static::TYPE));
         }
 
         $rest = new \stdClass();
@@ -80,12 +83,12 @@ class Rec extends TypeAbstract implements TypeInterface
         }
     
         if ($haveRest && ! $this->restSchema) {
-            throw new CheckFailedException(sprintf('Invalid keys [%s] found in %s %s.', implode(', ', array_keys(get_object_vars($rest))), $this->propName ?? 'top', static::TYPE));
+            throw new CheckFailedException(sprintf('Invalid keys [%s] found in %s %s.', implode(', ', array_keys(get_object_vars($rest))), Util::formatPropName($this->propName), static::TYPE));
         }
     
         foreach ($this->required as $key => $schema) {
             if (! property_exists($value, $key)) {
-                throw new CheckFailedException(sprintf('Key `%s` not found in `required` %s %s.', strval($key), $this->propName ?? 'top', static::TYPE));
+                throw new CheckFailedException(sprintf('Value for `%s` not found in `required` of %s %s.', strval($key), Util::formatPropName($this->propName), static::TYPE));
             }
             $schema->check($value->$key);
         }
