@@ -2,7 +2,7 @@
     "name": "shaggy8871/rx",
     "description": "The Rx schema and validation system",
     "type": "library",
-    "license": "GPL",
+    "license": "GPL-3.0-or-later",
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.1.0",
