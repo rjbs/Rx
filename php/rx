@@ -8,7 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 
 if (! isset($argv[1]) || ! isset($argv[2]) || ! file_exists($argv[1]) || ! file_exists($argv[2])) {
     echo "  ❌  Unable to find file(s) in argument(s).\n";
-    echo "      Usage: ./rx <yaml/json> <schema> <custom types glob>\n";
+    echo "      Usage: ./rx <yaml/json> <schema> [\"<glob of custom types>\"]\n";
     die();
 }
 try {

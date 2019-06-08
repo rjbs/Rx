@@ -37,6 +37,7 @@ composer require shaggy8871/rx
 ## Usage
 
 * Create a schema file
-* Run `./vendor/bin/rx <yaml/json> <schema> <custom learn types>`
+* Run `./vendor/bin/rx <yaml/json> <schema> ["<glob of custom types>"]`
+* Be sure to quote custom type glob!
 
-For example, `./vendor/bin/rx test.yml schema.yml types/*.yml`
+For example, `./vendor/bin/rx test.yml schema.yml "types/*.yml"`
