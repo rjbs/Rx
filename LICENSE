@@ -1,5 +1,8 @@
 
-The contents of the Rx repository are copyright (C) 2008, Ricardo SIGNES.
+The contents of the Rx repository are released under the GNU General Public License
+
+* Copyright (C) 2019, J Ginsberg (./php)
+* Copyright (C) 2008, Ricardo SIGNES
 
 They may be distributed under the terms of the GNU General Public License,
 below.  The Perl implementation, Data::Rx, may also be distributed under the

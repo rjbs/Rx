@@ -1,9 +1,10 @@
 #!/usr/bin/php
 <?php
-require 'ext/Test.php';
-require 'Rx.php';
+include_once("vendor/autoload.php");
 
-$index_json = file_get_contents('spec/index.json');
+require 'tests/Test.php';
+
+$index_json = file_get_contents('../spec/index.json');
 $index = json_decode($index_json);
 
 $test_data = array();
@@ -22,12 +23,12 @@ foreach ($index as $file) {
   if ($type == 'schemata') {
     $file = join("/", $parts);
     $test_schemata[ $leaf ] = json_decode(
-      file_get_contents("spec/schemata/$file")
+      file_get_contents("../spec/schemata/$file")
     );
   } else if ($type == 'data') {
     $file = join("/", $parts);
     $test_data[ $leaf ] = json_decode(
-      file_get_contents("spec/data/$file")
+      file_get_contents("../spec/data/$file")
     );
   } else {
     die("unknown entries in index.json");
@@ -90,13 +91,13 @@ foreach ($test_schemata as $schema_name => $test) {
   if (isset($_ENV["RX_TEST_SCHEMA"]) and $_ENV["RX_TEST_SCHEMA"] != $schema_name)
     continue;
 
-  $Rx = new Rx();
+  $Rx = new Rx\Rx();
 
   $schema = null;
 
   if (isset($test->composedtype)) {
     try {
-      $Rx->learn_type($test->composedtype->uri, $test->composedtype->schema);
+      $Rx->learnType($test->composedtype->uri, $test->composedtype->schema);
     } catch (Exception $e) {
       if (isset($test->composedtype->invalid)) {
         pass("BAD COMPOSED TYPE: $schema_name");
@@ -112,12 +113,12 @@ foreach ($test_schemata as $schema_name => $test) {
     }
 
     if (isset($test->composedtype->prefix))
-      $Rx->add_prefix($test->composedtype->prefix[0],
+      $Rx->addPrefix($test->composedtype->prefix[0],
                       $test->composedtype->prefix[1]);
   }
 
   try {
-    $schema = $Rx->make_schema($test->schema);
+    $schema = $Rx->makeSchema($test->schema);
   } catch (Exception $e) {
     if (isset($test->invalid)) {
       pass("BAD SCHEMA: $schema_name");
@@ -144,8 +145,12 @@ foreach ($test_schemata as $schema_name => $test) {
       foreach ($entries as $name => $want) {
         $value = $test_data[$source]->$name;
 
-        $result = $schema->check($value);
-        if ($pf == 'fail') $result = ! $result;
+        try {
+            $result = $schema->check($value);
+        } catch (Exception $e) {
+            $result = false;
+            if ($pf == 'fail') $result = ! $result;
+        }
 
         if ("$source/$entry" == "num/0e0")
           todo_start("PHP's json_decode can't handle 0e0 as number");
