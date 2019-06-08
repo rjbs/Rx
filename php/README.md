@@ -5,6 +5,8 @@
 
 Based on https://github.com/rjbs/Rx with ideas from https://blog.picnic.nl/how-to-use-yaml-schema-to-validate-your-yaml-files-c82c049c2097
 
+Standalone PHP version is available at https://github.com/shaggy8871/php-rx
+
 ## What is Rx?
 
 When adding an API to your web service, you have to choose how to encode the
@@ -27,7 +29,7 @@ JSON-style data structures and is as easy to work with as JSON itself.
 ## Installation
 
 ```
-composer require shaggy8871/rx
+composer require shaggy8871/php-rx
 ```
 
 ## Documentation
