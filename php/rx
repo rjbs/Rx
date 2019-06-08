@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 declare(strict_types=1);
 
@@ -7,6 +8,14 @@ use Symfony\Component\Yaml\Yaml;
 
 if (! isset($argv[1]) || ! isset($argv[2]) || ! file_exists($argv[1]) || ! file_exists($argv[2])) {
     echo "  ❌  Unable to find file(s) in argument(s).\n";
+    echo "      Usage: ./rx <yaml/json> <schema> <custom types glob>\n";
+    die();
+}
+try {
+    $credentialsFile = Yaml::parse(file_get_contents($argv[1]), Yaml::PARSE_OBJECT_FOR_MAP);
+} catch (Exception $e) {
+    echo "  ❌  Unable to parse yaml/json file.\n";
+    echo "      {$e->getMessage()}\n";
     die();
 }
 try {
@@ -16,25 +25,18 @@ try {
     echo "      {$e->getMessage()}\n";
     die();
 }
-try {
-    $credentialsFile = Yaml::parse(file_get_contents($argv[1]), Yaml::PARSE_OBJECT_FOR_MAP);
-} catch (Exception $e) {
-    echo "  ❌  Unable to parse credentials file.\n";
-    echo "      {$e->getMessage()}\n";
-    die();
-}
 
 $rx = new Rx\Rx();
 
 // Add custom types
 if ($argv[3]) {
-    $types = explode(';', $argv[3]);
-    foreach($types as $type) {
+    foreach (glob($argv[3]) as $type) {
         try {
             $typeFile = Yaml::parse(file_get_contents($type), Yaml::PARSE_OBJECT_FOR_MAP);
             $rx->learnType($typeFile->uri, $typeFile->schema);
+            echo "  ✅  Added {$typeFile->uri}.\n";
         } catch (Exception $e) {
-            echo "  ❌  Unable to add custom types.\n";
+            echo "  ❌  Unable to add custom types via glob.\n";
             echo "      {$e->getMessage()}\n";
             die();        
         }
