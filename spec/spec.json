@@ -1,5 +1,5 @@
 {
-   "count" : 1625,
+   "count" : 1641,
    "tests" : {
       "all-2recs" : {
          "schema" : {
@@ -1730,7 +1730,7 @@
                         0
                      ],
                      "error" : [
-                        "type"
+                        "pants"
                      ]
                   }
                ],
@@ -7912,11 +7912,26 @@
             "type" : "//all"
          }
       },
+      "invalid/all-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "of" : [],
+            "type" : "//all",
+            "unknown" : "this will cause things to explode"
+         }
+      },
       "invalid/any-of-0" : {
          "invalid" : true,
          "schema" : {
             "of" : [],
             "type" : "//any"
+         }
+      },
+      "invalid/any-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//any",
+            "unknown" : "this will cause things to explode"
          }
       },
       "invalid/arr-arr-cont" : {
@@ -7949,6 +7964,25 @@
             "type" : "//arr"
          }
       },
+      "invalid/bad-prefix" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "/bad/bad"
+         }
+      },
+      "invalid/bad-type" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "bad"
+         }
+      },
+      "invalid/bool-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//bool",
+            "unknown" : "this will cause things to explode"
+         }
+      },
       "invalid/composed-cycle" : {
          "composedtype" : {
             "invalid" : true,
@@ -7979,11 +8013,68 @@
             "unknown" : "this will cause an explosion"
          }
       },
+      "invalid/def-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//def",
+            "unknown" : "this will cause things to explode"
+         }
+      },
+      "invalid/fail-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//fail",
+            "unknown" : "this will cause things to explode"
+         }
+      },
       "invalid/int-unknown-arg" : {
          "invalid" : true,
          "schema" : {
             "type" : "//int",
-            "unknown" : "this will make things explode"
+            "unknown" : "this will cause to things explode"
+         }
+      },
+      "invalid/map-null-values" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//map",
+            "values" : null
+         }
+      },
+      "invalid/map-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//map",
+            "unknown" : "this will cause things to explode",
+            "values" : "//any"
+         }
+      },
+      "invalid/nil-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//nil",
+            "unknown" : "this will cause things to explode"
+         }
+      },
+      "invalid/num-null-value" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//num",
+            "value" : null
+         }
+      },
+      "invalid/num-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//num",
+            "unknown" : "this will cause things to explode"
+         }
+      },
+      "invalid/one-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//one",
+            "unknown" : "this will cause things to explode"
          }
       },
       "invalid/rec-both-req-opt" : {
@@ -8029,6 +8120,24 @@
             "type" : "//seq",
             "unknown" : "this will cause things to explode"
          }
+      },
+      "invalid/str-null-value" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//str",
+            "value" : null
+         }
+      },
+      "invalid/str-unknown-arg" : {
+         "invalid" : true,
+         "schema" : {
+            "type" : "//str",
+            "unknown" : "this will cause things to explode"
+         }
+      },
+      "invalid/unknown" : {
+         "invalid" : true,
+         "schema" : "//unknown"
       },
       "map-int" : {
          "schema" : {

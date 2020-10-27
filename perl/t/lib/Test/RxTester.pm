@@ -109,8 +109,7 @@ sub assert_fail {
     my $ok   = 1;
     my @diag;
 
-  FAILS:
-    {
+    FAILS: {
       if (try { $fails->isa('Data::Rx::FailureSet') }) {
         my $fail = $fails->failures;
         $want ||= [];
@@ -222,7 +221,7 @@ sub run_tests {
 
     Test::More::diag "testing $spec_name";
 
-    my $rx     = Data::Rx->new({ sort_keys => 1 });
+    my $rx = Data::Rx->new({ sort_keys => 1 });
 
     if ($spec->{'composedtype'}) {
       my $rc =
