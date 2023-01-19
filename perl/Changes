@@ -1,6 +1,8 @@
 Revision history for Data-Rx
 
 {{$NEXT}}
+
+0.200008  2023-01-18 22:03:24-05:00 America/New_York
         - update packaging
         - minimum perl is now Perl v5.12
 
