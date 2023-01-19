@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Data::Rx::CommonType::EasyNew;
 # ABSTRACT: base class for core Rx types, with some defaults

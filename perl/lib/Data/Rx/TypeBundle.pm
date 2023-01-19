@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Data::Rx::TypeBundle;
 # ABSTRACT: base class for type bundles

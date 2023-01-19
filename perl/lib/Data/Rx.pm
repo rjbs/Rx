@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Data::Rx;
 # ABSTRACT: perl implementation of Rx schema system
@@ -33,8 +33,8 @@ use Data::Rx::TypeBundle::Core;
 =head1 COMPLEX CHECKS
 
 Note that a "schema" can be represented either as a name or as a definition.
-In the L</SYNOPSIS> above, note that we have both, '//str' and 
-C<{ type =E<gt> '//int', value =E<gt> 201 }>.  
+In the L</SYNOPSIS> above, note that we have both, '//str' and
+C<{ type =E<gt> '//int', value =E<gt> 201 }>.
 With the L<collection types|http://rx.codesimply.com/coretypes.html#collect>
 provided by Rx, you can validate many complex structures.  See L</learn_types>
 for how to teach your Rx schema object about the new types you create.
@@ -86,7 +86,7 @@ sub _expand_uri {
 
   if ($str =~ m{\A/(.*?)/(.+)\z}) {
     my ($prefix, $rest) = ($1, $2);
-  
+
     my $lookup = $self->{prefix};
     Carp::croak "unknown prefix '$prefix' in type name '$str'"
       unless exists $lookup->{$prefix};
@@ -207,7 +207,7 @@ sub register_type_plugin {
 
       Carp::confess("a type plugin is already registered for $uri")
         if $self->{handler}{ $uri };
-        
+
       $self->{handler}{ $uri } = $plugin;
     }
   }
@@ -288,7 +288,7 @@ sub core_bundle {
   return 'Data::Rx::TypeBundle::Core';
 }
 
-sub core_type_plugins { 
+sub core_type_plugins {
   my ($self) = @_;
 
   Carp::cluck("core_type_plugins deprecated; use Data::Rx::TypeBundle::Core");

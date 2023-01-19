@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Data::Rx::CoreType::str;
 # ABSTRACT: the Rx //str type
@@ -22,7 +22,7 @@ sub guts_from_arg {
     ) {
       Carp::croak(sprintf(
         'invalid value (%s) for //str',
-        defined $val ? $val : 'undef',
+        $val // 'undef',
       ));
     }
   }

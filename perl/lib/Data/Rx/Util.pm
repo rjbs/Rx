@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Data::Rx::Util;
 # ABSTRACT: helper routines for Data::Rx
@@ -40,12 +40,12 @@ sub _make_range_check {
     if exists $arg->{max};
   push @tolerances, Number::Tolerant->new(less_than => $arg->{'max-ex'})
     if exists $arg->{'max-ex'};
-  
+
   my $tol = do {
     no warnings 'once';
     List::Util::reduce { $a & $b } @tolerances;
   };
-  
+
   return sub { $_[0] == $tol };
 }
 

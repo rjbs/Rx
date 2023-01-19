@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Data::Rx::CoreType::bool;
 # ABSTRACT: the Rx //bool type

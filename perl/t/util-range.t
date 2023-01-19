@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 
 use Test::More 'no_plan';

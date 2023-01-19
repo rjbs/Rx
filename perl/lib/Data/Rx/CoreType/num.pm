@@ -1,4 +1,4 @@
-use strict;
+use v5.12.0;
 use warnings;
 package Data::Rx::CoreType::num;
 # ABSTRACT: the Rx //num type
@@ -25,7 +25,7 @@ sub guts_from_arg {
     ) {
       Carp::croak(sprintf(
         'invalid value (%s) for //%s',
-        defined $val ? $val : 'undef',
+        $val // 'undef',
         $class->subname,
       ));
     }
@@ -68,7 +68,7 @@ sub _value_is_of_type {
 sub assert_valid {
   my ($self, $value) = @_;
 
-  $self->__type_fail($value) unless defined $value and length $value;
+  $self->__type_fail($value) unless length $value;
 
   # XXX: This is insufficiently precise.  It's here to keep us from believing
   # that JSON::XS::Boolean objects, which end up looking like 0 or 1, are
